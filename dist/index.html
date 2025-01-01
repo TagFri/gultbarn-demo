@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="nb">
+<head>
+    <meta charset="UTF-8">
+    <!-- max-scale=1 : avoid zooming in on input on mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Gult barn</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js"></script>
+    <link rel="icon" type="image/x-icon" href="/logo.f5cd7aa4.svg">
+    <!-- GOOGLE FONTS -->
+    <style>@import "https://fonts.googleapis.com/css2?family=Lobster&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap";
+
+</style>
+    <!-- STYLESHEETS -->
+    <link rel="stylesheet" href="/index.0796372e.css">
+    <link rel="stylesheet" href="/index.e38cde8f.css">
+    <link rel="stylesheet" href="/index.647eb789.css">
+    <link rel="stylesheet" href="/index.f6df1236.css">
+    <link rel="stylesheet" href="/index.9e4c6fd2.css">
+</head>
+<body>
+<!-- JS SCRIPTS -->
+<!-- INPUT MASKING -->
+<script src="/index.0b5c1320.js"></script>
+<script src="/index.f20eef8f.js"></script>
+<!-- OWN JS -->
+<script src="/index.61542594.js" defer=""></script>
+<!-- HTML -->
+<header>
+    <div id="logo">
+        <img src="/logo.f5cd7aa4.svg" alt="Gult barn logo">
+        <h1>gultbarn</h1>
+    </div>
+    <div id="about">
+        <h2 id="about-us-title">hilsen sommervikarene</h2>
+        <button id="about-us-info"><img src="/utropstegn.7e596a3e.svg" alt="about-logo"></button>
+    </div>
+</header>
+<main id="main">
+    <!-- INFO ABOUT CHILD -->
+    <div id="child-container" class="container round-container">
+        <h2>Om barnet</h2>
+        <!-- BIRTH WEIGHT INPUT-->
+        <p class="child-info">Fødselsvekt</p>
+        <input id="birth-weight" class="full-input child-info-input" type="text" inputmode="numeric" placeholder="3500g">
+        <!-- BIRTH TIME INPUT-->
+        <p class="child-info">Fødselstidpunkt</p>
+        <div class="double-input">
+            <input id="birthtime-date" class="half-input child-info-input" type="text" inputmode="numeric" placeholder="dd/mm">
+            <input id="birthtime-time" class="half-input child-info-input" type="text" inputmode="numeric" placeholder="hh:mm">
+        </div>
+        <!-- GASTATION AT BIRTH-->
+        <p class="child-info">Gestasjons ved fødsel</p>
+        <div class="double-input">
+            <input id="gestation-week" class="half-input child-info-input" type="text" inputmode="numeric" placeholder="39u">
+            <input id="gestation-day" class="half-input child-info-input" type="text" inputmode="numeric" placeholder="5d">
+        </div>
+    </div>
+    <!-- LAB CONTAINER-->
+    <div id="lab-container" class="container round-container">
+        <!-- ADD NEW LAB VALUE-->
+        <h2>Legg til målinger</h2>
+        <p class="lab-info">Tidspunkt for prøve</p>
+        <div class="double-input">
+            <input class="half-input" id="lab-date" type="text" inputmode="numeric" placeholder="dd/mm">
+            <input class="half-input" id="lab-time" type="text" inputmode="numeric" placeholder="hh:mm">
+        </div>
+        <p class="lab-info">S-bilirubin verdi</p>
+        <div class="double-input">
+            <input class="inp" id="bilirubin-value" type="text" inputmode="numeric" placeholder="120 µmol/L">
+            <button class="btn" id="add-lab">Legg til</button>
+        </div>
+        <p id="Lab-add-error" class="lab-info red-font"></p>
+        <!-- LAB VALUES LIST-->
+        <hr>
+        <ul id="lab-list">
+            <li class="individual-lab">
+                <button class="remove-lab"><img class="individual-lab-remove" src="/fjern.f9e9db9a.svg" alt="delete-icon"></button>
+                <img src="/blodprove-opasitet.bfaf097c.svg" alt="blodprove-icon">
+                <img src="/kalender-opasitet.72dbdbe7.svg" alt="calendar-icon">
+                <img src="/tidspunkt-opasitet.384a0566.svg" alt="time-icon">
+            </li>
+        </ul>
+    </div>
+    <!-- GRAPH -->
+    <div id="graph-container" class="container">
+        <canvas id="graph"></canvas>
+    </div>
+    <!-- EXTRA QUESTIONS ACORDING TO GUIDELINES -->
+    <!-- TODO: Legg til nøkkelspørsmål ift bilirubinverdier -->
+    <!-- CLINICAL GUIDANCE / ADVICE -->
+    <div id="advice-container" class="container round-container">
+        <h2>Faglig råd</h2>
+    </div>
+    <!-- PREFORMATTED AND FINISHED JOURNAL NOTE -->
+    <div id="journal-container" class="container round-container">
+        <h2>Journalføre?</h2>
+    </div>
+</main>
+</body>
+</html>

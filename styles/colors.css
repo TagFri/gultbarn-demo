@@ -1,0 +1,17 @@
+:root {
+    /* COLORS */
+    --color-yellow-strong: #F5A201;
+    --color-yellow-medium: #FBC169;
+    --color-yellow-light: #FFE2B1;
+    --color-yellow-lighter: #FFFAF2;
+    --color-black: #0B1E33;
+    --color-grey: #C3C7CB;
+    --color-red: #FB4141;
+    --color-green: #C4E047
+}
+
+
+body {
+    /* STANDARD FONT COLOR */
+    color: var(--color-black);
+}

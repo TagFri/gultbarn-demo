@@ -1,0 +1,177 @@
+*, h1, h2, h3, h4, h5, h6, p, input, a, li{
+    font-family: "Roboto", sans-serif;
+}
+body {
+    margin: 0.5rem;
+}
+@media (min-width: 992px) {
+    body {
+        max-width: 1200px;
+        margin: 1rem auto;
+    }
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    > #logo, > #about {
+        display: flex;
+        align-items: center;
+    }
+    > #logo {
+        justify-content: start;
+        > img {
+            padding-right: 0.5rem;
+        }
+    }
+    > #about {
+        justify-content: end;
+        > img {
+            padding-left: 0.5rem;
+        }
+    }
+    #about-us-title {
+        font-weight: lighter;
+    }
+    /* Responsive header images compared to text*/
+    img {
+        @media (max-width: 576px) {height: 1.5rem;}
+        @media (min-width: 576px) {height: 2rem;}
+    }
+    button {
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+}
+
+/* MAIN CONTAINER STYLES */
+.container {
+    margin: 1.5rem;
+    padding: 1rem;
+    height: fit-content;
+}
+
+.round-container {
+    border-radius: 1.5rem;
+    text-align: center;
+    padding: 1.5rem;
+}
+
+/* INDIVIDUAL CONTAINER STYLES */
+#child-container, #lab-container {
+    border: 0.07rem solid var(--color-grey);
+    input {
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        border: 0.07rem solid var(--color-grey);
+    }
+}
+
+input:focus{
+    outline: 0.1rem solid var(--color-yellow-medium);
+    outline-offset: -0.075rem;
+}
+
+.invalid-input {
+    outline: 0.1rem solid var(--color-red);
+    outline-offset: -0.075rem;
+}
+
+.valid-input {
+    outline: 0.1rem solid var(--color-green);
+    outline-offset: -0.075rem;
+}
+
+.red-font {
+    color: var(--color-red);
+}
+
+.double-input {
+    display: flex;
+    justify-content: space-between;
+    > .inp {
+        width: 55%;
+    }
+    > .btn {
+        /* Size */
+        width: 35%;
+
+        /* Style */
+        background: var(--color-black);
+        color: white;
+        border-radius: 0.5rem;
+        border: none;
+        text-decoration: none;
+        text-align: center;
+
+        /* Interactivity */
+        cursor: pointer;
+        transition: background 100ms ease-in-out,
+        transform 100ms ease;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+
+    > .btn:active {
+        transform: scale(0.97);
+    }
+}
+.full-input {
+    width: 90%;
+}
+.half-input {
+    width: 37%;
+}
+
+.child-info, .lab-info {
+    text-align: left;
+    margin-top: 0.8rem;
+    margin-bottom: 0.3rem;
+}
+
+
+#birthtime-date, #birthtime-time, #gestation-week, #gestation-day {
+    text-align: center;
+}
+
+#advice-container, #journal-container {
+    border: none;
+}
+
+#advice-container {
+    background-color: var(--color-yellow-light);
+}
+
+#journal-container {
+    background-color: var(--color-yellow-lighter)
+}
+
+hr {
+    border: 0.005rem solid var(--color-grey);
+    margin: 1rem 0;
+}
+
+#lab-list {
+    img {
+        height: 1.5rem;}}
+
+li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    padding: 0 1rem;
+}
+
+.remove-lab {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+#graph-container {
+    width: 100%;
+}
+

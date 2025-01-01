@@ -1,0 +1,54 @@
+/* Line height and spacing */
+body {
+    h1 {line-height: 1;     letter-spacing: -0.0625rem;}
+    h2 {line-height: 1.067; letter-spacing: -0.05rem;}
+    h3 {line-height: 1.083; letter-spacing: -0.00375rem;}
+    h4 {line-height: 1.1;   letter-spacing: -0.0025rem;}
+    h5 {line-height: 1.111; letter-spacing: -0.0125rem;}
+    h6 {line-height: 1.125; letter-spacing: -0.00625rem;}
+}
+
+/* MOBILE FONTS */
+@media (max-width: 576px) {
+    /* Root font-size*/
+    * {font-size: 14px;}
+    body {
+        /* Heading font sizes*/
+        h1 {font-size: 1.5rem}
+        h2 {font-size: 1.3rem}
+        h3 {font-size: 1.25rem}
+        /* Bold text*/
+        h1, h2, h3 {font-weight: bold}
+        header > h2 {font-weight: 200}
+    }
+}
+
+/* TABLET FONTS */
+@media (min-width: 576px) {
+    /* Root font-size*/
+    * {font-size: 16px;}
+    body {
+        /* Heading font sizes*/
+        h1 {font-size: 2.125rem}
+        h2 {font-size: 1.5rem}
+        h3 {font-size: 1.25rem}
+        h4 {font-size: 1.125rem}
+        /* Bold text*/
+        h1, h2, h3 {font-weight: bold}
+    }
+}
+/* DESKTOP FONTS */
+@media (min-width: 992px) {
+    /* Root font-size*/
+    * {font-size: 18px;}
+    /* Heading font sizes*/
+    body {
+        h1 {font-size: 2.125rem}
+        h2 {font-size: 1.875rem}
+        h3 {font-size: 1.5rem}
+        h4 {font-size: 1.25rem}
+        h5 {font-size: 1.125rem}
+        /* Bold text */
+        h1, h2, h3, h4, h5 {font-weight: bold}
+    }
+}
