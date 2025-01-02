@@ -153,16 +153,19 @@ hr {
     margin: 1rem 0;
 }
 
-#lab-list {
+#lab-icons, #lab-list {
     img {
         height: 1.5rem;}}
-
 li {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 0.5rem;
     padding: 0 1rem;
+    > * {
+        width: 20%;
+        font-size: 1rem;
+    }
 }
 
 .remove-lab {
@@ -172,6 +175,22 @@ li {
 }
 
 #graph-container {
-    width: 100%;
+    width: 90%;
 }
 
+.individual-lab {
+    display: flex;
+    justify-content: space-between;
+}
+
+.error-message {
+    display: block;
+    text-align: left;
+    color: var(--color-red);
+    font-size: 0.8rem;
+    margin: 0.5rem 0;
+}
+
+.no-error-message {
+    display: none;
+}

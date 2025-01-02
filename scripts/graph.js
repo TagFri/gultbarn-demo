@@ -1,5 +1,5 @@
-import {validatedLabInputs, validatedChildInputs} from "./inputHandling.js";
-export {initiateGraph, updateGraph}
+import {labTaken, validatedChildInputs} from "./inputHandling.js";
+export {initiateGraph, updateChildGraph, updateLabGraph}
 
 const yellowStrong =    'rgb(245, 162, 1)'
 const yellowMedium =    'rgb(251, 193, 105)'
@@ -16,10 +16,9 @@ function initiateGraph() {
     const ctx = document.getElementById('graph');
     ctx.innerHTML = "";
     myChart = new Chart(ctx, {
-        type: 'line',
+        type: 'scatter',
         data: {
             //Dates (0 = birthdate, each consequently +1day until 10(14?) days of age)
-            labels: [0,1,2,3,4,5,6,7,8,9,10],
             //One dataset = one line
             datasets: [
                 {//DATASET 1 -> CHILD LIGHT LIMIT
@@ -28,23 +27,28 @@ function initiateGraph() {
                     spanGaps: true,
                     borderColor: black, //Yellow colour
                     pointRadius: 0,
+                    showLine: true,
+                    fill: false,
                 },
                 {//DATASET 2 -> LAB VALUES
                     label: "Labratorieverdier",
                     data: [],
                     spanGaps: true,
                     borderColor: yellowStrong,
-                    pointRadius: 5
+                    pointRadius: 5,
+                    showLine: true,
+                    fill: false,
                 }
             ],
         },
 
         options: {
+            parsing: {
+                xAxisKey: 'x',
+                yAxisKey: 'y'
+            },
             //Turn on/off animation on initilizing
             animation: true,
-            grid: {
-                display: false
-            },
             plugins: {
                 legend: {
                     //Turn on/off top-description for each graph
@@ -60,13 +64,15 @@ function initiateGraph() {
                 },
                 tooltip: {
                     //Turn on/off hover box on each datapoint
-                    enabled: false
+                    enabled: true
                 }
             },
             scales: {
                 x: {
-                    time: {
-                        unit: 'day'
+                    suggestedMin: 0,
+                    suggestedMax: 10,
+                    ticks: {
+                        stepSize: 1,
                     }
                 },
                 y: {
@@ -84,22 +90,51 @@ function initiateGraph() {
     });
 }
 
-function updateGraph() {
+function updateChildGraph() {
     //Check if child graph needs an update
     let newLightLimitInfo = createLightLimit()
     let newLightlimitLabel = newLightLimitInfo[0]
-    let newLightLimit = newLightLimitInfo.splice(1)
+    let newLightLimit = newLightLimitInfo[1]
+    console.log(newLightLimit)
     if (currentLightLimit === null || newLightLimit !== currentLightLimit) {
         currentLightLimit = newLightLimit
-        myChart.data.datasets[1].label = newLightlimitLabel
-        myChart.data.datasets[1].data = currentLightLimit
-        myChart.data.datasets[1].spanGaps = true
-        myChart.data.datasets[1].tension = 0
+        myChart.data.datasets[0].label = newLightlimitLabel
+        myChart.data.datasets[0].data = newLightLimit
+        myChart.data.datasets[0].spanGaps = true
+        myChart.data.datasets[0].tension = 0
+        console.log("Oppdater barnegraf")
         myChart.update()
     } else {
         console.log("no change in child graph")
     }
-    //todo -> update lab-graph
+}
+
+function updateLabGraph() {
+    let day0 = new Date()
+    day0.setHours(validatedChildInputs["birthtime-time"][0])
+    day0.setMinutes(validatedChildInputs["birthtime-time"][1])
+    day0.setDate(validatedChildInputs["birthtime-date"][0])
+    day0.setMonth(validatedChildInputs["birthtime-date"][1] - 1)
+    let data = {}
+    for (const [time, labValue] of Object.entries(labTaken)) {
+        //Time difference from lab taken and birth in days
+        let labTime = new Date(time)
+        let timeDifference = (labTime.getTime() - day0.getTime()) / (1000 * 60 * 60 * 24)
+        console.log("Labtime:" + labTime + " = " + labTime.getTime())
+        console.log("Day0" + day0 + " = " + day0.getTime())
+        console.log(timeDifference)
+        data[timeDifference] = labValue
+        if (currentLabGraph === null || data !== currentLabGraph) {
+            currentLabGraph = data
+            myChart.data.datasets[1].label = "Bilirubinverdier"
+            myChart.data.datasets[1].data = currentLabGraph
+            myChart.data.datasets[1].spanGaps = true
+            myChart.data.datasets[1].tension = 0
+            myChart.update()
+        } else {
+            console.log("no change in lab graph")
+        }
+    }
 }
 
 function createLightLimit() {
@@ -110,15 +145,16 @@ function createLightLimit() {
     //Y-values for light-limits
     let lightValues =
         // Birthweight < 1000:
-        (birthWeight < 1000)?["Under 1000g", "Nan",100,"Nan","Nan",150,"Nan","Nan","Nan","Nan","Nan",150]
+        (birthWeight < 1000)?["Under 1000g", {1:100,4:150,10:150}]
             // Birthweight <1500
-            : (birthWeight < 1500)?["Under 1500", "Nan",125,"Nan","Nan",200,"Nan","Nan","Nan","Nan","Nan",200]
+
+            : (birthWeight < 1500)?["Under 1500g", {1:125,4:200,10:200}]
                 // Birthweight <2500
-                : (birthWeight < 2500)?["Under 2500", "Nan",150,"Nan","Nan",250,"Nan","Nan","Nan","Nan","Nan",250]
+                : (birthWeight < 2500)?["Under 2500",{1:150,4:250,10:250}]
                     // Birthweight >2500 + GA <37
-                    : (gestationWeek < 37)?["Over 2500g + GA <37", "Nan",150,"Nan",300,"Nan","Nan","Nan","Nan","Nan","Nan",300]
+                    : (gestationWeek < 37)?["Over 2500g + GA <37",{1:150,4:300,10:300}]
                         // Birthweight >2500 + GA >=37
-                        : ["Over 2500g + GA >=37", "Nan",175,"Nan",350,"Nan","Nan","Nan","Nan","Nan","Nan",350]
+                        : ["Over 2500g + GA >=37",{1:175,4:350,10:350}]
     return (lightValues)
 }
 
@@ -127,7 +163,7 @@ function createLightLimit() {
 //function createXaxis() {
 //    //ESTABLISH X-AXIS FROM BIRTH DATETIME
 //    //Get date and time for child
-//    let childTime = validatedChildInputs["birth-time"]
+//    let childTime = validatedChildInputs
 //    let childDate = validatedChildInputs["birth-date"]
 //    //Create DATE-TIME VARIABLE
 //    let time0 = new Date(); // Original birthdate

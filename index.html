@@ -41,6 +41,7 @@
         <!-- BIRTH WEIGHT INPUT-->
         <p class="child-info">Fødselsvekt</p>
         <input id="birth-weight" class="full-input child-info-input" type="text" inputmode="numeric" placeholder="3500g">
+        <p id="birth-weight-error" class="no-error-message">Må være mellom 500 - 7500g</p>
         <!-- BIRTH TIME INPUT-->
         <p class="child-info">Fødselstidpunkt</p>
         <div class="double-input">
@@ -60,23 +61,27 @@
         <h2>Legg til målinger</h2>
         <p class="lab-info">Tidspunkt for prøve</p>
         <div class="double-input">
-            <input class="half-input" id="lab-date" type="text" inputmode="numeric" placeholder="dd/mm">
-            <input class="half-input" id="lab-time" type="text" inputmode="numeric" placeholder="hh:mm">
+            <input class="half-input lab-input" id="lab-date" type="text" inputmode="numeric" placeholder="dd/mm">
+            <input class="half-input lab-input" id="lab-time" type="text" inputmode="numeric" placeholder="hh:mm">
         </div>
         <p class="lab-info">S-bilirubin verdi</p>
         <div class="double-input">
-            <input class="inp" id="bilirubin-value" type="text" inputmode="numeric" placeholder="120 µmol/L">
+            <input class="inp lab-input" id="bilirubin-value" type="text" inputmode="numeric" placeholder="120 µmol/L">
             <button class="btn" id="add-lab">Legg til</button>
         </div>
         <p id="Lab-add-error" class="lab-info red-font"></p>
         <!-- LAB VALUES LIST-->
         <hr>
-        <ul id="lab-list">
-            <li class="individual-lab">
-                <button class="remove-lab"><img class="individual-lab-remove" src="./assets/icons/fjern.svg" alt="delete-icon"></button>
+        <ul id="lab-icons">
+            <li class="lab-icons-list">
+                <p></p>
                 <img src="./assets/icons/blodprove-opasitet.svg" alt="blodprove-icon">
                 <img src="./assets/icons/kalender-opasitet.svg" alt="calendar-icon">
                 <img src="./assets/icons/tidspunkt-opasitet.svg" alt="time-icon">
+            </li>
+        </ul>
+        <ul id="lab-list">
+            <li class="lab-list-item">
             </li>
         </ul>
     </div>
