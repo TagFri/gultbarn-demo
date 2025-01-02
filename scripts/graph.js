@@ -1,6 +1,5 @@
 import {validatedLabInputs, validatedChildInputs} from "./inputHandling.js";
 export {initiateGraph, updateGraph}
-import Chart from 'chart.js/auto';
 
 const yellowStrong =    'rgb(245, 162, 1)'
 const yellowMedium =    'rgb(251, 193, 105)'
@@ -25,14 +24,14 @@ function initiateGraph() {
             datasets: [
                 {//DATASET 1 -> CHILD LIGHT LIMIT
                     label: "Lysgrense",
-                    data: [-10],
+                    data: [],
                     spanGaps: true,
                     borderColor: black, //Yellow colour
                     pointRadius: 0,
                 },
                 {//DATASET 2 -> LAB VALUES
-                    label: "Laboratorieverdier",
-                    data: [-10],
+                    label: "Labratorieverdier",
+                    data: [],
                     spanGaps: true,
                     borderColor: yellowStrong,
                     pointRadius: 5
@@ -95,6 +94,7 @@ function updateGraph() {
         myChart.data.datasets[1].label = newLightlimitLabel
         myChart.data.datasets[1].data = currentLightLimit
         myChart.data.datasets[1].spanGaps = true
+        myChart.data.datasets[1].tension = 0
         myChart.update()
     } else {
         console.log("no change in child graph")
