@@ -8,8 +8,17 @@ let labTaken = []
 //Initial event listeners
 function eventListeners() {
     //Listen on keyup
-    document.getElementById("main").addEventListener("keyup", function(event) {
-        inputHandling(event.target.id, event.target.value)
+    document.getElementById("main").addEventListener("blur", function(event) {
+        let integer = parseInputToInteger(event.target.value)
+        let validatedInput= validateInput(event.target.id, integer)
+        if (event.target.classList.contains("child-info-input")) {
+            validatedChildInputs[event.target.id] = integer;
+        } else if (event.target.classList.contains("lab-input")) {
+            validatedLabInputs[event.target.id] = integer;
+        } else {
+            console.log("Couldn't save info")
+        }
+
     })
     document.getElementById("birth-weight").addEventListener("blur", function(event) {
         console.log("onblur")
@@ -30,8 +39,8 @@ function eventListeners() {
 //VALID INPUTS -> SAVE VALIDATED INPUT FROM ARRAY+ ADD CSS CLASS
 function validInputClass(id, integer){
     let element = document.getElementById(id)
-    element.classList.add("class", "valid-input");
-    element.classList.remove("class", "invalid-input");
+    element.classList.add("class", "no-error-message");
+    element.classList.remove("class", "error-messaget");
     console.log(id, integer)
     if (element.classList.contains("child-info-input")) {
         validatedChildInputs[id] = integer;
@@ -49,7 +58,7 @@ function invalidInputClass(id) {
 }
 
 //CONVERT INPUT TO INTEGERS
-function inputToIntegers(unformattedValue) {
+function parseInputToInteger(unformattedValue) {
     //Format values: remove masking and split minutes/hours & months/days
     let formattedValue = null
     if (/[gud]/.test(unformattedValue)) {
@@ -66,7 +75,7 @@ function inputToIntegers(unformattedValue) {
 }
 
 //VALIDATE INPUTS
-function handleInput(id, integer) {
+function validateInput(id, integer) {
     //Valid input ranges for each HTML ID
     const validationCriteria = {
         "birth-weight": [500, 7500],
@@ -100,7 +109,7 @@ function handleInput(id, integer) {
 // ON EVENT LISTEN KEY-UP FOR CHILD INFO:
 function inputHandling(id, unformattedValue) {
     //CONVERT RAW INPUT TO INTEGERS -> VALIDATE INPUT
-    handleInput(id, inputToIntegers(unformattedValue))
+    validateInput(id, parseInputToInteger(unformattedValue))
 }
 
 //IF ALL CHILD INPUTS ARE VALID: UPDATE GRAPHS

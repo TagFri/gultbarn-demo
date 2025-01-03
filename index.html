@@ -48,14 +48,14 @@
             <input id="birth-date" class="birthTimeDate half-input child-info-input" type="text" inputmode="numeric" placeholder="dd/mm">
             <input id="birth-time" class="birthTimeDate half-input child-info-input" type="text" inputmode="numeric" placeholder="hh:mm">
         </div>
-        <p id="birthTimeDate" class="no-error-message">Feil i dato</p>
+        <p id="birth-time-date-error" class="no-error-message">Feil i dato</p>
         <!-- GASTATION AT BIRTH-->
         <p class="child-info">Gestasjons ved fødsel</p>
         <div class="double-input">
             <input id="gestation-week" class="gestation half-input child-info-input" type="text" inputmode="numeric" placeholder="39u">
             <input id="gestation-day" class="gestation half-input child-info-input" type="text" inputmode="numeric" placeholder="5d">
         </div>
-        <p id="gestation" class="no-error-message">Feil i gestasjonalder</p>
+        <p id="gestation-error" class="no-error-message">Feil i gestasjonalder</p>
     </div>
     <!-- LAB CONTAINER-->
     <div id="lab-container" class="container round-container">
@@ -66,7 +66,8 @@
             <input class="half-input lab-input" id="lab-date" type="text" inputmode="numeric" placeholder="dd/mm">
             <input class="half-input lab-input" id="lab-time" type="text" inputmode="numeric" placeholder="hh:mm">
         </div>
-        <p class="lab-info">S-bilirubin verdi</p>
+        <p class="no-error-message">Feil i dato</p>
+        <p class="lab-info">Bilirubinverdi</p>
         <div class="double-input">
             <input class="inp lab-input" id="bilirubin-value" type="text" inputmode="numeric" placeholder="120 µmol/L">
             <button class="btn" id="add-lab">Legg til</button>
