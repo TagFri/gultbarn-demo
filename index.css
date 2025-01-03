@@ -132,7 +132,7 @@ input:focus{
 }
 
 
-#birthtime-date, #birthtime-time, #gestation-week, #gestation-day {
+#birth-date, #birth-time, #gestation-week, #gestation-day {
     text-align: center;
 }
 
