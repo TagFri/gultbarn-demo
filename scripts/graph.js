@@ -48,7 +48,7 @@ function initiateGraph() {
                     spanGaps: true,
                     borderDash: [5, 5],
                     borderColor: yellowStrong,
-                    pointRadius: 0,
+                    pointRadius: 5,
                     showLine: true,
                     fill: false,
                 }
@@ -156,15 +156,15 @@ function createLightLimit() {
     //Y-values for light-limits
     let lightValues =
         // Birthweight < 1000:
-        (birthWeight < 1000)?[      "Under 1000g",          {1:100,4:150,10:150}, [((150-100)/(4-1)),150]]
+        (birthWeight < 1000)?[      "Under 1000g",          {1:100,4:150,10:150}, [1,4,((150-100)/(4-1)),100, 150]]
         // Birthweight <1500
-        : (birthWeight < 1500)?[    "Under 1500g",          {1:125,4:200,10:200}, [((200-125)/(4-1)),200]]
+        : (birthWeight < 1500)?[    "Under 1500g",          {1:125,4:200,10:200}, [1,4,((200-125)/(4-1)),125, 200]]
         // Birthweight <2500
-        : (birthWeight < 2500)?[    "Under 2500",           {1:150,4:250,10:250}, [((250-150)/(4-1)),250]]
+        : (birthWeight < 2500)?[    "Under 2500",           {1:150,4:250,10:250}, [1,4,((250-150)/(4-1)),150, 250]]
         // Birthweight >2500 + GA <37
-        : (gestationWeek < 37)?[    "Over 2500g + GA <37",  {1:150,3:300,10:300}, [((300-150)/(3-1)),300]]
+        : (gestationWeek < 37)?[    "Over 2500g + GA <37",  {1:150,3:300,10:300}, [1,3,((300-150)/(3-1)),150, 300]]
         // Birthweight >2500 + GA >=37
-        : [                         "Over 2500g + GA >=37", {1:175,3:350,10:350}, [((350-175)/(3-1)),350]]
+        : [                         "Over 2500g + GA >=37", {1:175,3:350,10:350}, [1,3,((350-175)/(3-1)),175, 350]]
     return (lightValues)
 }
 
@@ -197,22 +197,60 @@ function extrapolationGraphing() {
         //Calculate slope (Y per X)
         let slope = diffY / diffX
 
-        //Test {1:100,4:150,10:150}]
-        console.log("DATO!")
-        let day0 = new Date(validatedChildInputs["birth-time-date"])
-        console.log(day0)
-        let xValue = (x2 - day0.getTime()) / (1000 * 60 * 60 * 24)
-        console.log(xValue)
-        let extrapolationx2 = xValue +2
-        let extrapolationy2 = y2 + slope * 2
-        let data = {}
-        data[xValue] = y2;
-        data[extrapolationx2] = extrapolationy2
-        console.log(data)
-        myChart.data.datasets[2].data = data
-        myChart.data.datasets[2].spanGaps = true
-        myChart.data.datasets[2].tension = 0
-        myChart.update()
+        //ESTIMATE TIME TO CROSSING
+        //let currentLightSlope -> [1,4,((150-100)/(4-1)),100, 150]
+        let xToCrossing = null
+        let deltaBirtdateLastPoint = ((x2 - new Date(validatedChildInputs["birth-time-date"].getTime())) / (1000 * 60 * 60 * 24))
+        console.log("EVALUERE FØR PLATÅ:")
+        console.log("FRA FØDSEL: " + deltaBirtdateLastPoint)
+        console.log("Platu knekk: " + currentLightSlope[1])
+        console.log("Slope på lab: " + slope)
+        console.log("Slope på lysgrense: " + currentLightSlope[2])
+        if (deltaBirtdateLastPoint < currentLightSlope[1] && slope > currentLightSlope[2]) {
+            console.log("UNDER SLOPE + BRATTERE")
+            //todo Check if line crosses in slopeing area?calculateCrossing:PleatuCrossing
+            // The graphs y value at the last lab point = graph startvalue of Y + days between graph start to Last lab point * slope of graph
+            let graphY = currentLightSlope[3] + ((deltaBirtdateLastPoint - currentLightSlope[0]) * currentLightSlope[2])
+            let diffY = graphY - y2
+            let diffSlope = slope - currentLightSlope[2]
+            xToCrossing = diffY / diffSlope
+            console.log("graphY: " + graphY)
+            console.log("diffYSlope: " + diffY)
+            console.log("xToCrossing: " + xToCrossing)
+            if (xToCrossing < (currentLightSlope[1] - deltaBirtdateLastPoint)) {
+                console.log("UNDER SLOPE + BRATTERE + KRYSSER SLOPE")
+                xToCrossing = xToCrossing
+            }
+            else { //copy of platau
+                console.log("UNDER SLOPE + BRATTERE + KRYSSER PLATAU")
+                let platau = currentLightSlope[4];
+                let diffYtoPlatau = platau - y2
+                xToCrossing = diffYtoPlatau / slope
+            }
+        } else {
+            console.log("I PLATAU")
+            let platau = currentLightSlope[4];
+            let diffYtoPlatau = platau - y2
+            xToCrossing = diffYtoPlatau / slope
+        }
+        console.log("Final xToCrossing: " + xToCrossing)
+        //Extrapolation grahing
+        if (slope > 0){
+            let day0 = new Date(validatedChildInputs["birth-time-date"])
+            let xValue = (x2 - day0.getTime()) / (1000 * 60 * 60 * 24)
+            let extrapolationx2 = xValue + xToCrossing
+            let extrapolationy2 = y2 + slope * xToCrossing
+            let data = {}
+            data[xValue] = y2;
+            data[extrapolationx2] = extrapolationy2
+            myChart.data.datasets[2].data = data
+            myChart.data.datasets[2].spanGaps = true
+            myChart.data.datasets[2].tension = 0
+            myChart.update()
+        } else {
+            myChart.data.datasets[2].data = []
+            myChart.update()
+        }
     }
     else {
         console.log("Not enough datapoints for extrapolation")

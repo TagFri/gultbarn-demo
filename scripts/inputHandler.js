@@ -213,4 +213,6 @@ function removeLab (targetButton) {
     displayLabs()
     //Update Graph
     updateLabGraph()
+    //Update extrapolation
+    extrapolationGraphing()
 }
