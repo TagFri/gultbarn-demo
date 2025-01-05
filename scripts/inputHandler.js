@@ -1,23 +1,34 @@
+import {updateChildGraph, updateLabGraph} from "./graph.js"
+export {validatedChildInputs, labTaken, lastLabs}
 export {eventListeners}
 
-let childInputs = {}
-let labInputs = {}
+let validatedChildInputs = {}
+let validatedLabInputs = {}
+let labTaken = {}
+let lastLabs = []
 
-//Listen on blur for whole page
+//Add eventlistneres on start
 function eventListeners() {
+    //EVENT LISTEN ON MAIN PAGE
     document.getElementById("main").addEventListener("focusout", function(event) {
         //Returns inputted values as integers. Masking ensures correct input.
         let inputValue = parseInputToInteger(event.target.value);
         //Returns true or false if the input is valid or not
         let valid = validate(event.target.id, inputValue)
-        if (valid) {addValue(event.target.id)}
+        if (valid) {addValue(event.target.id, inputValue)}
         //Adds/removes error message dependent on the validity of the input
         if (!valid || valid) {errorMessages(event.target.id, valid)}
         //Graph if all inputs are validated
-        (readyForChildGraph())?console.log("graphing...."):console.log("Not ready for graph, missing validated inputs")
-        console.log(childInputs)
+        (readyForChildGraph())?updateChildGraph():console.log("waiting child graph")
+    })
+    //EVENT LISTEN ON ADD LAB BUTTON
+    document.getElementById("add-lab").addEventListener("click", function(){
+        saveLab();
+        clearLabinput();
     })
 }
+
+//Listen on click for addLab button
 
 //CONVERT INPUT TO INTEGERS
 function parseInputToInteger(unformattedValue) {
@@ -87,17 +98,128 @@ function errorMessages(id, valid) {
     }
 }
 
-function addValue(id) {
+//Add values to child / lab input associated arrays
+function addValue(id, inputValue) {
     const element = document.getElementById(id)
     if (element.classList.contains("child-info-input")) {
-        childInputs[id] = element.value;
+        validatedChildInputs[id] = inputValue;
     } else if (element.classList.contains("lab-input")) {
-        labInputs[id] = element.value;
+        validatedLabInputs[id] = inputValue;
     } else {
         console.log("Couldn't save info")
     }
 }
 
 function readyForChildGraph() {
-    return (Object.keys(childInputs).length === 5)
+    if ((Object.keys(validatedChildInputs).length === 5)) {
+        let time = validatedChildInputs["birth-time"]
+        let date = validatedChildInputs["birth-date"]
+        validatedChildInputs["birth-time-date"] = new Date(2024, date[1]-1, date[0],time[0], time[1], 0, 0)
+        delete validatedChildInputs["birth-date"]
+        delete validatedChildInputs["birth-time"]
+        return true
+    }
+    return (Object.keys(validatedChildInputs).length === 5)
+}
+
+function saveLab() {
+    let bilirubin = validatedLabInputs["bilirubin-value"]
+    let time = validatedLabInputs["lab-time"]
+    let date = validatedLabInputs["lab-date"]
+    let labTimeDate = new Date(2024, date[1]-1, date[0],time[0], time[1], 0, 0)
+    labTaken[labTimeDate]=[time, date, bilirubin]
+
+    //Make array with only datestamps
+    let oldArray = labTaken
+    let timeArray = []
+    for (var timestamp in labTaken) {
+        timeArray.push(new Date(timestamp))
+    }
+
+    //Sort array with datestamps according to time
+    timeArray = timeArray.sort(function(a, b) {
+        return a - b
+    })
+
+    //Get two last labs for extrapolation
+    if (timeArray.length >= 2) {
+        lastLabs = timeArray.slice[-2]
+        console.log("Extrapolation of: " + lastLabs)
+        console.log("TimeArray")
+        console.log(timeArray)
+        console.log(timeArray[-1])
+    } else {console.log("no extrapolation values")}
+
+    //Update LabTaken in sorted order
+    let sortedLabTaken = {}
+    for (const [key, value] of Object.entries(timeArray)) {
+        sortedLabTaken[value] = labTaken[value]
+    }
+    labTaken = sortedLabTaken
+
+    //Update HTML + UPDATE GRAPH
+    displayLabs();
+    updateLabGraph();
+    //extrapolationGraphing();
+}
+
+function clearLabinput() {
+    //Clear input fields
+    document.getElementById("bilirubin-value").value = ""
+    document.getElementById("lab-date").value = ""
+    document.getElementById("lab-time").value = ""
+}
+
+function displayLabs() {
+    //Display info on page
+    //UL element for all lab <li> items
+    const labList = document.getElementById("lab-list")
+    //Remove old instance
+    labList.innerHTML = ""
+    //Loop through all labs:
+    for (var key in labTaken) {
+        //Decomposistion of values:
+        let time = labTaken[key][0]
+        let date = labTaken[key][1]
+        let bilirubin = labTaken[key][2]
+
+        //Create each lab as LI
+        const li = document.createElement("li")
+        li.id = key
+        li.classList.add("individual-lab")
+        const button = document.createElement("button")
+        button.classList.add("remove-lab")
+        button.addEventListener("click", function(event) {
+          removeLab(event.target)
+        })
+        const image = document.createElement("img")
+        image.src = "./assets/icons/fjern.svg"
+        image.classList.add("individual-lab-remove")
+        image.alt = "delete-icon"
+        //Lab value
+        const labValueElement = document.createElement('p')
+        labValueElement.innerHTML = bilirubin
+        //Lab date
+        const labDateElement = document.createElement('p')
+        labDateElement.innerHTML = date[0].toString().padStart(2, "0") + "/" + date[1].toString().padStart(2, "0")
+        //Lab time
+        const labTimeElement = document.createElement('p')
+        labTimeElement.innerHTML = time[0].toString().padStart(2, "0") + ":" + time[1].toString().padStart(2, "0")
+
+        //Append elements to each other
+        button.appendChild(image)
+        li.appendChild(button)
+        li.appendChild(labValueElement)
+        li.appendChild(labDateElement)
+        li.appendChild(labTimeElement)
+        labList.appendChild(li)
+    }
+}
+function removeLab (targetButton) {
+    //Remove from LabTaken array
+    delete labTaken[targetButton.parentElement.parentElement.id]
+    //Update HTML
+    displayLabs()
+    //Update Graph
+    updateLabGraph()
 }

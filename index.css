@@ -4,9 +4,11 @@
 body {
     margin: 0.5rem;
 }
+
 @media (min-width: 992px) {
     body {
         max-width: 1200px;
+        padding: 0 1rem;
         margin: 1rem auto;
     }
 }
@@ -92,12 +94,8 @@ input:focus{
     display: flex;
     justify-content: space-between;
     > .inp {
-        width: 55%;
     }
     > .btn {
-        /* Size */
-        width: 35%;
-
         /* Style */
         background: var(--color-black);
         color: white;
