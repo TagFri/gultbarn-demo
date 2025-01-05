@@ -176,6 +176,9 @@ li {
 
 #graph-container {
     width: 90%;
+    @media (max-width: 600px) {
+        width: 80%;
+    }
 }
 
 .individual-lab {

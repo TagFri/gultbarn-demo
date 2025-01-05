@@ -60,6 +60,8 @@ function initiateGraph() {
         },
 
         options: {
+            responsive: true,
+            aspectRatio: 1.75,
             parsing: {
                 xAxisKey: 'x',
                 yAxisKey: 'y'
