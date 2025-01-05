@@ -10,6 +10,7 @@ const grey =            'rgb(195, 199, 203)'
 const red =             'rgb(251, 65, 65)'
 
 let currentLightLimit = null
+let currentLightSlope = null
 let currentLabGraph = null
 let extrapolation = null
 let myChart = null
@@ -109,6 +110,9 @@ function updateChildGraph() {
     let newLightLimit = newLightLimitInfo[1]
     if (currentLightLimit === null || newLightLimit !== currentLightLimit) {
         currentLightLimit = newLightLimit
+        currentLightSlope = newLightLimitInfo[2]
+        console.log("SLOPY")
+        console.log(currentLightSlope)
         myChart.data.datasets[0].label = newLightlimitLabel
         myChart.data.datasets[0].data = newLightLimit
         myChart.data.datasets[0].spanGaps = true
@@ -152,15 +156,15 @@ function createLightLimit() {
     //Y-values for light-limits
     let lightValues =
         // Birthweight < 1000:
-        (birthWeight < 1000)?["Under 1000g", {1:100,4:150,10:150}]
-            // Birthweight <1500
-            : (birthWeight < 1500)?["Under 1500g", {1:125,4:200,10:200}]
-                // Birthweight <2500
-                : (birthWeight < 2500)?["Under 2500",{1:150,4:250,10:250}]
-                    // Birthweight >2500 + GA <37
-                    : (gestationWeek < 37)?["Over 2500g + GA <37",{1:150,4:300,10:300}]
-                        // Birthweight >2500 + GA >=37
-                        : ["Over 2500g + GA >=37",{1:175,4:350,10:350}]
+        (birthWeight < 1000)?[      "Under 1000g",          {1:100,4:150,10:150}, [((150-100)/(4-1)),150]]
+        // Birthweight <1500
+        : (birthWeight < 1500)?[    "Under 1500g",          {1:125,4:200,10:200}, [((200-125)/(4-1)),200]]
+        // Birthweight <2500
+        : (birthWeight < 2500)?[    "Under 2500",           {1:150,4:250,10:250}, [((250-150)/(4-1)),250]]
+        // Birthweight >2500 + GA <37
+        : (gestationWeek < 37)?[    "Over 2500g + GA <37",  {1:150,3:300,10:300}, [((300-150)/(3-1)),300]]
+        // Birthweight >2500 + GA >=37
+        : [                         "Over 2500g + GA >=37", {1:175,3:350,10:350}, [((350-175)/(3-1)),350]]
     return (lightValues)
 }
 
