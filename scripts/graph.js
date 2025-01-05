@@ -12,7 +12,6 @@ const red =             'rgb(251, 65, 65)'
 let currentLightLimit = null
 let currentLightSlope = null
 let currentLabGraph = null
-let extrapolation = null
 let myChart = null
 let xCrossing = null
 let yCrossing = null
@@ -146,7 +145,12 @@ function updateLabGraph() {
         //Time difference from lab taken and birth in days
         let labTime = new Date(timestamp)
         let timeDifference = (labTime.getTime() - day0.getTime()) / (1000 * 60 * 60 * 24)
-        data[timeDifference] = labinfo[2] }
+        data[timeDifference] = labinfo[2]
+        //TODO implement transfusjon graph if values are high
+        /*if (labinfo[2] > currentLightLimit[10]) {
+            tranfusionGraph()
+        }*/
+    }
 
     if (currentLabGraph === null || data !== currentLabGraph) {
         currentLabGraph = data
@@ -220,7 +224,6 @@ function extrapolationGraphing() {
         console.log("Slope på lysgrense: " + currentLightSlope[2])
         if (deltaBirtdateLastPoint < currentLightSlope[1] && slope > currentLightSlope[2]) {
             console.log("UNDER SLOPE + BRATTERE")
-            //todo Check if line crosses in slopeing area?calculateCrossing:PleatuCrossing
             // The graphs y value at the last lab point = graph startvalue of Y + days between graph start to Last lab point * slope of graph
             let graphY = currentLightSlope[3] + ((deltaBirtdateLastPoint - currentLightSlope[0]) * currentLightSlope[2])
             let diffY = graphY - y2
@@ -268,3 +271,43 @@ function extrapolationGraphing() {
         console.log("Not enough datapoints for extrapolation")
     }
 }
+
+/*function tranfusionGraph() {
+    var trandusjonData = {
+        label: "Utskiftningsgrense v/hemolyse (se kommentar)",
+        data: {0:200,3:400,10:400},
+        spanGaps: true,
+        tension: 0,
+        borderColor: black,
+        backgroundColor: black,
+        pointRadius: 0,
+        showLine: true,
+        fill: false,
+    }
+    myChart.data.datasets.push(trandusjonData)
+
+
+    /*myChart.data.push(myChart.data.datasets[3].data = {0:200,3:400,10:400})
+    myChart.data.datasets[3].label = "Utskiftningsgrense v/hemolyse (se kommentar)"
+    myChart.data.datasets[3].spanGaps = true
+    myChart.data.datasets[3].tension = 0
+    myChart.data.datasets[3].borderColor = black
+    myChart.data.datasets[3].backgroundColor = black
+    myChart.data.datasets[3].pointRadius = 0
+    myChart.data.datasets[3].showLine = true
+    myChart.data.datasets[3].fill = false
+
+    myChart.data.datasets[4].label = "Utskiftningstransfusjon hos terminbarn uten risikofaktrorer (se kommentar)"
+    myChart.data.datasets[4].data = {0:450,10:450}
+    myChart.data.datasets[4].spanGaps = true
+    myChart.data.datasets[4].tension = 0
+    myChart.data.datasets[4].borderDash = [5, 5]
+    myChart.data.datasets[4].borderColor = black
+    myChart.data.datasets[4].backgroundColor = black
+    myChart.data.datasets[4].pointRadius = 0
+    myChart.data.datasets[4].showLine = true
+    myChart.data.datasets[4].fill = false
+
+    myChart.update()
+}
+*/

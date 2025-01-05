@@ -109,14 +109,23 @@ function addValue(id, inputValue) {
         console.log("Couldn't save info")
     }
 }
+function checkYear(date) {
+    let year = new Date().getFullYear()
+    if (new Date(year, date[1]-1, date[0],0, 0, 0, 0) > new Date()) {
+        year += -1
+    } else { year = year}
+    return year
+}
 
 function readyForChildGraph() {
     if ((Object.keys(validatedChildInputs).length === 5)) {
         let time = validatedChildInputs["birth-time"]
         let date = validatedChildInputs["birth-date"]
-        validatedChildInputs["birth-time-date"] = new Date(2024, date[1]-1, date[0],time[0], time[1], 0, 0)
+        let year = checkYear(date)
+        validatedChildInputs["birth-time-date"] = new Date(year, date[1]-1, date[0],time[0], time[1], 0, 0)
         delete validatedChildInputs["birth-date"]
         delete validatedChildInputs["birth-time"]
+        console.log(validatedChildInputs)
         return true
     }
     return (Object.keys(validatedChildInputs).length === 5)
@@ -126,7 +135,8 @@ function saveLab() {
     let bilirubin = validatedLabInputs["bilirubin-value"]
     let time = validatedLabInputs["lab-time"]
     let date = validatedLabInputs["lab-date"]
-    let labTimeDate = new Date(2024, date[1]-1, date[0],time[0], time[1], 0, 0)
+    let year = checkYear(date)
+    let labTimeDate = new Date(year, date[1]-1, date[0],time[0], time[1], 0, 0)
     labTaken[labTimeDate]=[time, date, bilirubin]
 
     //Make array with only datestamps
