@@ -81,7 +81,28 @@ function initiateGraph() {
                 },
                 tooltip: {
                     //Turn on/off hover box on each datapoint
-                    enabled: true
+                    enabled: true,
+                    callbacks: {
+                        label: function(context) {
+                            //Y verdi label -> bilirubin verdi
+                            let bilirubin = context.parsed.y
+                            //X verdi -> Dato
+                            let date = new Date(validatedChildInputs["birth-time-date"]).getTime()
+                            let time = date + (context.parsed.x * 1000 * 60 * 60 * 24)
+                            date = new Date(time)
+                            let minutes = date.getMinutes()
+                            if (minutes < 10) {minutes = "0" + minutes} else {minutes = minutes}
+                            let hours = date.getHours()
+                            if (hours < 10) {hours = "0" + hours} else {hours = hours}
+                            let days = date.getDate()
+                            if (days < 10) {days = "0" + days} else {days = days}
+                            let months = date.getMonth() + 1
+                            if (months < 10) {months = "0" + months} else {months = months}
+                            let years = date.getFullYear()
+                            years = years.toString().slice(-2)
+                            return days + "/" + months + "-" + years + " kl." + hours + ":" + minutes + " - Bilirubin: " + bilirubin + " mg/dl"
+                        }
+                    }
                 }
             },
             scales: {
