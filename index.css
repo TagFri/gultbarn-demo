@@ -176,7 +176,6 @@ li {
 
 #graph-container {
     width: 90%;
-    opacity: 1;
 }
 
 .individual-lab {
@@ -194,8 +193,4 @@ li {
 
 .no-error-message {
     display: none;
-}
-
-.opacity-container{
-    opacity: 0.4;
 }

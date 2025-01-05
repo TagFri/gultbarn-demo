@@ -19,12 +19,12 @@ function eventListeners() {
         if (valid) {
             addValue(event.target.id, inputValue)
             //Update child graph:
-            updateChildGraph()
+
         }
         //Checks for when child inputs is finished
         if (readyForChildGraph()) {
             //Enables lab values:
-            enableLabContainer()
+            updateChildGraph()
         } else {
         console.log("Not ready for labs")
     }})
@@ -247,12 +247,4 @@ function removeLab (targetButton) {
     updateLabGraph()
     //Update extrapolation
     extrapolationGraphing()
-}
-
-function enableLabContainer() {
-    document.getElementById("lab-container").style.opacity = 1
-    document.getElementById("lab-date").disabled = false
-    document.getElementById("lab-time").disabled = false
-    document.getElementById("bilirubin-value").disabled = false
-    document.getElementById("add-lab").disabled = false
 }

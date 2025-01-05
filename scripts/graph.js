@@ -122,8 +122,6 @@ function initiateGraph() {
 }
 
 function updateChildGraph() {
-    //Remove opacity from canvas
-    document.getElementById('graph-container').style.opacity = 1
     //Check if child graph needs an update
     let newLightLimitInfo = createLightLimit()
     let newLightlimitLabel = newLightLimitInfo[0]
