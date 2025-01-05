@@ -14,6 +14,8 @@ let currentLightSlope = null
 let currentLabGraph = null
 let extrapolation = null
 let myChart = null
+let xCrossing = null
+let yCrossing = null
 
 function initiateGraph() {
     const ctx = document.getElementById('graph');
@@ -86,6 +88,9 @@ function initiateGraph() {
                     suggestedMax: 10,
                     ticks: {
                         stepSize: 1,
+                    },
+                    grid: {
+                        display: false
                     }
                 },
                 y: {
@@ -96,6 +101,9 @@ function initiateGraph() {
                     //Markering hvert 50 på y-akse
                     ticks: {
                         stepSize: 50
+                    },
+                    grid: {
+                        display: false
                     }
                 }
             }
@@ -238,11 +246,11 @@ function extrapolationGraphing() {
         if (slope > 0){
             let day0 = new Date(validatedChildInputs["birth-time-date"])
             let xValue = (x2 - day0.getTime()) / (1000 * 60 * 60 * 24)
-            let extrapolationx2 = xValue + xToCrossing
-            let extrapolationy2 = y2 + slope * xToCrossing
+            xCrossing = xValue + xToCrossing
+            yCrossing = y2 + slope * xToCrossing
             let data = {}
             data[xValue] = y2;
-            data[extrapolationx2] = extrapolationy2
+            data[xCrossing] = yCrossing
             myChart.data.datasets[2].data = data
             myChart.data.datasets[2].spanGaps = true
             myChart.data.datasets[2].tension = 0
