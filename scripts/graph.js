@@ -1,5 +1,5 @@
-import {labTaken, lastLabs, validatedChildInputs} from "./inputHandler.js";
-export {initiateGraph, updateChildGraph, updateLabGraph}
+import {labTaken, validatedChildInputs} from "./inputHandler.js";
+export {initiateGraph, updateChildGraph, updateLabGraph, extrapolationGraphing}
 
 const yellowStrong =    'rgb(245, 162, 1)'
 const yellowMedium =    'rgb(251, 193, 105)'
@@ -168,29 +168,48 @@ function createLightLimit() {
     return (lightValues)
 }
 
-/*function extrapolationGraphing() {
-    console.log("TEST")
-    console.log(lastLabs)
-    if (Object.keys(lastLabs).length >=2) {
+function extrapolationGraphing() {
+    //Extract last two points of lab taken
+    let extrapolationFirst = null
+    let extrapolationLast = null
+    for (const [timestamp, labInfo] of Object.entries(labTaken)) {
+        if (extrapolationFirst == null) {
+            extrapolationFirst = [timestamp, labInfo[2]]
+        } else if (extrapolationLast == null) {
+            extrapolationLast = [timestamp, labInfo[2]]
+        } else {
+            extrapolationFirst = extrapolationLast
+            extrapolationLast = [timestamp, labInfo[2]]
+        }
+    }
+    //If there are two points, extrapolate graph
+    if (extrapolationFirst != null && extrapolationLast != null) {
         //Calculate X difference
-        let x1 = new Date(lastLabs[0]).getTime()
-        let x2 = new Date(lastLabs[1]).getTime()
+        let x1 = new Date(extrapolationFirst[0]).getTime()
+        let x2 = new Date(extrapolationLast[0]).getTime()
         let diffX = (x2 - x1 ) / (1000 * 60 * 60 * 24)
 
         //Calculate Y difference (take datetime key from last labs, estract index 2 in labTaken array = Bilirubin value)
-        let y1 = labTaken[lastLabs[0]][2]
-        let y2 = labTaken[lastLabs[1]][2]
+        let y1 = extrapolationFirst[1]
+        let y2 = extrapolationLast[1]
         let diffY = y2-y1
 
         //Calculate slope (Y per X)
         let slope = diffY / diffX
 
         //Test {1:100,4:150,10:150}]
+        console.log("DATO!")
         let day0 = new Date(validatedChildInputs["birth-time-date"])
+        console.log(day0)
         let xValue = (x2 - day0.getTime()) / (1000 * 60 * 60 * 24)
-        extrapolation[xValue] = y2
-        extrapolation[xValue+2] = slope *2
-        myChart.data.datasets[2].data = extrapolation
+        console.log(xValue)
+        let extrapolationx2 = xValue +2
+        let extrapolationy2 = y2 + slope * 2
+        let data = {}
+        data[xValue] = y2;
+        data[extrapolationx2] = extrapolationy2
+        console.log(data)
+        myChart.data.datasets[2].data = data
         myChart.data.datasets[2].spanGaps = true
         myChart.data.datasets[2].tension = 0
         myChart.update()
@@ -198,4 +217,4 @@ function createLightLimit() {
     else {
         console.log("Not enough datapoints for extrapolation")
     }
-} */
+}

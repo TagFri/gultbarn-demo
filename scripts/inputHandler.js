@@ -1,5 +1,5 @@
-import {updateChildGraph, updateLabGraph} from "./graph.js"
-export {validatedChildInputs, labTaken, lastLabs}
+import {updateChildGraph, updateLabGraph, extrapolationGraphing} from "./graph.js"
+export {validatedChildInputs, labTaken}
 export {eventListeners}
 
 let validatedChildInputs = {}
@@ -141,15 +141,6 @@ function saveLab() {
         return a - b
     })
 
-    //Get two last labs for extrapolation
-    if (timeArray.length >= 2) {
-        lastLabs = timeArray.slice[-2]
-        console.log("Extrapolation of: " + lastLabs)
-        console.log("TimeArray")
-        console.log(timeArray)
-        console.log(timeArray[-1])
-    } else {console.log("no extrapolation values")}
-
     //Update LabTaken in sorted order
     let sortedLabTaken = {}
     for (const [key, value] of Object.entries(timeArray)) {
@@ -160,7 +151,7 @@ function saveLab() {
     //Update HTML + UPDATE GRAPH
     displayLabs();
     updateLabGraph();
-    //extrapolationGraphing();
+    extrapolationGraphing();
 }
 
 function clearLabinput() {
