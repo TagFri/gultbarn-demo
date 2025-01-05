@@ -93,7 +93,8 @@ input:focus{
 .double-input {
     display: flex;
     justify-content: space-between;
-    > .inp {
+    > #bilirubin-value {
+        width: 50%;
     }
     > .btn {
         /* Style */

@@ -31,6 +31,7 @@ function initiateGraph() {
                     data: [],
                     spanGaps: true,
                     borderColor: black, //Yellow colour
+                    backgroundColor: black,
                     pointRadius: 0,
                     showLine: true,
                     fill: false,
@@ -40,6 +41,7 @@ function initiateGraph() {
                     data: [],
                     spanGaps: true,
                     borderColor: yellowStrong,
+                    backgroundColor: yellowStrong,
                     pointRadius: 5,
                     showLine: true,
                     fill: false,
@@ -49,8 +51,9 @@ function initiateGraph() {
                     data: [],
                     spanGaps: true,
                     borderDash: [5, 5],
-                    borderColor: yellowStrong,
-                    pointRadius: 5,
+                    borderColor: yellowMedium,
+                    backgroundColor: yellowMedium,
+                    pointRadius: 3,
                     showLine: true,
                     fill: false,
                 }
@@ -125,6 +128,7 @@ function updateChildGraph() {
         myChart.data.datasets[0].data = newLightLimit
         myChart.data.datasets[0].spanGaps = true
         myChart.data.datasets[0].tension = 0
+        myChart.options.scales.y.max = currentLightLimit[10] + 50
         myChart.update()
     } else {
         console.log("no change in child graph")
