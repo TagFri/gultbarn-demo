@@ -104,6 +104,7 @@ input:focus{
         border: none;
         text-decoration: none;
         text-align: center;
+        padding: 0 5%;
 
         /* Interactivity */
         cursor: pointer;
@@ -175,6 +176,7 @@ li {
 
 #graph-container {
     width: 90%;
+    opacity: 1;
 }
 
 .individual-lab {
@@ -192,4 +194,8 @@ li {
 
 .no-error-message {
     display: none;
+}
+
+.opacity-container{
+    opacity: 0.4;
 }

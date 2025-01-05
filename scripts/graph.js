@@ -1,5 +1,5 @@
 import {labTaken, validatedChildInputs} from "./inputHandler.js";
-export {initiateGraph, updateChildGraph, updateLabGraph, extrapolationGraphing}
+export {initiateGraph, updateChildGraph, updateLabGraph, extrapolationGraphing, removeChildGraph}
 
 const yellowStrong =    'rgb(245, 162, 1)'
 const yellowMedium =    'rgb(251, 193, 105)'
@@ -87,20 +87,7 @@ function initiateGraph() {
                             //Y verdi label -> bilirubin verdi
                             let bilirubin = context.parsed.y
                             //X verdi -> Dato
-                            let date = new Date(validatedChildInputs["birth-time-date"]).getTime()
-                            let time = date + (context.parsed.x * 1000 * 60 * 60 * 24)
-                            date = new Date(time)
-                            let minutes = date.getMinutes()
-                            if (minutes < 10) {minutes = "0" + minutes} else {minutes = minutes}
-                            let hours = date.getHours()
-                            if (hours < 10) {hours = "0" + hours} else {hours = hours}
-                            let days = date.getDate()
-                            if (days < 10) {days = "0" + days} else {days = days}
-                            let months = date.getMonth() + 1
-                            if (months < 10) {months = "0" + months} else {months = months}
-                            let years = date.getFullYear()
-                            years = years.toString().slice(-2)
-                            return days + "/" + months + "-" + years + " kl." + hours + ":" + minutes + " - Bilirubin: " + bilirubin + " mg/dl"
+                            return prettyDateFromX(context.parsed.x) + " - Bilirubin: " + bilirubin + " mg/dl"
                         }
                     }
                 }
@@ -135,6 +122,8 @@ function initiateGraph() {
 }
 
 function updateChildGraph() {
+    //Remove opacity from canvas
+    document.getElementById('graph-container').style.opacity = 1
     //Check if child graph needs an update
     let newLightLimitInfo = createLightLimit()
     let newLightlimitLabel = newLightLimitInfo[0]
@@ -142,26 +131,30 @@ function updateChildGraph() {
     if (currentLightLimit === null || newLightLimit !== currentLightLimit) {
         currentLightLimit = newLightLimit
         currentLightSlope = newLightLimitInfo[2]
-        console.log("SLOPY")
-        console.log(currentLightSlope)
         myChart.data.datasets[0].label = newLightlimitLabel
         myChart.data.datasets[0].data = newLightLimit
         myChart.data.datasets[0].spanGaps = true
         myChart.data.datasets[0].tension = 0
         myChart.options.scales.y.max = currentLightLimit[10] + 50
         myChart.update()
+        console.log("Child graph updated")
     } else {
-        console.log("no change in child graph")
+        console.log("No change in child graph")
     }
     updateLabGraph()
 }
-
+function removeChildGraph() {
+    myChart.data.datasets[0].data = []
+    myChart.update()
+}
 function updateLabGraph() {
     //Get child birthdate as x-axis 0
     let day0 = new Date(validatedChildInputs["birth-time-date"])
 
     //Loop through all labs taken
     let data = {}
+    console.log("LAbTaken at graphing....")
+    console.log(labTaken)
     for (const [timestamp, labinfo] of Object.entries(labTaken)) {
         //Time difference from lab taken and birth in days
         let labTime = new Date(timestamp)
@@ -180,8 +173,9 @@ function updateLabGraph() {
         myChart.data.datasets[1].spanGaps = true
         myChart.data.datasets[1].tension = 0
         myChart.update()
+        console.log("Lab graph updated")
     } else {
-        console.log("no change in lab graph")
+        console.log("No change in lab graph")
     }
 }
 
@@ -202,6 +196,8 @@ function createLightLimit() {
         : (gestationWeek < 37)?[    "Over 2500g + GA <37",  {1:150,3:300,10:300}, [1,3,((300-150)/(3-1)),150, 300]]
         // Birthweight >2500 + GA >=37
         : [                         "Over 2500g + GA >=37", {1:175,3:350,10:350}, [1,3,((350-175)/(3-1)),175, 350]]
+    console.log("Light values set to: " + lightValues[0])
+    console.log(lightValues[1])
     return (lightValues)
 }
 
@@ -238,38 +234,25 @@ function extrapolationGraphing() {
         //let currentLightSlope -> [1,4,((150-100)/(4-1)),100, 150]
         let xToCrossing = null
         let deltaBirtdateLastPoint = ((x2 - new Date(validatedChildInputs["birth-time-date"].getTime())) / (1000 * 60 * 60 * 24))
-        console.log("EVALUERE FØR PLATÅ:")
-        console.log("FRA FØDSEL: " + deltaBirtdateLastPoint)
-        console.log("Platu knekk: " + currentLightSlope[1])
-        console.log("Slope på lab: " + slope)
-        console.log("Slope på lysgrense: " + currentLightSlope[2])
         if (deltaBirtdateLastPoint < currentLightSlope[1] && slope > currentLightSlope[2]) {
-            console.log("UNDER SLOPE + BRATTERE")
             // The graphs y value at the last lab point = graph startvalue of Y + days between graph start to Last lab point * slope of graph
             let graphY = currentLightSlope[3] + ((deltaBirtdateLastPoint - currentLightSlope[0]) * currentLightSlope[2])
             let diffY = graphY - y2
             let diffSlope = slope - currentLightSlope[2]
             xToCrossing = diffY / diffSlope
-            console.log("graphY: " + graphY)
-            console.log("diffYSlope: " + diffY)
-            console.log("xToCrossing: " + xToCrossing)
             if (xToCrossing < (currentLightSlope[1] - deltaBirtdateLastPoint)) {
-                console.log("UNDER SLOPE + BRATTERE + KRYSSER SLOPE")
                 xToCrossing = xToCrossing
             }
             else { //copy of platau
-                console.log("UNDER SLOPE + BRATTERE + KRYSSER PLATAU")
                 let platau = currentLightSlope[4];
                 let diffYtoPlatau = platau - y2
                 xToCrossing = diffYtoPlatau / slope
             }
         } else {
-            console.log("I PLATAU")
             let platau = currentLightSlope[4];
             let diffYtoPlatau = platau - y2
             xToCrossing = diffYtoPlatau / slope
         }
-        console.log("Final xToCrossing: " + xToCrossing)
         //Extrapolation grahing
         if (slope > 0){
             let day0 = new Date(validatedChildInputs["birth-time-date"])
@@ -283,52 +266,36 @@ function extrapolationGraphing() {
             myChart.data.datasets[2].spanGaps = true
             myChart.data.datasets[2].tension = 0
             myChart.update()
+            console.log("Extrapolation graph updated")
+            console.log("Labslope: " + slope)
+            console.log("Lightslope: " + (currentLightSlope[2]))
+            console.log("ETA crossing in: " + xToCrossing + " = " + prettyDateFromX(xCrossing))
         } else {
             myChart.data.datasets[2].data = []
             myChart.update()
+            console.log("Extrapolation graph deleted")
         }
     }
     else {
+        myChart.data.datasets[2].data = []
+        myChart.update()
         console.log("Not enough datapoints for extrapolation")
     }
 }
 
-/*function tranfusionGraph() {
-    var trandusjonData = {
-        label: "Utskiftningsgrense v/hemolyse (se kommentar)",
-        data: {0:200,3:400,10:400},
-        spanGaps: true,
-        tension: 0,
-        borderColor: black,
-        backgroundColor: black,
-        pointRadius: 0,
-        showLine: true,
-        fill: false,
-    }
-    myChart.data.datasets.push(trandusjonData)
-
-
-    /*myChart.data.push(myChart.data.datasets[3].data = {0:200,3:400,10:400})
-    myChart.data.datasets[3].label = "Utskiftningsgrense v/hemolyse (se kommentar)"
-    myChart.data.datasets[3].spanGaps = true
-    myChart.data.datasets[3].tension = 0
-    myChart.data.datasets[3].borderColor = black
-    myChart.data.datasets[3].backgroundColor = black
-    myChart.data.datasets[3].pointRadius = 0
-    myChart.data.datasets[3].showLine = true
-    myChart.data.datasets[3].fill = false
-
-    myChart.data.datasets[4].label = "Utskiftningstransfusjon hos terminbarn uten risikofaktrorer (se kommentar)"
-    myChart.data.datasets[4].data = {0:450,10:450}
-    myChart.data.datasets[4].spanGaps = true
-    myChart.data.datasets[4].tension = 0
-    myChart.data.datasets[4].borderDash = [5, 5]
-    myChart.data.datasets[4].borderColor = black
-    myChart.data.datasets[4].backgroundColor = black
-    myChart.data.datasets[4].pointRadius = 0
-    myChart.data.datasets[4].showLine = true
-    myChart.data.datasets[4].fill = false
-
-    myChart.update()
+function prettyDateFromX(x) {
+    let date = new Date(validatedChildInputs["birth-time-date"]).getTime()
+    let time = date + (x * 1000 * 60 * 60 * 24)
+    date = new Date(time)
+    let minutes = date.getMinutes()
+    if (minutes < 10) {minutes = "0" + minutes} else {minutes = minutes}
+    let hours = date.getHours()
+    if (hours < 10) {hours = "0" + hours} else {hours = hours}
+    let days = date.getDate()
+    if (days < 10) {days = "0" + days} else {days = days}
+    let months = date.getMonth() + 1
+    if (months < 10) {months = "0" + months} else {months = months}
+    let years = date.getFullYear()
+    years = years.toString().slice(-2)
+    return (days + "/" + months + "-" + years + " kl." + hours + ":" + minutes)
 }
-*/

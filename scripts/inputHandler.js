@@ -1,4 +1,4 @@
-import {updateChildGraph, updateLabGraph, extrapolationGraphing} from "./graph.js"
+import {updateChildGraph, updateLabGraph, extrapolationGraphing, removeChildGraph} from "./graph.js"
 export {validatedChildInputs, labTaken}
 export {eventListeners}
 
@@ -15,20 +15,24 @@ function eventListeners() {
         let inputValue = parseInputToInteger(event.target.value);
         //Returns true or false if the input is valid or not
         let valid = validate(event.target.id, inputValue)
-        if (valid) {addValue(event.target.id, inputValue)}
-        //Adds/removes error message dependent on the validity of the input
-        if (!valid || valid) {errorMessages(event.target.id, valid)}
-        //Graph if all inputs are validated
-        (readyForChildGraph())?updateChildGraph():console.log("waiting child graph")
-    })
+        errorMessages(event.target.id, valid)
+        if (valid) {
+            addValue(event.target.id, inputValue)
+            //Update child graph:
+            updateChildGraph()
+        }
+        //Checks for when child inputs is finished
+        if (readyForChildGraph()) {
+            //Enables lab values:
+            enableLabContainer()
+        } else {
+        console.log("Not ready for labs")
+    }})
     //EVENT LISTEN ON ADD LAB BUTTON
     document.getElementById("add-lab").addEventListener("click", function(){
         saveLab();
-        clearLabinput();
     })
 }
-
-//Listen on click for addLab button
 
 //CONVERT INPUT TO INTEGERS
 function parseInputToInteger(unformattedValue) {
@@ -107,10 +111,19 @@ function addValue(id, inputValue) {
         validatedLabInputs[id] = inputValue;
     } else {
         console.log("Couldn't save info")
+        try {
+            validatedChildInputs.pop(id)
+            console.log(id + "removed from ValidatedChildInputs")
+        } catch (error) {
+            console.log("No " + id + " key in ValidatedChildInputs")
+        }
     }
+    console.log("ValidatedChildInputs:")
+    console.log(validatedChildInputs)
 }
 function checkYear(date) {
     let year = new Date().getFullYear()
+    //Check if date is larger then today (hence subtract one year
     if (new Date(year, date[1]-1, date[0],0, 0, 0, 0) > new Date()) {
         year += -1
     } else { year = year}
@@ -123,45 +136,54 @@ function readyForChildGraph() {
         let date = validatedChildInputs["birth-date"]
         let year = checkYear(date)
         validatedChildInputs["birth-time-date"] = new Date(year, date[1]-1, date[0],time[0], time[1], 0, 0)
-        delete validatedChildInputs["birth-date"]
-        delete validatedChildInputs["birth-time"]
         console.log(validatedChildInputs)
         return true
+    } else if (validatedChildInputs["birth-time-date"] && (Object.keys(validatedChildInputs).length === 4)) {
+        return true
+    } else {
+        return false
     }
-    return (Object.keys(validatedChildInputs).length === 5)
+    console.log("Function readyForChildGraph() did not return true or false.")
 }
 
-function saveLab() {
+function saveLab() { //addlab
     let bilirubin = validatedLabInputs["bilirubin-value"]
     let time = validatedLabInputs["lab-time"]
     let date = validatedLabInputs["lab-date"]
     let year = checkYear(date)
     let labTimeDate = new Date(year, date[1]-1, date[0],time[0], time[1], 0, 0)
-    labTaken[labTimeDate]=[time, date, bilirubin]
+    //If lab is before birth -> Create errror message. Includes future values
+    if (labTimeDate < validatedChildInputs["birth-time-date"]) {
+        errorMessages("lab-date", false)
+    //Else update labvalues
+    } else {
+        labTaken[labTimeDate] = [time, date, bilirubin]
 
-    //Make array with only datestamps
-    let oldArray = labTaken
-    let timeArray = []
-    for (var timestamp in labTaken) {
-        timeArray.push(new Date(timestamp))
+        //Make array with only datestamps
+        let oldArray = labTaken
+        let timeArray = []
+        for (var timestamp in labTaken) {
+            timeArray.push(new Date(timestamp))
+        }
+
+        //Sort array with datestamps according to time
+        timeArray = timeArray.sort(function (a, b) {
+            return a - b
+        })
+
+        //Update LabTaken in sorted order
+        let sortedLabTaken = {}
+        for (const [key, value] of Object.entries(timeArray)) {
+            sortedLabTaken[value] = labTaken[value]
+        }
+        labTaken = sortedLabTaken
+
+        //Update HTML + UPDATE GRAPH
+        clearLabinput()
+        displayLabs();
+        updateLabGraph();
+        extrapolationGraphing();
     }
-
-    //Sort array with datestamps according to time
-    timeArray = timeArray.sort(function(a, b) {
-        return a - b
-    })
-
-    //Update LabTaken in sorted order
-    let sortedLabTaken = {}
-    for (const [key, value] of Object.entries(timeArray)) {
-        sortedLabTaken[value] = labTaken[value]
-    }
-    labTaken = sortedLabTaken
-
-    //Update HTML + UPDATE GRAPH
-    displayLabs();
-    updateLabGraph();
-    extrapolationGraphing();
 }
 
 function clearLabinput() {
@@ -225,4 +247,12 @@ function removeLab (targetButton) {
     updateLabGraph()
     //Update extrapolation
     extrapolationGraphing()
+}
+
+function enableLabContainer() {
+    document.getElementById("lab-container").style.opacity = 1
+    document.getElementById("lab-date").disabled = false
+    document.getElementById("lab-time").disabled = false
+    document.getElementById("bilirubin-value").disabled = false
+    document.getElementById("add-lab").disabled = false
 }
