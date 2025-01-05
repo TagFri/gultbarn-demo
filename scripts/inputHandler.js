@@ -32,6 +32,14 @@ function eventListeners() {
     document.getElementById("add-lab").addEventListener("click", function(){
         saveLab();
     })
+    // EVENT LISTEN ON ABOUT US
+    document.getElementById("about-us-info").addEventListener("click", function(){
+        window.alert(
+            "Lag med kjærlighet for barneavdelingen ved Sørlandet Sykehus <3 \n\n" +
+            "Spørsmål/feil/annet? -> hei@sableteknisk.no\n\n" +
+            "Pst. gjerne send med bilde om noe ikke fungerer som det skal :)"
+        )
+    })
 }
 
 //CONVERT INPUT TO INTEGERS

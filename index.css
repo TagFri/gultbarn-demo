@@ -197,3 +197,6 @@ li {
 .no-error-message {
     display: none;
 }
+#crossing-info {
+    text-align: center;
+}

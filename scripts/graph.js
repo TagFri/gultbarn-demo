@@ -36,7 +36,7 @@ function initiateGraph() {
                     fill: false,
                 },
                 {//DATASET 1 -> LAB VALUES
-                    label: "Labratorieverdier",
+                    label: "Lab",
                     data: [],
                     spanGaps: true,
                     borderColor: yellowStrong,
@@ -46,7 +46,7 @@ function initiateGraph() {
                     fill: false,
                 },
                 {//DATASETT 2 -> EXTRAPOLATION OF LAB VALUES
-                    label: "Beregnet fortsettelse",
+                    label: "Beregning",
                     data: [],
                     spanGaps: true,
                     borderDash: [5, 5],
@@ -87,7 +87,7 @@ function initiateGraph() {
                     callbacks: {
                         label: function(context) {
                             //Y verdi label -> bilirubin verdi
-                            let bilirubin = context.parsed.y
+                            let bilirubin = Math.floor(context.parsed.y * 100) / 100;
                             //X verdi -> Dato
                             return prettyDateFromX(context.parsed.x) + " - Bilirubin: " + bilirubin + " mg/dl"
                         }
@@ -269,7 +269,7 @@ function extrapolationGraphing() {
             console.log("Extrapolation graph updated")
             console.log("Labslope: " + slope)
             console.log("Lightslope: " + (currentLightSlope[2]))
-            console.log("ETA crossing in: " + xToCrossing + " = " + prettyDateFromX(xCrossing))
+            console.log("ETA crossing in: " + Math.floor((xToCrossing * 100)/100) + " = " + prettyDateFromX(xCrossing))
         } else {
             myChart.data.datasets[2].data = []
             myChart.update()
