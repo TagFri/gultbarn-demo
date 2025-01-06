@@ -113,9 +113,15 @@ input:focus{
         -webkit-appearance: none;
         -moz-appearance: none;
     }
-
+    /* ON CLICK */
     > .btn:active {
         transform: scale(0.97);
+    }
+    /* ON FOCUS */
+    > .btn:focus, > .btn:hover {
+        outline: none;
+        background: var(--color-yellow-strong);
+        color: var(--color-black);
     }
 }
 .full-input {
@@ -217,5 +223,9 @@ li {
 }
 
 .opacity-container {
-    opacity: 0.5;
+    opacity: 0.3;
+    > * , ::placeholder{
+        color: var(--color-grey);
+    }
+
 }
