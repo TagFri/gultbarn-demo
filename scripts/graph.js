@@ -1,4 +1,4 @@
-import {labTaken, validatedChildInputs} from "./inputHandler.js";
+import {labTaken, childInputs} from "./inputHandler.js";
 export {initiateGraph, updateChildGraph, updateLabGraph, extrapolationGraphing, removeChildGraph}
 
 const yellowStrong =    'rgb(245, 162, 1)'
@@ -149,7 +149,7 @@ function removeChildGraph() {
 }
 function updateLabGraph() {
     //Get child birthdate as x-axis 0
-    let day0 = new Date(validatedChildInputs["birth-time-date"])
+    let day0 = new Date(childInputs["birth-time-date"])
 
     //Loop through all labs taken
     let data = {}
@@ -181,8 +181,8 @@ function updateLabGraph() {
 
 function createLightLimit() {
     //Get gestaionWeek and BirthWeight
-    let gestationWeek = validatedChildInputs["gestation-week"]
-    let birthWeight = validatedChildInputs["birth-weight"]
+    let gestationWeek = childInputs["gestation-week"]
+    let birthWeight = childInputs["birth-weight"]
 
     //Y-values for light-limits
     let lightValues =
@@ -233,7 +233,7 @@ function extrapolationGraphing() {
         //ESTIMATE TIME TO CROSSING
         //let currentLightSlope -> [1,4,((150-100)/(4-1)),100, 150]
         let xToCrossing = null
-        let deltaBirtdateLastPoint = ((x2 - new Date(validatedChildInputs["birth-time-date"].getTime())) / (1000 * 60 * 60 * 24))
+        let deltaBirtdateLastPoint = ((x2 - new Date(childInputs["birth-time-date"].getTime())) / (1000 * 60 * 60 * 24))
         if (deltaBirtdateLastPoint < currentLightSlope[1] && slope > currentLightSlope[2]) {
             // The graphs y value at the last lab point = graph startvalue of Y + days between graph start to Last lab point * slope of graph
             let graphY = currentLightSlope[3] + ((deltaBirtdateLastPoint - currentLightSlope[0]) * currentLightSlope[2])
@@ -255,7 +255,7 @@ function extrapolationGraphing() {
         }
         //Extrapolation grahing
         if (slope > 0){
-            let day0 = new Date(validatedChildInputs["birth-time-date"])
+            let day0 = new Date(childInputs["birth-time-date"])
             let xValue = (x2 - day0.getTime()) / (1000 * 60 * 60 * 24)
             xCrossing = xValue + xToCrossing
             yCrossing = y2 + slope * xToCrossing
@@ -284,7 +284,7 @@ function extrapolationGraphing() {
 }
 
 function prettyDateFromX(x) {
-    let date = new Date(validatedChildInputs["birth-time-date"]).getTime()
+    let date = new Date(childInputs["birth-time-date"]).getTime()
     let time = date + (x * 1000 * 60 * 60 * 24)
     date = new Date(time)
     let minutes = date.getMinutes()

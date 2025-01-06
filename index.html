@@ -38,6 +38,7 @@
     <div id="all-input-container">
     <!-- INFO ABOUT CHILD -->
     <div id="child-container" class="container round-container">
+        <img id="complete-icon" class="hidden" src="assets/icons/checkmark.svg" alt="complete-icon">
         <h2>Om barnet</h2>
         <!-- BIRTH WEIGHT INPUT-->
         <p class="child-info">Fødselsvekt</p>
@@ -51,27 +52,27 @@
         </div>
         <p id="birth-time-date-error" class="no-error-message">Feil i dato</p>
         <!-- GASTATION AT BIRTH-->
-        <p class="child-info">Gestasjons ved fødsel</p>
+        <p class="child-info">Gestasjonsalder</p>
         <div class="double-input">
             <input id="gestation-week" class="gestation half-input child-info-input" type="text" inputmode="numeric" placeholder="39u">
-            <input id="gestation-day" class="gestation half-input child-info-input" type="text" inputmode="numeric" placeholder="5d">
+            <button id="add-child" class="half-input btn">Legg til</button>
         </div>
         <p id="gestation-error" class="no-error-message">Feil i gestasjonalder</p>
     </div>
     <!-- LAB CONTAINER-->
-    <div id="lab-container" class="container round-container">
+    <div id="lab-container" class="container round-container opacity-container">
         <!-- ADD NEW LAB VALUE-->
         <h2>Legg til målinger</h2>
         <p class="lab-info">Tidspunkt for prøve</p>
         <div class="double-input">
-            <input class="half-input lab-input" id="lab-date" type="text" inputmode="numeric" placeholder="dd/mm">
-            <input class="half-input lab-input" id="lab-time" type="text" inputmode="numeric" placeholder="hh:mm">
+            <input class="half-input lab-input" id="lab-date" type="text" inputmode="numeric" placeholder="dd/mm" disabled>
+            <input class="half-input lab-input" id="lab-time" type="text" inputmode="numeric" placeholder="hh:mm" disabled>
         </div>
         <p class="no-error-message">Feil i dato</p>
         <p class="lab-info">Bilirubinverdi</p>
         <div class="double-input">
-            <input id="bilirubin-value" class="half-input lab-input"  type="text" inputmode="numeric" placeholder="120 µmol/L">
-            <button id="add-lab" class="btn">Legg til</button>
+            <input id="bilirubin-value" class="half-input lab-input"  type="text" inputmode="numeric" placeholder="120 µmol/L" disabled>
+            <button id="add-lab" class="half-input btn" disabled>Legg til</button>
         </div>
         <p id="Lab-add-error" class="no-error-message">Feil i bilirubin verdi</p>
         <!-- LAB VALUES LIST-->
@@ -91,19 +92,19 @@
     </div>
     </div>
     <!-- GRAPH -->
-    <div id="graph-container" class="container">
+    <div id="graph-container" class="container opacity-container">
         <canvas id="graph"></canvas>
     </div>
     <!-- EXTRA QUESTIONS ACORDING TO GUIDELINES -->
     <!-- TODO: Legg til nøkkelspørsmål ift bilirubinverdier -->
     <!-- CLINICAL GUIDANCE / ADVICE -->
-    <div id="advice-container" class="container round-container">
+    <div id="advice-container" class="container round-container opacity-container">
         <h2>Faglig råd</h2>
         <h3 style="font-size: 1rem;padding-top:0.8rem">Funksjon under arbeid</h3>
         <p style="font-size: 1rem;padding-top:0.8rem">Vi ønsker å gi tilpasset tilbakemelding iht. pediatriveieldren. Dette krever nøye gjennomgang, mange tester og rett og slett mer tid på å programmere siden. I mellom tiden kan man bruke siden for å se når barenet krysser lysgrensa.</p>
     </div>
     <!-- PREFORMATTED AND FINISHED JOURNAL NOTE -->
-    <div id="journal-container" class="container round-container">
+    <div id="journal-container" class="container round-container opacity-container">
         <h2>Journalføre?</h2>
         <h3 style="font-size: 1rem;padding-top:0.8rem">Funksjon under arbeid</h3>
         <p style="font-size: 1rem;padding-top:0.8rem">Kanpp for å kunne lime inn all info i forhåndslaget journaldokument.</p>

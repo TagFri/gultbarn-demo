@@ -1,38 +1,63 @@
 import {updateChildGraph, updateLabGraph, extrapolationGraphing, removeChildGraph} from "./graph.js"
-export {validatedChildInputs, labTaken}
+export {childInputs, labTaken}
 export {eventListeners}
 
-let validatedChildInputs = {}
+let childInputs = {}
 let validatedLabInputs = {}
 let labTaken = {}
 let lastLabs = []
 
 //Add eventlistneres on start
 function eventListeners() {
-    //EVENT LISTEN ON MAIN PAGE
-    document.getElementById("main").addEventListener("focusout", function(event) {
-        //Returns inputted values as integers. Masking ensures correct input.
-        let inputValue = parseInputToInteger(event.target.value);
-        //Returns true or false if the input is valid or not
-        let valid = validate(event.target.id, inputValue)
-        errorMessages(event.target.id, valid)
-        if (valid) {
-            addValue(event.target.id, inputValue)
-            //Update child graph:
-
+    // SAVE CHILD INPUT AND CREATE GRAPH
+    document.getElementById("add-child").addEventListener("click", function(event) {
+        const CHILDINPUTS = ["birth-weight", "birth-date", "birth-time", "gestation-week"]
+        for (const id of CHILDINPUTS) {
+            //Returns inputted values as integers. Masking ensures correct input.
+            let inputValue = parseInputToInteger(document.getElementById(id).value);
+            //Returns true or false if the input is valid or not
+            let valid = validate(id, inputValue)
+            //Valid inputs are added to the list
+            if (valid) {
+                errorMessages(id, false)
+                addValue(id, inputValue)
+            //Invalid inputs are displayed as error
+            } else {
+                errorMessages(id, true)
+            }
         }
         //Checks for when child inputs is finished
-        if (readyForChildGraph()) {
-            //Enables lab values:
+        if (childInputs["birth-weight"] && childInputs["birth-date"] && childInputs["birth-time"] && childInputs["gestation-week"] ) {
+            let time = childInputs["birth-time"]
+            let date = childInputs["birth-date"]
+            let year = checkYear(date)
+            childInputs["birth-time-date"] = new Date(year, date[1]-1, date[0],time[0], time[1], 0, 0)
+            showLabInputs()
+            displayCompleteIcon()
             updateChildGraph()
         } else {
         console.log("Not ready for labs")
     }})
-    //EVENT LISTEN ON ADD LAB BUTTON
+    //SAVE LAB INPUTS AND CREATE GRAPH
     document.getElementById("add-lab").addEventListener("click", function(){
+        const LABINPUTS = ["lab-date", "lab-time", "bilirubin-value"]
+        for (const id of LABINPUTS) {
+            //Returns inputted values as integers. Masking ensures correct input.
+            let inputValue = parseInputToInteger(document.getElementById(id).value);
+            //Returns true or false if the input is valid or not
+            let valid = validate(id, inputValue)
+            //Valid inputs are added to the list
+            if (valid) {
+                errorMessages(id, false)
+                addValue(id, inputValue)
+                //Invalid inputs are displayed as error
+            } else {
+                errorMessages(id, true)
+            }
+        }
         saveLab();
     })
-    // EVENT LISTEN ON ABOUT US
+    //ABOUT US ALERT BOX
     document.getElementById("about-us-info").addEventListener("click", function(){
         window.alert(
             "Lag med kjærlighet for barneavdelingen ved Sørlandet Sykehus <3 \n\n" +
@@ -67,7 +92,6 @@ function validate(id, integer) {
         "date": [[1, 31],[1,12]],
         "time": [[0, 23],[0, 59]],
         "gestation-week": [22, 45],
-        "gestation-day": [0, 6],
         "bilirubin-value": [0, 1000],
     }
     //Validate time/date input
@@ -95,8 +119,8 @@ function validate(id, integer) {
 //ADD ERROR MESSAGE CLASS
 function errorMessages(id, valid) {
     //Add class dependent on valid input or not (true/false)
-    let addCss = valid? "no-error-message": "error-message"
-    let removeCss = valid? "error-message": "no-error-message"
+    let addCss = valid? "error-message": "no-error-message"
+    let removeCss = valid? "no-error-message": "error-message"
     //Target element
     const targetEleemnet = document.getElementById(id)
     //Add addCss to full inputs
@@ -114,20 +138,20 @@ function errorMessages(id, valid) {
 function addValue(id, inputValue) {
     const element = document.getElementById(id)
     if (element.classList.contains("child-info-input")) {
-        validatedChildInputs[id] = inputValue;
+        childInputs[id] = inputValue;
     } else if (element.classList.contains("lab-input")) {
         validatedLabInputs[id] = inputValue;
     } else {
         console.log("Couldn't save info")
         try {
-            validatedChildInputs.pop(id)
+            childInputs.pop(id)
             console.log(id + "removed from ValidatedChildInputs")
         } catch (error) {
             console.log("No " + id + " key in ValidatedChildInputs")
         }
     }
     console.log("ValidatedChildInputs:")
-    console.log(validatedChildInputs)
+    console.log(childInputs)
 }
 function checkYear(date) {
     let year = new Date().getFullYear()
@@ -138,22 +162,6 @@ function checkYear(date) {
     return year
 }
 
-function readyForChildGraph() {
-    if ((Object.keys(validatedChildInputs).length === 5)) {
-        let time = validatedChildInputs["birth-time"]
-        let date = validatedChildInputs["birth-date"]
-        let year = checkYear(date)
-        validatedChildInputs["birth-time-date"] = new Date(year, date[1]-1, date[0],time[0], time[1], 0, 0)
-        console.log(validatedChildInputs)
-        return true
-    } else if (validatedChildInputs["birth-time-date"] && (Object.keys(validatedChildInputs).length === 4)) {
-        return true
-    } else {
-        return false
-    }
-    console.log("Function readyForChildGraph() did not return true or false.")
-}
-
 function saveLab() { //addlab
     let bilirubin = validatedLabInputs["bilirubin-value"]
     let time = validatedLabInputs["lab-time"]
@@ -161,7 +169,7 @@ function saveLab() { //addlab
     let year = checkYear(date)
     let labTimeDate = new Date(year, date[1]-1, date[0],time[0], time[1], 0, 0)
     //If lab is before birth -> Create errror message. Includes future values
-    if (labTimeDate < validatedChildInputs["birth-time-date"]) {
+    if (labTimeDate < childInputs["birth-time-date"]) {
         errorMessages("lab-date", false)
     //Else update labvalues
     } else {
@@ -255,4 +263,28 @@ function removeLab (targetButton) {
     updateLabGraph()
     //Update extrapolation
     extrapolationGraphing()
+}
+
+function displayCompleteIcon() {
+    const completeIcon = document.getElementById("complete-icon")
+    completeIcon.classList.remove("hidden")
+}
+
+function showLabInputs() {
+    //Fetch all inputs that need to be activated:
+    const labDate = document.getElementById("lab-date")
+    const labTime = document.getElementById("lab-time")
+    const bilirubinValue = document.getElementById("bilirubin-value")
+    const addLab = document.getElementById("add-lab")
+    const labInputs = [labDate, labTime, bilirubinValue, addLab]
+    for (const input of labInputs) {
+        input.disabled = false
+    }
+    //Remove opacity on lab container
+    const labContainer = document.getElementById("lab-container")
+    labContainer.classList.remove("opacity-container")
+
+    const graphContainer = document.getElementById("graph-container")
+    graphContainer.classList.remove("opacity-container")
+
 }

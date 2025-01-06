@@ -200,3 +200,22 @@ li {
 #crossing-info {
     text-align: center;
 }
+
+#child-container {
+    position: relative;
+}
+
+#complete-icon {
+    position: absolute;
+    height: 2.25rem;
+    right: -15px;
+    top: -15px;
+}
+
+.hidden {
+    display: none;
+}
+
+.opacity-container {
+    opacity: 0.5;
+}
