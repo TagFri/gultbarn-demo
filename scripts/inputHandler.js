@@ -35,6 +35,7 @@ function eventListeners() {
             showLabInputs()
             displayCompleteIcon()
             updateChildGraph()
+            document.getElementById("lab-date").focus()
         } else {
         console.log("Not ready for labs")
     }})
@@ -199,6 +200,7 @@ function saveLab() { //addlab
         displayLabs();
         updateLabGraph();
         extrapolationGraphing();
+        document.getElementById("lab-date").focus()
     }
 }
 
