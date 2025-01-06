@@ -9,6 +9,49 @@ let lastLabs = []
 
 //Add eventlistneres on start
 function eventListeners() {
+    //autofocus
+    document.getElementById("birth-weight").addEventListener("keydown", function() {
+        let inputValid = validate("birth-weight", parseInputToInteger(document.getElementById("birth-weight").value));
+        if (inputValid && (document.getElementById("birth-weight").value.length === 4 || document.getElementById("birth-weight").value.length === 5)) {
+            document.getElementById("birth-date").focus()
+        }
+    })
+    document.getElementById("birth-date").addEventListener("keydown", function() {
+        let inputValid = validate("birt-date", parseInputToInteger(document.getElementById("birth-date").value));
+        if (inputValid && document.getElementById("birth-date").value.trim("_").length === 5) {
+            document.getElementById("birth-time").focus()
+        }
+    })
+    document.getElementById("birth-time").addEventListener("keydown", function() {
+        let inputValid = validate("birt-time", parseInputToInteger(document.getElementById("birth-time").value));
+        console.log(document.getElementById("birth-time").value.replace(/_$/,''))
+        console.log(document.getElementById("birth-time").value.replace(/_$/,'').length)
+        console.log(inputValid)
+        if (inputValid && document.getElementById("birth-time").value.replace(/_$/,'').length === 5) {
+            console.log("focus")
+            document.getElementById("gestation-week").focus()
+        }
+    })
+    document.getElementById("gestation-week").addEventListener("keydown", function() {
+        let inputValid = validate("gestation-week", parseInputToInteger(document.getElementById("gestation-week").value));
+        if (inputValid && document.getElementById("gestation-week").value.length === 3) {
+            document.getElementById("add-child").focus()
+        }
+    })
+    document.getElementById("lab-date").addEventListener("keydown", function() {
+        let inputValid = validate("lab-date", parseInputToInteger(document.getElementById("lab-date").value));
+        if (inputValid && document.getElementById("lab-date").value.trim("_").length === 5) {
+            document.getElementById("lab-time").focus()
+        }
+    })
+    document.getElementById("lab-time").addEventListener("keydown", function() {
+        let inputValid = validate("lab-time", parseInputToInteger(document.getElementById("lab-time").value));
+        if (inputValid && document.getElementById("lab-time").value.replace(/_$/,'').length === 5) {
+            document.getElementById("bilirubin-value").focus()
+        }
+    })
+
+
     // SAVE CHILD INPUT AND CREATE GRAPH
     document.getElementById("add-child").addEventListener("click", function(event) {
         const CHILDINPUTS = ["birth-weight", "birth-date", "birth-time", "gestation-week"]
@@ -171,9 +214,9 @@ function saveLab() { //addlab
     let labTimeDate = new Date(year, date[1]-1, date[0],time[0], time[1], 0, 0)
     //If lab is before birth -> Create errror message. Includes future values
     if (labTimeDate < childInputs["birth-time-date"]) {
-        errorMessages("lab-date", false)
+        errorMessages("lab-date", true)
     //Else update labvalues
-    } else {
+    }else {
         labTaken[labTimeDate] = [time, date, bilirubin]
 
         //Make array with only datestamps
