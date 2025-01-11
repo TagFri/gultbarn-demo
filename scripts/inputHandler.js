@@ -50,6 +50,16 @@ function eventListeners() {
             document.getElementById("bilirubin-value").focus()
         }
     })
+    document.getElementById("bilirubin-value").addEventListener("keydown", function() {
+        console.log("bilirubin-value keydown")
+        let inputValid = validate("bilirubin-value", parseInputToInteger(document.getElementById("bilirubin-value").value));
+        console.log(inputValid)
+        console.log(document.getElementById("bilirubin-value").value)
+        if (inputValid && (document.getElementById("bilirubin-value").value.replace(/ µmol\/L$/,'') > 99)) {
+            console.log("focus")
+            document.getElementById("add-lab").focus()
+        }
+    })
 
 
     // SAVE CHILD INPUT AND CREATE GRAPH
