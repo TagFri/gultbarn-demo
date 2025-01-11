@@ -12,6 +12,7 @@ const red =             'rgb(251, 65, 65)'
 let currentLightLimit = null
 let currentLightSlope = null
 let currentLabGraph = null
+let currentLabSlope = null
 let myChart = null
 let xCrossing = null
 let yCrossing = null
@@ -19,6 +20,11 @@ let yCrossing = null
 function initiateGraph() {
     const ctx = document.getElementById('graph');
     ctx.innerHTML = "";
+    //Chart font size
+    Chart.defaults.font.size = 14;
+    //todo Include change on resize window
+    //Chart font family
+    Chart.defaults.font.family = 'Poppins';
     myChart = new Chart(ctx, {
         type: 'scatter',
         data: {
@@ -28,12 +34,13 @@ function initiateGraph() {
                 {//DATASET 0 -> CHILD LIGHT LIMIT
                     label: "Lysgrense",
                     data: [],
-                    spanGaps: true,
-                    borderColor: black, //Yellow colour
-                    backgroundColor: black,
-                    pointRadius: 0,
-                    showLine: true,
-                    fill: false,
+                    //Line properties
+                    spanGaps: true,     //Make line between data
+                    borderColor: black, //Line color
+                    borderWidth: 3.5,   //Line thickness
+                    pointRadius: 0,     //Datapoint radis. 0 = not show
+                    showLine: true,     //Show line on scatter plot
+                    fill: false,        //Remove fill under graph
                 },
                 {//DATASET 1 -> LAB VALUES
                     label: "Lab",
@@ -41,7 +48,8 @@ function initiateGraph() {
                     spanGaps: true,
                     borderColor: yellowStrong,
                     backgroundColor: yellowStrong,
-                    pointRadius: 5,
+                    borderWidth: 3.5,
+                    pointRadius: 8,
                     showLine: true,
                     fill: false,
                 },
@@ -52,7 +60,19 @@ function initiateGraph() {
                     borderDash: [5, 5],
                     borderColor: yellowMedium,
                     backgroundColor: yellowMedium,
-                    pointRadius: 3,
+                    borderWidth: 3.5,
+                    pointRadius: 8,
+                    showLine: true,
+                    fill: false,
+                },
+                {//DATASETT 3 -> Transfusion
+                    label: "Transfusjon",
+                    data: [],
+                    spanGaps: true,
+                    borderColor: black,
+                    backgroundColor: black,
+                    borderWidth: 3.5,
+                    pointRadius: 8,
                     showLine: true,
                     fill: false,
                 }
@@ -69,15 +89,18 @@ function initiateGraph() {
             //Turn on/off animation on initilizing
             animation: true,
             plugins: {
+                title: {
+                  display: true,
+                },
                 legend: {
                     //Turn on/off top-description for each graph
-                    display: true,
+                    display: false,
                     labels: {
                         usePointStyle: true,
                         boxWidth: 10,
                         padding: 10,
                         font: {
-                            weight: 'bold'
+                            weight: 'normal'
                         }
                     }
                 },
@@ -92,7 +115,7 @@ function initiateGraph() {
                             return prettyDateFromX(context.parsed.x) + " - Bilirubin: " + bilirubin + " mg/dl"
                         }
                     }
-                }
+                },
             },
             scales: {
                 x: {
@@ -102,7 +125,11 @@ function initiateGraph() {
                         stepSize: 1,
                     },
                     grid: {
-                        display: false
+                        display: false,
+                    },
+                    //X-axis linewidth
+                    border: {
+                        width: 2,
                     }
                 },
                 y: {
@@ -115,7 +142,11 @@ function initiateGraph() {
                         stepSize: 50
                     },
                     grid: {
-                        display: false
+                        display: false,
+                    },
+                    //X-axis linewidth
+                    border: {
+                        width: 2,
                     }
                 }
             }
@@ -131,7 +162,7 @@ function updateChildGraph() {
     if (currentLightLimit === null || newLightLimit !== currentLightLimit) {
         currentLightLimit = newLightLimit
         currentLightSlope = newLightLimitInfo[2]
-        myChart.data.datasets[0].label = newLightlimitLabel
+        myChart.options.plugins.title.text = newLightlimitLabel
         myChart.data.datasets[0].data = newLightLimit
         myChart.data.datasets[0].spanGaps = true
         myChart.data.datasets[0].tension = 0
@@ -164,6 +195,7 @@ function updateLabGraph() {
         /*if (labinfo[2] > currentLightLimit[10]) {
             tranfusionGraph()
         }*/
+        transfusionGraph()
     }
 
     if (currentLabGraph === null || data !== currentLabGraph) {
@@ -174,6 +206,8 @@ function updateLabGraph() {
         myChart.data.datasets[1].tension = 0
         myChart.update()
         console.log("Lab graph updated")
+        advice()
+
     } else {
         console.log("No change in lab graph")
     }
@@ -228,17 +262,17 @@ function extrapolationGraphing() {
         let diffY = y2-y1
 
         //Calculate slope (Y per X)
-        let slope = diffY / diffX
+        currentLabSlope = diffY / diffX
 
         //ESTIMATE TIME TO CROSSING
         //let currentLightSlope -> [1,4,((150-100)/(4-1)),100, 150]
         let xToCrossing = null
         let deltaBirtdateLastPoint = ((x2 - new Date(childInputs["birth-time-date"].getTime())) / (1000 * 60 * 60 * 24))
-        if (deltaBirtdateLastPoint < currentLightSlope[1] && slope > currentLightSlope[2]) {
+        if (deltaBirtdateLastPoint < currentLightSlope[1] && currentLabSlope > currentLightSlope[2]) {
             // The graphs y value at the last lab point = graph startvalue of Y + days between graph start to Last lab point * slope of graph
             let graphY = currentLightSlope[3] + ((deltaBirtdateLastPoint - currentLightSlope[0]) * currentLightSlope[2])
             let diffY = graphY - y2
-            let diffSlope = slope - currentLightSlope[2]
+            let diffSlope = currentLabSlope - currentLightSlope[2]
             xToCrossing = diffY / diffSlope
             if (xToCrossing < (currentLightSlope[1] - deltaBirtdateLastPoint)) {
                 xToCrossing = xToCrossing
@@ -246,19 +280,19 @@ function extrapolationGraphing() {
             else { //copy of platau
                 let platau = currentLightSlope[4];
                 let diffYtoPlatau = platau - y2
-                xToCrossing = diffYtoPlatau / slope
+                xToCrossing = diffYtoPlatau / currentLabSlope
             }
         } else {
             let platau = currentLightSlope[4];
             let diffYtoPlatau = platau - y2
-            xToCrossing = diffYtoPlatau / slope
+            xToCrossing = diffYtoPlatau / currentLabSlope
         }
         //Extrapolation grahing
-        if (slope > 0){
+        if (currentLabSlope > 0){
             let day0 = new Date(childInputs["birth-time-date"])
             let xValue = (x2 - day0.getTime()) / (1000 * 60 * 60 * 24)
             xCrossing = xValue + xToCrossing
-            yCrossing = y2 + slope * xToCrossing
+            yCrossing = y2 + currentLabSlope * xToCrossing
             let data = {}
             data[xValue] = y2;
             data[xCrossing] = yCrossing
@@ -267,7 +301,7 @@ function extrapolationGraphing() {
             myChart.data.datasets[2].tension = 0
             myChart.update()
             console.log("Extrapolation graph updated")
-            console.log("Labslope: " + slope)
+            console.log("Labslope: " + currentLabSlope)
             console.log("Lightslope: " + (currentLightSlope[2]))
             console.log("ETA crossing in: " + Math.floor((xToCrossing * 100)/100) + " = " + prettyDateFromX(xCrossing))
         } else {
@@ -283,6 +317,20 @@ function extrapolationGraphing() {
     }
 }
 
+function transfusionGraph() {
+    let before24 = null
+    let aboveLightLimit = null
+    //<24h or above light limit at any time
+    for (const [timestamp, labInfo] of Object.entries(labTaken)) {
+        let day0 = new Date(childInputs["birth-time-date"]).getTime() / (1000 * 60 * 60 * 24)
+        let labDay = new Date(timestamp).getTime() / (1000 * 60 * 60 * 24)
+        if (labDay - day0) {
+            before24 = true
+        } else if (labInfo[2]>1){
+            console.log("Above light limit")
+        }
+    }
+}
 function prettyDateFromX(x) {
     let date = new Date(childInputs["birth-time-date"]).getTime()
     let time = date + (x * 1000 * 60 * 60 * 24)
@@ -298,4 +346,46 @@ function prettyDateFromX(x) {
     let years = date.getFullYear()
     years = years.toString().slice(-2)
     return (days + "/" + months + "-" + years + " kl." + hours + ":" + minutes)
+}
+
+function advice() {
+    //Advice titles
+    let adviceTitle = document.getElementById("advice-title").innerHTML = ""
+    const tHIGH_NOT_FALLING = "Avtal kontroll"
+    const tHIGH_FALLING = "Kontroll vurderes av lege"
+    const tLOW_RISING = "Kontroll om 1-2 dager, se graf"
+    //Advice paragraphs
+    let adviceParagraph = document.getElementById("advice-paragraph").innerHTML = ""
+    const pHIGH_NOT_FALLING = "Bilirubinverdi >250 uten tegn til fall, avtal kontroll"
+    const pHIGH_FALLING = "Hatt bilirubinverdi >250, men viser en klar fallende verdi. Aksepteres uten kontroll etter klinisk vurdering av lege."
+    const pLOW_RISING = "Bilirubin over 250 og samtidig stigende. Kontroll innen 1-2 dager."
+    const pSOURCE = "https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.1-tidlig-ikterus-forste-710-dager"
+    //
+    let maxBilirubin = null
+    let lastValue = null
+    let secoundLastValue = null
+    for (const [dateStamp, bilirubin] of Object.entries(currentLabGraph)) {
+        if (bilirubin > maxBilirubin) {
+            maxBilirubin = bilirubin
+        }
+        if (lastValue != null && secoundLastValue != null) {
+            lastValue = bilirubin
+        } else if (secoundLastValue != null) {
+            secoundLastValue = lastValue
+            lastValue = bilirubin
+        } else {
+            lastValue = bilirubin
+            secoundLastValue = lastValue
+        }
+    }
+    if (maxBilirubin >250 && currentLabSlope > currentLightSlope) {
+        adviceTitle.innerHTML = tHIGH_NOT_FALLING
+        adviceParagraph.innerHTML = pHIGH_NOT_FALLING
+    } else if (maxBilirubin >270 && ((secoundLastValue - lastValue) < -20)) {
+        adviceTitle.innerHTML = tHIGH_FALLING
+        adviceParagraph.innerHTML = pHIGH_FALLING
+    } else if (maxBilirubin >250 && currentLabSlope == currentLightSlope) {
+        adviceTitle.innerHTML = tLOW_RISING
+        adviceParagraph.innerHTML = pLOW_RISING
+    }
 }

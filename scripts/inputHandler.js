@@ -282,12 +282,15 @@ function displayLabs() {
         image.alt = "delete-icon"
         //Lab value
         const labValueElement = document.createElement('p')
+        labValueElement.classList.add("semi-bold")
         labValueElement.innerHTML = bilirubin
         //Lab date
         const labDateElement = document.createElement('p')
+        labDateElement.classList.add("semi-bold")
         labDateElement.innerHTML = date[0].toString().padStart(2, "0") + "/" + date[1].toString().padStart(2, "0")
         //Lab time
         const labTimeElement = document.createElement('p')
+        labTimeElement.classList.add("semi-bold")
         labTimeElement.innerHTML = time[0].toString().padStart(2, "0") + ":" + time[1].toString().padStart(2, "0")
 
         //Append elements to each other

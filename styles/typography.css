@@ -8,6 +8,14 @@ body {
     h6 {line-height: 1.125; letter-spacing: -0.00625rem;}
 }
 
+*, h1, h2, h3, h4, h5, h6, p, input, a, li{
+    font-family: "Poppins", sans-serif;
+}
+
+.semi-bold {
+    font-weight: 500;
+}
+
 /* MOBILE FONTS */
 @media (max-width: 576px) {
     /* Root font-size*/
@@ -43,11 +51,11 @@ body {
     * {font-size: 18px;}
     /* Heading font sizes*/
     body {
-        h1 {font-size: 2.125rem}
-        h2 {font-size: 1.875rem}
-        h3 {font-size: 1.5rem}
-        h4 {font-size: 1.25rem}
-        h5 {font-size: 1.125rem}
+        h1 {font-size: 1.6rem}         /*2.125 <- gammel*/
+        h2 {font-size: 1.4rem}         /*1.875 <- gammel*/
+        h3 {font-size: 1.2rem}         /*1.5re <- gammel*/
+        h4 {font-size: 1.1rem}          /*1.25r <- gammel*/
+        h5 {font-size: 1.1rem}          /*1.125 <- gammel*/
         /* Bold text */
         h1, h2, h3, h4, h5 {font-weight: bold}
     }
