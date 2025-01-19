@@ -64,7 +64,7 @@ header {
     border: 0.07rem solid var(--color-grey);
     input {
         padding: 0.5rem 0.75rem;
-        border-radius: 0.6rem;
+        border-radius: 1rem;
         border: 0.07rem solid var(--color-grey);
     }
 }
@@ -98,7 +98,7 @@ input:focus{
         /* Style */
         background: var(--color-black);
         color: white;
-        border-radius: 0.6rem;
+        border-radius: 1rem;
         border: none;
         text-decoration: none;
         text-align: center;
@@ -129,7 +129,8 @@ input:focus{
     width: 37%;
 }
 
-.child-info, .lab-info {
+label {
+    display: block;
     text-align: left;
     margin-top: 0.8rem;
     margin-bottom: 0.3rem;
@@ -145,11 +146,12 @@ input:focus{
 }
 
 #advice-container {
-    background-color: var(--color-yellow-light);
+    background-color: var(--color-grey);
+    height: 8rem;
 }
 
 #journal-container {
-    background-color: var(--color-yellow-lighter)
+    background-color: var(--color-grey)
 }
 
 hr {
@@ -159,7 +161,7 @@ hr {
 
 #lab-icons, #lab-list {
     img {
-        height: 1.5rem;}}
+        height: 1.3rem;}}
 li {
     display: flex;
     justify-content: space-between;
@@ -218,9 +220,5 @@ li {
 }
 
 .opacity-container {
-    opacity: 0.05;
-    > * , ::placeholder{
-        color: var(--color-grey);
-    }
-
+    opacity: 0.2;
 }

@@ -1,79 +1,28 @@
 import {updateChildGraph, updateLabGraph, extrapolationGraphing, removeChildGraph} from "./graph.js"
 export {childInputs, labTaken}
-export {eventListeners}
+export {eventListeners, validateChild}
 
 let childInputs = {}
 let validatedLabInputs = {}
 let labTaken = {}
-let lastLabs = []
 
 //Add eventlistneres on start
 function eventListeners() {
-    //autofocus
-    document.getElementById("birth-weight").addEventListener("keydown", function() {
-        let inputValid = validate("birth-weight", parseInputToInteger(document.getElementById("birth-weight").value));
-        if (inputValid && (document.getElementById("birth-weight").value.length === 4 || document.getElementById("birth-weight").value.length === 5)) {
-            document.getElementById("birth-date").focus()
-        }
-    })
-    document.getElementById("birth-date").addEventListener("keydown", function() {
-        let inputValid = validate("birt-date", parseInputToInteger(document.getElementById("birth-date").value));
-        if (inputValid && document.getElementById("birth-date").value.trim("_").length === 5) {
-            document.getElementById("birth-time").focus()
-        }
-    })
-    document.getElementById("birth-time").addEventListener("keydown", function() {
-        let inputValid = validate("birt-time", parseInputToInteger(document.getElementById("birth-time").value));
-        console.log(document.getElementById("birth-time").value.replace(/_$/,''))
-        console.log(document.getElementById("birth-time").value.replace(/_$/,'').length)
-        console.log(inputValid)
-        if (inputValid && document.getElementById("birth-time").value.replace(/_$/,'').length === 5) {
-            console.log("focus")
-            document.getElementById("gestation-week").focus()
-        }
-    })
-    document.getElementById("gestation-week").addEventListener("keydown", function() {
-        let inputValid = validate("gestation-week", parseInputToInteger(document.getElementById("gestation-week").value));
-        if (inputValid && document.getElementById("gestation-week").value.length === 3) {
-            document.getElementById("add-child").focus()
-        }
-    })
-    document.getElementById("lab-date").addEventListener("keydown", function() {
-        let inputValid = validate("lab-date", parseInputToInteger(document.getElementById("lab-date").value));
-        if (inputValid && document.getElementById("lab-date").value.trim("_").length === 5) {
-            document.getElementById("lab-time").focus()
-        }
-    })
-    document.getElementById("lab-time").addEventListener("keydown", function() {
-        let inputValid = validate("lab-time", parseInputToInteger(document.getElementById("lab-time").value));
-        if (inputValid && document.getElementById("lab-time").value.replace(/_$/,'').length === 5) {
-            document.getElementById("bilirubin-value").focus()
-        }
-    })
-    document.getElementById("bilirubin-value").addEventListener("keydown", function() {
-        console.log("bilirubin-value keydown")
-        let inputValid = validate("bilirubin-value", parseInputToInteger(document.getElementById("bilirubin-value").value));
-        console.log(inputValid)
-        console.log(document.getElementById("bilirubin-value").value)
-        if (inputValid && (document.getElementById("bilirubin-value").value.replace(/ µmol\/L$/,'') > 99)) {
-            console.log("focus")
-            document.getElementById("add-lab").focus()
-        }
-    })
-
+    //VALIDATION AND AUTONEXT ON KEYSTROKE AT INPUTS
+    document.getElementById("all-input-container").addEventListener("keyup", function(target) {
+        autoNextInput(target)
 
     // SAVE CHILD INPUT AND CREATE GRAPH
     document.getElementById("add-child").addEventListener("click", function(event) {
         const CHILDINPUTS = ["birth-weight", "birth-date", "birth-time", "gestation-week"]
         for (const id of CHILDINPUTS) {
             //Returns inputted values as integers. Masking ensures correct input.
-            let inputValue = parseInputToInteger(document.getElementById(id).value);
+            let inputValue = inputToInteger(document.getElementById(id).value);
             //Returns true or false if the input is valid or not
             let valid = validate(id, inputValue)
             //Valid inputs are added to the list
             if (valid) {
                 errorMessages(id, false)
-                addValue(id, inputValue)
             //Invalid inputs are displayed as error
             } else {
                 errorMessages(id, true)
@@ -86,7 +35,7 @@ function eventListeners() {
             let year = checkYear(date)
             childInputs["birth-time-date"] = new Date(year, date[1]-1, date[0],time[0], time[1], 0, 0)
             showLabInputs()
-            displayCompleteIcon()
+            showFormCompletion(true)
             updateChildGraph()
             document.getElementById("lab-date").focus()
         } else {
@@ -97,7 +46,7 @@ function eventListeners() {
         const LABINPUTS = ["lab-date", "lab-time", "bilirubin-value"]
         for (const id of LABINPUTS) {
             //Returns inputted values as integers. Masking ensures correct input.
-            let inputValue = parseInputToInteger(document.getElementById(id).value);
+            let inputValue = inputToInteger(document.getElementById(id).value);
             //Returns true or false if the input is valid or not
             let valid = validate(id, inputValue)
             //Valid inputs are added to the list
@@ -111,30 +60,51 @@ function eventListeners() {
         }
         saveLab();
     })
-    //ABOUT US ALERT BOX
-    document.getElementById("about-us-info").addEventListener("click", function(){
-        window.alert(
-            "Lag med kjærlighet for barneavdelingen ved Sørlandet Sykehus <3 \n\n" +
-            "Spørsmål/feil/annet? -> hei@sableteknisk.no\n\n" +
-            "Pst. gjerne send med bilde om noe ikke fungerer som det skal :)"
-        )
-    })
+})}
+
+function autoNextInput(target) {
+    //Get ID for input element
+    let inputID = target.target.id
+    let inputValue = target.target.value;
+    //Chooce next focus when validated
+    let inputFields = ["birth-weight", "birth-date", "birth-time", "gestation-week", "add-child" ,"lab-date", "lab-time", "bilirubin-value", "add-lab"]
+    let nextInput = (inputFields[inputFields.indexOf(inputID) +1])
+    //If time/date, remove id before (eg. birth-time -> time)
+    let validationID = inputID
+    if (validationID.includes("time") || validationID.includes("date")) {
+        validationID = validationID.substring(validationID.indexOf("-")+1)
+    }
+    //AUTOFOCUS PARAMETERS
+    const VALID_LENGTH = {
+        "birth-weight": 5,
+        "date": 5,
+        "time": 5,
+        "gestation-week": 3,
+        "bilirubin-value": 10
+    }
+    //Validate input (correct range + format) -> go to next input
+    let inputValid = validate(inputID, inputToInteger(inputValue));
+    if (inputValid && inputValue.replaceAll('_','').length === VALID_LENGTH[validationID])
+    {
+        document.getElementById(nextInput).focus()
+    }
 }
 
 //CONVERT INPUT TO INTEGERS
-function parseInputToInteger(unformattedValue) {
+function inputToInteger(input) {
+    console.log("INPUT: " + input)
     //Format values: remove masking and split minutes/hours & months/days
-    let formattedValue = null
-    if (/[gud]/.test(unformattedValue)) {
-        formattedValue =  parseInt(unformattedValue.substring(0, unformattedValue.length - 1))
-    } else if ((/µmol\/L/).test(unformattedValue)) {
-        formattedValue =  parseInt(unformattedValue.substring(0, unformattedValue.length - 6))
-    } else if (/[:/]/.test(unformattedValue)) {
-        let ddhh = parseInt(unformattedValue.substring(0, 2)) // days or hours
-        let mmmm = parseInt(unformattedValue.substring(3, 5)) // months or minutes
-        formattedValue = [ddhh, mmmm]
+    let integerOutput = null
+    if (/[gud]/.test(input)) {
+        integerOutput =  parseInt(input.substring(0, input.length - 1))
+    } else if ((/µmol\/L/).test(input)) {
+        integerOutput =  parseInt(input.substring(0, input.length - 6))
+    } else if (/[:/]/.test(input)) {
+        let ddhh = parseInt(input.substring(0, 2)) // days or hours
+        let mmmm = parseInt(input.substring(3, 5)) // months or minutes
+        integerOutput = [ddhh, mmmm]
     }
-    return(formattedValue)
+    return(integerOutput)
 }
 
 //VALIDATE INPUTS
@@ -142,7 +112,7 @@ function validate(id, integer) {
     let validation = null
     //Valid input ranges for each HTML ID
     const validationCriteria = {
-        "birth-weight": [500, 7500],
+        "birth-weight": [500, 4999],
         "date": [[1, 31],[1,12]],
         "time": [[0, 23],[0, 59]],
         "gestation-week": [22, 45],
@@ -166,8 +136,21 @@ function validate(id, integer) {
             && integer <= validationCriteria[id][1]
         )?validation=true:validation=false;
     }
-
     return(validation)
+}
+function validateChild() {
+    console.log("VALIDATE CHILD")
+    //todo validate whole container
+    //
+}
+
+
+function validateForm(formElement) {
+    for (const input of formElement.elements) {
+        if (input.type === 'text') {
+            console.log(input.id)
+        }
+    }
 }
 
 //ADD ERROR MESSAGE CLASS
@@ -188,25 +171,15 @@ function errorMessages(id, valid) {
     }
 }
 
-//Add values to child / lab input associated arrays
-function addValue(id, inputValue) {
-    const element = document.getElementById(id)
-    if (element.classList.contains("child-info-input")) {
-        childInputs[id] = inputValue;
-    } else if (element.classList.contains("lab-input")) {
-        validatedLabInputs[id] = inputValue;
+function showFormCompletion(boolean) {
+    const COMPLETE_ICON = document.getElementById("complete-icon")
+    if (boolean) {
+        COMPLETE_ICON.classList.remove("hidden")
     } else {
-        console.log("Couldn't save info")
-        try {
-            childInputs.pop(id)
-            console.log(id + "removed from ValidatedChildInputs")
-        } catch (error) {
-            console.log("No " + id + " key in ValidatedChildInputs")
-        }
+        COMPLETE_ICON.classList.add("hidden")
     }
-    console.log("ValidatedChildInputs:")
-    console.log(childInputs)
 }
+
 function checkYear(date) {
     let year = new Date().getFullYear()
     //Check if date is larger then today (hence subtract one year
@@ -296,11 +269,9 @@ function displayLabs() {
         labValueElement.innerHTML = bilirubin
         //Lab date
         const labDateElement = document.createElement('p')
-        labDateElement.classList.add("semi-bold")
         labDateElement.innerHTML = date[0].toString().padStart(2, "0") + "/" + date[1].toString().padStart(2, "0")
         //Lab time
         const labTimeElement = document.createElement('p')
-        labTimeElement.classList.add("semi-bold")
         labTimeElement.innerHTML = time[0].toString().padStart(2, "0") + ":" + time[1].toString().padStart(2, "0")
 
         //Append elements to each other
@@ -323,11 +294,6 @@ function removeLab (targetButton) {
     extrapolationGraphing()
 }
 
-function displayCompleteIcon() {
-    const completeIcon = document.getElementById("complete-icon")
-    completeIcon.classList.remove("hidden")
-}
-
 function showLabInputs() {
     //Fetch all inputs that need to be activated:
     const labDate = document.getElementById("lab-date")
@@ -345,4 +311,38 @@ function showLabInputs() {
     const graphContainer = document.getElementById("graph-container")
     graphContainer.classList.remove("opacity-container")
 
+}
+
+
+
+
+
+//Reorganize form to values
+function getFormValues(form) {
+    let values = {}
+    for (input of form.elements) {
+        if (input.type === 'text') {
+            if (input.id === 'birth-weight') {
+                values["birthWeight"] = input.value;
+            } else if (input.id === 'birth-date') {
+                values["birthDate"] = input.value;
+            } else if (input.id === 'birth-time') {
+                values["birthTime"] = input.value;
+            } else if (input.id === 'gestation-week') {
+                values["gestationWeek"] = input.value;
+            }
+        }
+    }
+    return(values)
+}
+
+
+//create objects from Form
+class ChildInfo {
+    constructor([birthWeight, birthDate, birthTime, gestationWeek]) {
+        this.birthWeight = birthWeight;
+        this.birthDate = birthDate;
+        this.birthTime = birthTime;
+        this.gestationWeek = gestationWeek;
+    }
 }

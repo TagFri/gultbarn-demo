@@ -38,7 +38,7 @@
     </div>
     <div id="about">
         <h3 id="about-us-title">hilsen sommervikarene</h3>
-        <button id="about-us-info"><img src="./assets/icons/utropstegn.svg" alt="about-logo"></button>
+        <button id="about-us-info"><img src="./assets/icons/exlamation.svg" alt="about-logo"></button>
     </div>
 </header>
 <main id="main">
@@ -48,21 +48,21 @@
         <img id="complete-icon" class="hidden" src="assets/icons/checkmark.svg" alt="complete-icon">
         <h2>Om barnet</h2>
         <!-- BIRTH WEIGHT INPUT-->
-        <p class="child-info">Fødselsvekt</p>
-        <input id="birth-weight" class="birthWeight full-input child-info-input" type="text" inputmode="numeric" placeholder="3500g">
+        <label for="birth-weight">Fødselsvekt</label>
+        <input id="birth-weight" name="birth-weight" class="birthWeight full-input child-info-input" type="text" inputmode="numeric" placeholder="3500g">
         <p id="birth-weight-error" class="no-error-message">Må være mellom 500 - 7500g</p>
         <!-- BIRTH TIME INPUT-->
-        <p class="child-info">Fødselstidpunkt</p>
+        <label for="birth-date">Fødselstidpunkt</label>
         <div class="double-input">
-            <input id="birth-date" class="birthTimeDate half-input child-info-input" type="text" inputmode="numeric" placeholder="dd/mm">
-            <input id="birth-time" class="birthTimeDate half-input child-info-input" type="text" inputmode="numeric" placeholder="hh:mm">
+            <input id="birth-date" name="birt-date" class="birthTimeDate half-input child-info-input" type="text" inputmode="numeric" placeholder="dd/mm">
+            <input id="birth-time" name="birt-time" class="birthTimeDate half-input child-info-input" type="text" inputmode="numeric" placeholder="hh:mm">
         </div>
         <p id="birth-time-date-error" class="no-error-message">Feil i dato</p>
         <!-- GASTATION AT BIRTH-->
-        <p class="child-info">Gestasjonsalder</p>
+        <label for="gestation-week">Gestasjonsalder</label>
         <div class="double-input">
-            <input id="gestation-week" class="gestation half-input child-info-input" type="text" inputmode="numeric" placeholder="39u">
-            <button id="add-child" class="half-input btn">Legg til</button>
+            <input id="gestation-week" name="gestation-week" class="gestation half-input child-info-input" type="text" inputmode="numeric" placeholder="39u">
+            <button id="add-child" onclick="validateChild()" class="half-input btn" >Legg til</button>
         </div>
         <p id="gestation-error" class="no-error-message">Feil i gestasjonalder</p>
     </div>
@@ -70,26 +70,28 @@
     <div id="lab-container" class="container round-container opacity-container">
         <!-- ADD NEW LAB VALUE-->
         <h2>Legg til målinger</h2>
-        <p class="lab-info">Tidspunkt for prøve</p>
+        <form id="lab-form">
+        <label for="lab-date">Tidspunkt for prøve</label>
         <div class="double-input">
             <input class="half-input lab-input" id="lab-date" type="text" inputmode="numeric" placeholder="dd/mm" disabled>
             <input class="half-input lab-input" id="lab-time" type="text" inputmode="numeric" placeholder="hh:mm" disabled>
         </div>
         <p class="no-error-message">Feil i dato</p>
-        <p class="lab-info">Bilirubinverdi</p>
+        <label for="bilirubin-value">Bilirubinverdi</label>
         <div class="double-input">
             <input id="bilirubin-value" class="half-input lab-input"  type="text" inputmode="numeric" placeholder="120 µmol/L" disabled>
             <button id="add-lab" class="half-input btn" disabled>Legg til</button>
         </div>
         <p id="Lab-add-error" class="no-error-message">Feil i bilirubin verdi</p>
+        </form>
         <!-- LAB VALUES LIST-->
         <hr>
         <ul id="lab-icons">
             <li class="lab-icons-list">
                 <p></p>
-                <img src="./assets/icons/blodprove-opasitet.svg" alt="blodprove-icon">
-                <img src="./assets/icons/kalender-opasitet.svg" alt="calendar-icon">
-                <img src="./assets/icons/tidspunkt-opasitet.svg" alt="time-icon">
+                <img src="./assets/icons/blood-sample-opace.svg" alt="blodprove-icon">
+                <img src="./assets/icons/calender-opace.svg" alt="calendar-icon">
+                <img src="./assets/icons/time-opace.svg" alt="time-icon">
             </li>
         </ul>
         <ul id="lab-list">
@@ -108,7 +110,7 @@
     <div id="advice-container" class="container round-container opacity-container">
         <h2 id="advice-title">Faglig råd</h2>
         <h3 id="advice-paragraph">Funksjon under arbeid</h3>
-        <p>Vi ønsker å gi tilpasset tilbakemelding iht. pediatriveieldren. Dette krever nøye gjennomgang, mange tester og rett og slett mer tid på å programmere siden. I mellom tiden kan man bruke siden for å se når barenet krysser lysgrensa.</p>
+        <p></p>
     </div>
     <!-- PREFORMATTED AND FINISHED JOURNAL NOTE -->
     <div id="journal-container" class="container round-container opacity-container">
