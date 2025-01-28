@@ -141,17 +141,42 @@ label {
     text-align: center;
 }
 
-#advice-container, #journal-container {
-    border: none;
+#advice-container {
+    text-align: left;
+    align-items: flex-start;
+    background-color: var(--color-yellow-light);
+    /* BAKGRUNNS BILDE */
+    background-image: url("./assets/icons/no_follow_up.svg");
+    background-size: 25%;
+    background-position: bottom right;
+    padding-right: 30%;
+    h4 {
+    align-self: center;
+    }
 }
 
-#advice-container {
-    background-color: var(--color-grey);
-    height: 8rem;
+#advice-container, #journal-container {
+    border: none;
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-repeat: no-repeat;
+    min-height: 14rem;
+    img {
+        height: 1rem;
+    }
+    h3, p, h4 {
+        margin: 0.75rem 0.3rem;
+    }
 }
 
 #journal-container {
-    background-color: var(--color-grey)
+    background-color: var(--color-grey-light);
+    /* BAKGRUNNS BILDE */
+    background-image: url("./assets/icons/journal_grey.svg");
+    background-position: bottom center;
+    background-size: 40%;
 }
 
 hr {
@@ -221,4 +246,65 @@ li {
 
 .opacity-container {
     opacity: 0.2;
+}
+
+footer {
+    font-size: 0.9rem;
+    margin-top: 5rem;
+    width: 100vw;
+    position: absolute;
+    left: 0;
+    background-color: var(--color-yellow-strong);
+    border-radius: 75px 75px 0 0;
+    .main-container {
+        padding: 0 3rem;
+        max-width: 1200px;
+        margin: 5rem auto;
+    }
+
+    .flex-container {
+        display: flex;
+        justify-content: space-between;
+    }
+    .flex-column {
+        flex-direction: column;
+    }
+    img {
+        margin-top: 3rem;
+        width: 11rem;
+        height: auto;
+    }
+    .small-text {
+        font-size: 0.8rem;
+        opacity: 0.4;
+    }
+    .right-column {
+        align-items: flex-end;
+        text-align: right;
+        width: 25%;
+    }
+    .left-column {
+        text-align: left;
+        align-items: flex-start;
+        width: 45%;
+    }
+    h2, p {
+        margin-bottom: 1.25rem;
+        line-height: 1.4rem;
+    }
+    a {
+        margin-bottom: 0.5rem;
+        font-size: 1.04rem;
+    }
+    }
+    .link {
+        font-weight: bold;
+        text-decoration: underline;
+    }
+    .link:hover {
+        text-decoration: none;
+        color: var(--color-black);
+    }
+    .link:visited {
+        color: var(--color-black);
 }

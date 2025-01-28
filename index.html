@@ -10,7 +10,8 @@
             name="description"
             content="Pediatric bilirubin calculator to support clinical guidance">
     <title>gult barn</title>
-    <script  defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <link rel="icon" type="image/x-icon" href="./assets/icons/logo.svg">
     <!-- GOOGLE FONTS -->
     <style>
@@ -38,7 +39,6 @@
     </div>
     <div id="about">
         <h3 id="about-us-title">hilsen sommervikarene</h3>
-        <button id="about-us-info"><img src="./assets/icons/exlamation.svg" alt="about-logo"></button>
     </div>
 </header>
 <main id="main">
@@ -57,33 +57,35 @@
             <input id="birth-date" name="birt-date" class="birthTimeDate half-input child-info-input" type="text" inputmode="numeric" placeholder="dd/mm">
             <input id="birth-time" name="birt-time" class="birthTimeDate half-input child-info-input" type="text" inputmode="numeric" placeholder="hh:mm">
         </div>
-        <p id="birth-time-date-error" class="no-error-message">Feil i dato</p>
+        <p id="birth-date-error" class="no-error-message">Dato må være mellom 01/01 og 31/12</p>
+        <p id="birth-time-error" class="no-error-message">Tid må være mellom 00:00 og 23:59</p>
         <!-- GASTATION AT BIRTH-->
         <label for="gestation-week">Gestasjonsalder</label>
         <div class="double-input">
             <input id="gestation-week" name="gestation-week" class="gestation half-input child-info-input" type="text" inputmode="numeric" placeholder="39u">
-            <button id="add-child" onclick="validateChild()" class="half-input btn" >Legg til</button>
+            <button id="add-child" class="half-input btn" >Legg til</button>
         </div>
-        <p id="gestation-error" class="no-error-message">Feil i gestasjonalder</p>
+        <p id="gestation-week-error" class="no-error-message">GA må være mellom 22 og 45</p>
     </div>
     <!-- LAB CONTAINER-->
     <div id="lab-container" class="container round-container opacity-container">
         <!-- ADD NEW LAB VALUE-->
         <h2>Legg til målinger</h2>
-        <form id="lab-form">
         <label for="lab-date">Tidspunkt for prøve</label>
         <div class="double-input">
             <input class="half-input lab-input" id="lab-date" type="text" inputmode="numeric" placeholder="dd/mm" disabled>
             <input class="half-input lab-input" id="lab-time" type="text" inputmode="numeric" placeholder="hh:mm" disabled>
         </div>
-        <p class="no-error-message">Feil i dato</p>
+        <p id="lab-date-error" class="no-error-message">Dato må være mellom 01/01 og 31/12</p>
+        <p id="lab-time-error" class="no-error-message">Tid må være mellom 00:00 og 23:59</p>
+        <p id="early-lab-error" class="no-error-message">Før fødseltidspunkt</p>
+        <p id="late-lab-error" class="no-error-message">Mer enn 1mnd etter fødsel</p>
         <label for="bilirubin-value">Bilirubinverdi</label>
         <div class="double-input">
             <input id="bilirubin-value" class="half-input lab-input"  type="text" inputmode="numeric" placeholder="120 µmol/L" disabled>
             <button id="add-lab" class="half-input btn" disabled>Legg til</button>
         </div>
-        <p id="Lab-add-error" class="no-error-message">Feil i bilirubin verdi</p>
-        </form>
+        <p id="bilirubin-value-error" class="no-error-message">Bilirubin må være mellom 0 og 1000</p>
         <!-- LAB VALUES LIST-->
         <hr>
         <ul id="lab-icons">
@@ -107,17 +109,34 @@
     <!-- EXTRA QUESTIONS ACORDING TO GUIDELINES -->
     <!-- TODO: Legg til nøkkelspørsmål ift bilirubinverdier -->
     <!-- CLINICAL GUIDANCE / ADVICE -->
-    <div id="advice-container" class="container round-container opacity-container">
-        <h2 id="advice-title">Faglig råd</h2>
-        <h3 id="advice-paragraph">Funksjon under arbeid</h3>
-        <p></p>
+    <div id="advice-container" class="flex-container flex-column container round-container">
+            <h3 id="advice-title">Ingen oppfølging nødvendig</h3>
+            <p id="advice-paragraph">Barnet trenger ikke videre blodprøvekontroller eller oppfølging for gulsott. Bilirubinnivåene er trygge, og det er ingen behov for lysbehandling eller annen behandling.</p>
+            <h4><span><img src="./assets/icons/flag.svg" alt="flag-icon"></span> Gi tilbakemelding</h4>
     </div>
     <!-- PREFORMATTED AND FINISHED JOURNAL NOTE -->
-    <div id="journal-container" class="container round-container opacity-container">
-        <h2>Journalføre?</h2>
-        <h3>Funksjon under arbeid</h3>
-        <p>Kanpp for å kunne lime inn all info i forhåndslaget journaldokument.</p>
+    <div id="journal-container" class="container round-container">
+        <h3 id="journal-title">Journalføre?</h3>
+        <p id="journal-paragraph">Kopier opplysninger som journalnotat</p>
+        <h4><span><img src="./assets/icons/copy.svg" alt="flag-icon"></span> kopier</h4>
     </div>
 </main>
+<footer>
+    <div class="flex-container main-container">
+        <div class="flex-container flex-column left-column">
+            <p class="small-text">Version 1.0 (01. februar 2025)</p>
+            <h2>Laget med kjærlighet for barneavdelingen ved Sørlandet Sykehus</h2>
+            <p>Rådene i denne algoritmen er basert på Pediatriveilederen, og lysgrensene bygger på konsensus fra Interessegruppen i nyfødtmedisin, Norsk Barnelegeforening (2006, revidert 2016). All data behandles lokalt på din enhet og sendes aldri til eksterne servere. Algoritmen er utviklet med mål om å støtte kliniske vurderinger, men det tas forbehold om mulige feil eller mangler. Behandlende kliniker oppfordres alltid til å gjøre en selvstendig vurdering basert på barnets helhetlige situasjon</p>
+        </div>
+        <div class="flex-container flex-column right-column">
+            <img src="./assets/icons/logo_black.svg" alt="Gult barn logo">
+            <div class="flex-container flex-column feedback">
+                <a href="" class="link">Gi tilbakemelding</a>
+                <p class="mail">hei@sablateknisk.no</p>
+            </div>
+            <p>Algoritmen og nettsiden er utviklet<br>av Åge Frivoll og Vetle Mørland</p>
+        </div>
+    </div>
+</footer>
 </body>
 </html>

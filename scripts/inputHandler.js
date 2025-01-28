@@ -1,232 +1,298 @@
-import {updateChildGraph, updateLabGraph, extrapolationGraphing, removeChildGraph} from "./graph.js"
-export {childInputs, labTaken}
-export {eventListeners, validateChild}
+export {eventListeners, child, labs}
+import {updateChildGraph, updateLabGraph    } from "./graph.js"
 
-let childInputs = {}
-let validatedLabInputs = {}
-let labTaken = {}
+//**
+//**** INPUT OBJECTS
+//**
 
-//Add eventlistneres on start
-function eventListeners() {
-    //VALIDATION AND AUTONEXT ON KEYSTROKE AT INPUTS
-    document.getElementById("all-input-container").addEventListener("keyup", function(target) {
-        autoNextInput(target)
-
-    // SAVE CHILD INPUT AND CREATE GRAPH
-    document.getElementById("add-child").addEventListener("click", function(event) {
-        const CHILDINPUTS = ["birth-weight", "birth-date", "birth-time", "gestation-week"]
-        for (const id of CHILDINPUTS) {
-            //Returns inputted values as integers. Masking ensures correct input.
-            let inputValue = inputToInteger(document.getElementById(id).value);
-            //Returns true or false if the input is valid or not
-            let valid = validate(id, inputValue)
-            //Valid inputs are added to the list
-            if (valid) {
-                errorMessages(id, false)
-            //Invalid inputs are displayed as error
-            } else {
-                errorMessages(id, true)
+//Child-info for export
+let child = null
+class Child {
+    constructor(birthWeight, date, time, gestationWeek) {
+        this.birthWeight = birthWeight
+        this.date = date
+        this.time = time
+        this.gestationWeek = gestationWeek
+        this.timeDate = timeDate(date, time)
+    }
+    lightLimit() {
+        let lightlimit = null
+        if (this.birthWeight < 1000) {
+            lightlimit = {
+                "label": "Under 1000g",
+                "data": {1: 100, 4: 150, 10: 150},
+                "slope": (150 - 100) / (4 - 1)
             }
-        }
-        //Checks for when child inputs is finished
-        if (childInputs["birth-weight"] && childInputs["birth-date"] && childInputs["birth-time"] && childInputs["gestation-week"] ) {
-            let time = childInputs["birth-time"]
-            let date = childInputs["birth-date"]
-            let year = checkYear(date)
-            childInputs["birth-time-date"] = new Date(year, date[1]-1, date[0],time[0], time[1], 0, 0)
-            showLabInputs()
-            showFormCompletion(true)
-            updateChildGraph()
-            document.getElementById("lab-date").focus()
+        } else if (this.birthWeight < 1500) {
+            lightlimit = {
+                "label": "Under 1500g",
+                "data": {1: 125, 4: 200, 10: 200},
+                "slope": (200 - 125) / (4 - 1)
+            }
+        } else if (this.birthWeight < 2500) {
+            lightlimit = {
+                "label": "Under 2500g",
+                "data": {1: 150, 4: 250, 10: 250},
+                "slope": (250 - 150) / (4 - 1)
+            }
+        } else if (this.birthWeight > 2500 && this.gestationWeek < 37) {
+            lightlimit = {
+                "label": "Over 2500g + GA <37",
+                "data": {1: 150, 3: 300, 10: 300},
+                "slope": (300 - 150) / (3 - 1)
+            }
+        } else if (this.birthWeight > 2500 && this.gestationWeek >= 37) {
+            lightlimit = {
+                "label": "Over 2500g + GA >=37",
+                "data": {1: 175, 3: 350, 10: 350},
+                "slope": (350 - 175) / (3 - 1)
+            }
         } else {
-        console.log("Not ready for labs")
-    }})
-    //SAVE LAB INPUTS AND CREATE GRAPH
-    document.getElementById("add-lab").addEventListener("click", function(){
-        const LABINPUTS = ["lab-date", "lab-time", "bilirubin-value"]
-        for (const id of LABINPUTS) {
-            //Returns inputted values as integers. Masking ensures correct input.
-            let inputValue = inputToInteger(document.getElementById(id).value);
-            //Returns true or false if the input is valid or not
-            let valid = validate(id, inputValue)
-            //Valid inputs are added to the list
-            if (valid) {
-                errorMessages(id, false)
-                addValue(id, inputValue)
-                //Invalid inputs are displayed as error
-            } else {
-                errorMessages(id, true)
-            }
+            console.log("ERROR: No lightlimit found")
         }
-        saveLab();
-    })
-})}
+        return(lightlimit)
+    }
+}
 
-function autoNextInput(target) {
-    //Get ID for input element
-    let inputID = target.target.id
-    let inputValue = target.target.value;
-    //Chooce next focus when validated
-    let inputFields = ["birth-weight", "birth-date", "birth-time", "gestation-week", "add-child" ,"lab-date", "lab-time", "bilirubin-value", "add-lab"]
-    let nextInput = (inputFields[inputFields.indexOf(inputID) +1])
-    //If time/date, remove id before (eg. birth-time -> time)
-    let validationID = inputID
-    if (validationID.includes("time") || validationID.includes("date")) {
-        validationID = validationID.substring(validationID.indexOf("-")+1)
-    }
-    //AUTOFOCUS PARAMETERS
-    const VALID_LENGTH = {
-        "birth-weight": 5,
-        "date": 5,
-        "time": 5,
-        "gestation-week": 3,
-        "bilirubin-value": 10
-    }
-    //Validate input (correct range + format) -> go to next input
-    let inputValid = validate(inputID, inputToInteger(inputValue));
-    if (inputValid && inputValue.replaceAll('_','').length === VALID_LENGTH[validationID])
-    {
-        document.getElementById(nextInput).focus()
-    }
+//Labs for export
+let labs = []
+class Lab {
+    constructor(bilirubin, time, date) {
+        this.bilirubin = bilirubin
+        this.time = time
+        this.date = date
+        this.timeDate = timeDate(date, time)
+    }}
+
+
+
+//**
+//**** EVENT LISTENERES
+//**
+
+//ADD EVENT LISTENERES ON START
+function eventListeners() {
+    document.getElementById("add-child").addEventListener("click", saveChild)
+    document.getElementById("add-lab").addEventListener("click", saveLab)
+    document.getElementById("journal-container").addEventListener("click", function (event) {
+        target.backgroundImage = "url('./assets/icons/journal_grey.svg\')"
+    })
+}
+
+//**
+//**** GENERAL FUNCTIONS
+//**
+
+//CREATE TIMEDATE FROM LOCAL DATE + TIME
+function timeDate(date, time) {
+    let year = checkYear(date)
+    return(new Date(year, date[1] - 1, date[0], time[0], time[1], 0, 0))
 }
 
 //CONVERT INPUT TO INTEGERS
 function inputToInteger(input) {
-    console.log("INPUT: " + input)
     //Format values: remove masking and split minutes/hours & months/days
     let integerOutput = null
     if (/[gud]/.test(input)) {
-        integerOutput =  parseInt(input.substring(0, input.length - 1))
+        integerOutput = parseInt(input.substring(0, input.length - 1))
     } else if ((/µmol\/L/).test(input)) {
-        integerOutput =  parseInt(input.substring(0, input.length - 6))
+        integerOutput = parseInt(input.substring(0, input.length - 6))
     } else if (/[:/]/.test(input)) {
         let ddhh = parseInt(input.substring(0, 2)) // days or hours
         let mmmm = parseInt(input.substring(3, 5)) // months or minutes
         integerOutput = [ddhh, mmmm]
     }
-    return(integerOutput)
+    return (integerOutput)
 }
 
 //VALIDATE INPUTS
-function validate(id, integer) {
+function inputValidation(htmlID, intValue) {
+    //If time/date, remove id before (eg. birth-time -> time)
+    let validationID = htmlID
+    if (validationID.includes("time") || validationID.includes("date")) {
+        validationID = validationID.substring(validationID.indexOf("-") + 1)
+    }
     let validation = null
     //Valid input ranges for each HTML ID
     const validationCriteria = {
-        "birth-weight": [500, 4999],
-        "date": [[1, 31],[1,12]],
-        "time": [[0, 23],[0, 59]],
+        "birth-weight": [500, 7500],
+        "date": [[1, 31], [1, 12]],
+        "time": [[0, 23], [0, 59]],
         "gestation-week": [22, 45],
         "bilirubin-value": [0, 1000],
     }
     //Validate time/date input
-    let sorting = id.includes("time")?"time":"date";
-    if (id.includes("time")||id.includes("date")) {
-        (integer != null
-            &&  integer[0] >= validationCriteria[sorting][0][0]
-            && integer[0] <= validationCriteria[sorting][0][1]
-            && integer[1] >= validationCriteria[sorting][1][0]
-            && integer[1] <= validationCriteria[sorting][1][1])
-            ?validation=true:validation=false;
+    let sorting = validationID.includes("time") ? "time" : "date";
+    if (validationID.includes("time") || validationID.includes("date")) {
+        (intValue != null
+            && intValue[0] >= validationCriteria[sorting][0][0]
+            && intValue[0] <= validationCriteria[sorting][0][1]
+            && intValue[1] >= validationCriteria[sorting][1][0]
+            && intValue[1] <= validationCriteria[sorting][1][1])
+            ? validation = true : validation = false;
     }
-
     //Validates all other inputs (gram/weeks/days/mikromol)
     else {
-        (integer != null
-            && integer >= validationCriteria[id][0]
-            && integer <= validationCriteria[id][1]
-        )?validation=true:validation=false;
+        (intValue != null
+            && intValue >= validationCriteria[validationID][0]
+            && intValue <= validationCriteria[validationID][1]
+        ) ? validation = true : validation = false;
     }
-    return(validation)
-}
-function validateChild() {
-    console.log("VALIDATE CHILD")
-    //todo validate whole container
-    //
-}
-
-
-function validateForm(formElement) {
-    for (const input of formElement.elements) {
-        if (input.type === 'text') {
-            console.log(input.id)
-        }
-    }
-}
-
-//ADD ERROR MESSAGE CLASS
-function errorMessages(id, valid) {
-    //Add class dependent on valid input or not (true/false)
-    let addCss = valid? "error-message": "no-error-message"
-    let removeCss = valid? "no-error-message": "error-message"
-    //Target element
-    const targetEleemnet = document.getElementById(id)
-    //Add addCss to full inputs
-    if (targetEleemnet.classList.contains("full-input")) {
-        targetEleemnet.nextElementSibling.classList.add(addCss)
-        targetEleemnet.nextElementSibling.classList.remove(removeCss)
-    //Add addCss to half inputs
-    } else if (targetEleemnet.classList.contains("half-input" || "lab-input")) {
-        targetEleemnet.parentElement.nextElementSibling.classList.add(addCss)
-        targetEleemnet.parentElement.nextElementSibling.classList.remove(removeCss)
-    }
-}
-
-function showFormCompletion(boolean) {
-    const COMPLETE_ICON = document.getElementById("complete-icon")
-    if (boolean) {
-        COMPLETE_ICON.classList.remove("hidden")
-    } else {
-        COMPLETE_ICON.classList.add("hidden")
-    }
+    return (validation)
 }
 
 function checkYear(date) {
     let year = new Date().getFullYear()
     //Check if date is larger then today (hence subtract one year
-    if (new Date(year, date[1]-1, date[0],0, 0, 0, 0) > new Date()) {
+    if (new Date(new Date().getFullYear(), date[1] - 1, date[0], 0, 0, 0, 0) > new Date()) {
         year += -1
-    } else { year = year}
+    }
     return year
 }
 
-function saveLab() { //addlab
-    let bilirubin = validatedLabInputs["bilirubin-value"]
-    let time = validatedLabInputs["lab-time"]
-    let date = validatedLabInputs["lab-date"]
-    let year = checkYear(date)
-    let labTimeDate = new Date(year, date[1]-1, date[0],time[0], time[1], 0, 0)
-    //If lab is before birth -> Create errror message. Includes future values
-    if (labTimeDate < childInputs["birth-time-date"]) {
-        errorMessages("lab-date", true)
-    //Else update labvalues
-    }else {
-        labTaken[labTimeDate] = [time, date, bilirubin]
+//TOGGLE OPACITY
+function toggleOpacity(boolean) {
+    //True = enable opacity. False = disable opacity
+    //Toggle inputs disabled
+    const labInputs = [
+        document.getElementById("lab-date"),
+        document.getElementById("lab-time"),
+        document.getElementById("bilirubin-value"),
+        document.getElementById("add-lab")]
+    for (const input of labInputs) {
+        boolean? input.disabled = true : input.disabled = false
+    }
+    //Toggle container opacity
+    if (boolean) {
+        document.getElementById("lab-container").classList.add("opacity-container")
+        document.getElementById("graph-container").classList.add("opacity-container")
+    } else {
+        document.getElementById("lab-container").classList.remove("opacity-container")
+        document.getElementById("graph-container").classList.remove("opacity-container")
+    }
+}
 
-        //Make array with only datestamps
-        let oldArray = labTaken
-        let timeArray = []
-        for (var timestamp in labTaken) {
-            timeArray.push(new Date(timestamp))
+//ADD ERROR MESSAGE
+function errorMessages(id, valid) {
+    //Add class dependent on valid input or not (true/false)
+    let addCss = valid ? "no-error-message" : "error-message"
+    let removeCss = valid ? "error-message" : "no-error-message"
+    //Target element
+    let errorId = id + "-error"
+    document.getElementById(errorId).classList.add(addCss)
+    document.getElementById(errorId).classList.remove(removeCss)
+}
+
+//**
+//**** CHILD/LAB BOX VALIDATION
+//**
+function validateInputGroup(classSelector) {
+    let errorCounter = 0;
+    let inputs = document.querySelectorAll(classSelector)
+    let validatedInputs = []
+    //Loop through all inputs
+    for (const input of inputs) {
+        //Get value and ID
+        let inputID = input.id
+        let inputValue = inputToInteger(input.value);
+        //VALIDATION OF INPUT.
+        if (inputValidation(inputID, inputValue)) {
+            //Remove error message
+            errorMessages(inputID, true)
+            //Add validated input
+            validatedInputs.push(inputValue)
+        } else {
+            //Add error message + error counter
+            errorMessages(inputID, false)
+            errorCounter +=1;
         }
+    }
+    return [validatedInputs, errorCounter]
+}
 
-        //Sort array with datestamps according to time
-        timeArray = timeArray.sort(function (a, b) {
-            return a - b
-        })
+//**
+//**** CHILD HANDLING
+//**
+function saveChild() {
 
-        //Update LabTaken in sorted order
-        let sortedLabTaken = {}
-        for (const [key, value] of Object.entries(timeArray)) {
-            sortedLabTaken[value] = labTaken[value]
-        }
-        labTaken = sortedLabTaken
+    let validation = validateInputGroup(".child-info-input")
+    let validatedInputs = validation[0]
+    let errorCounter = validation[1]
 
-        //Update HTML + UPDATE GRAPH
-        clearLabinput()
-        displayLabs();
-        updateLabGraph();
-        extrapolationGraphing();
+    //Check if child as whole is valid
+    if (errorCounter == 0) {
+        //Create child object
+        child = new Child(validatedInputs[0], validatedInputs[1], validatedInputs[2], validatedInputs[3])
+        //Show complete icon on box
+        document.getElementById("complete-icon").classList.remove("hidden")
+        //Remove opacity on labs + graph
+        toggleOpacity(false)
+        //Create child graph
+        updateChildGraph()
+        //Focus on lab-date
         document.getElementById("lab-date").focus()
+    //If not valid = remove complete icon, turn on opacity, auto-focus on error input and remove graph
+    } else {
+        document.getElementById("complete-icon").classList.add("hidden") //Remove complete icon on box
+        toggleOpacity(true) // Add opacity and disable lab inputs
+        //todo focus on error-input
+        //todo remove graphs
+    }
+}
+
+//**
+//**** LAB HANDLING
+//**
+
+function saveLab() {
+    //Validation function and variables
+    let validation = validateInputGroup(".lab-input")
+    let validatedInputs = validation[0]
+    let errorCounter = validation[1]
+
+    //Check if lab is complete
+    if (errorCounter == 0) {
+        let birthMonth = child.timeDate.getMonth() + 1
+        let labMonth = validatedInputs[0][1]
+        //Om lab er før fødsel
+
+        // Om lab er mer enn 3 mnd etter
+
+        // Om lab er innenfor
+
+        //Calculate timedate variable
+        let year = checkYear(validatedInputs[0])
+        let timeDate = new Date(year, validatedInputs[0][1] - 1, validatedInputs[0][0], validatedInputs[1][0], validatedInputs[1][1], 0, 0)
+        //Check that lab is taken after child is born
+        if (timeDate < child.timeDate) {
+            errorMessages("early-lab", false)
+            console.log("ERROR: Lab is taken before child is born")
+            console.log(`Timedate ${timeDate}`)
+            console.log(`ChildTime ${child.timeDate}`)
+        } else {
+        //Save lab in labs
+            let lab = new Lab(
+                //Bilirubin
+                validatedInputs[2],
+                //Date
+                validatedInputs[1],
+                //Time
+                validatedInputs[0])
+            //Add lab object to lab collection
+            labs.push(lab)
+            labs = labs.sort((a, b) => a.timeDate - b.timeDate)
+            //Sort collection on time taken
+            //Remove error message, clear inputs, display labs and focus on lab date.
+            errorMessages("early-lab", true)
+            clearLabinput()
+            displayLabs();
+            updateLabGraph()
+            //extrapolationGraphing()
+            document.getElementById("lab-date").focus()
+        }
+    //Lab is incomplete
+    } else {
+        //todo focus on error-input
     }
 }
 
@@ -238,41 +304,34 @@ function clearLabinput() {
 }
 
 function displayLabs() {
-    //Display info on page
-    //UL element for all lab <li> items
+    //REMOVE OLD LABS
     const labList = document.getElementById("lab-list")
-    //Remove old instance
     labList.innerHTML = ""
-    //Loop through all labs:
-    for (var key in labTaken) {
-        //Decomposistion of values:
-        let time = labTaken[key][0]
-        let date = labTaken[key][1]
-        let bilirubin = labTaken[key][2]
-
-        //Create each lab as LI
+    //READD LABS
+    for (const lab of labs) {
+        ////Create each lab as LI
         const li = document.createElement("li")
-        li.id = key
+        li.id = lab.timeDate
         li.classList.add("individual-lab")
         const button = document.createElement("button")
         button.classList.add("remove-lab")
-        button.addEventListener("click", function(event) {
-          removeLab(event.target)
+        button.addEventListener("click", function (event) {
+            removeLab(event.target)
         })
         const image = document.createElement("img")
-        image.src = "./assets/icons/fjern.svg"
+        image.src = "./assets/icons/remove.svg"
         image.classList.add("individual-lab-remove")
         image.alt = "delete-icon"
         //Lab value
         const labValueElement = document.createElement('p')
         labValueElement.classList.add("semi-bold")
-        labValueElement.innerHTML = bilirubin
+        labValueElement.innerHTML = lab.bilirubin
         //Lab date
         const labDateElement = document.createElement('p')
-        labDateElement.innerHTML = date[0].toString().padStart(2, "0") + "/" + date[1].toString().padStart(2, "0")
+        labDateElement.innerHTML = lab.date[0].toString().padStart(2, "0") + "/" + lab.date[1].toString().padStart(2, "0")
         //Lab time
         const labTimeElement = document.createElement('p')
-        labTimeElement.innerHTML = time[0].toString().padStart(2, "0") + ":" + time[1].toString().padStart(2, "0")
+        labTimeElement.innerHTML = lab.time[0].toString().padStart(2, "0") + ":" + lab.time[1].toString().padStart(2, "0")
 
         //Append elements to each other
         button.appendChild(image)
@@ -282,67 +341,22 @@ function displayLabs() {
         li.appendChild(labTimeElement)
         labList.appendChild(li)
     }
+
 }
-function removeLab (targetButton) {
-    //Remove from LabTaken array
-    delete labTaken[targetButton.parentElement.parentElement.id]
+
+function removeLab(targetButton) {
+    //Remove from Labs array
+    for (let i = 0; i < labs.length; i++) {
+        //
+        if (labs[i].timeDate == targetButton.parentElement.parentElement.id) {
+            labs.splice(i, 1)
+            break
+        }
+    }
     //Update HTML
     displayLabs()
     //Update Graph
     updateLabGraph()
     //Update extrapolation
-    extrapolationGraphing()
-}
-
-function showLabInputs() {
-    //Fetch all inputs that need to be activated:
-    const labDate = document.getElementById("lab-date")
-    const labTime = document.getElementById("lab-time")
-    const bilirubinValue = document.getElementById("bilirubin-value")
-    const addLab = document.getElementById("add-lab")
-    const labInputs = [labDate, labTime, bilirubinValue, addLab]
-    for (const input of labInputs) {
-        input.disabled = false
-    }
-    //Remove opacity on lab container
-    const labContainer = document.getElementById("lab-container")
-    labContainer.classList.remove("opacity-container")
-
-    const graphContainer = document.getElementById("graph-container")
-    graphContainer.classList.remove("opacity-container")
-
-}
-
-
-
-
-
-//Reorganize form to values
-function getFormValues(form) {
-    let values = {}
-    for (input of form.elements) {
-        if (input.type === 'text') {
-            if (input.id === 'birth-weight') {
-                values["birthWeight"] = input.value;
-            } else if (input.id === 'birth-date') {
-                values["birthDate"] = input.value;
-            } else if (input.id === 'birth-time') {
-                values["birthTime"] = input.value;
-            } else if (input.id === 'gestation-week') {
-                values["gestationWeek"] = input.value;
-            }
-        }
-    }
-    return(values)
-}
-
-
-//create objects from Form
-class ChildInfo {
-    constructor([birthWeight, birthDate, birthTime, gestationWeek]) {
-        this.birthWeight = birthWeight;
-        this.birthDate = birthDate;
-        this.birthTime = birthTime;
-        this.gestationWeek = gestationWeek;
-    }
+    //extrapolationGraphing()
 }
