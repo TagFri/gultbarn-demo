@@ -1,5 +1,6 @@
 export {eventListeners, child, labs}
 import {updateChildGraph, updateLabGraph    } from "./graph.js"
+import {copyContent} from "./journal.js"
 
 //**
 //**** INPUT OBJECTS
@@ -74,8 +75,12 @@ class Lab {
 function eventListeners() {
     document.getElementById("add-child").addEventListener("click", saveChild)
     document.getElementById("add-lab").addEventListener("click", saveLab)
-    document.getElementById("journal-container").addEventListener("click", function (event) {
-        target.backgroundImage = "url('./assets/icons/journal_grey.svg\')"
+    document.getElementById("journal-copy").addEventListener("click", copyContent)
+    document.getElementById("journal-copy").addEventListener("mouseover", function () {
+        document.getElementById("journal-container").style.backgroundImage = "url('./assets/icons/journal_yellow.svg')"
+    })
+    document.getElementById("journal-copy").addEventListener("mouseout", function () {
+        document.getElementById("journal-container").style.backgroundImage = "url('./assets/icons/journal_grey.svg')"
     })
 }
 

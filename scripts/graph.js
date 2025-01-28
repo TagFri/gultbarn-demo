@@ -1,5 +1,5 @@
 export {initiateGraph, updateChildGraph, updateLabGraph}
-import {child, labs} from "./inputHandler.js"
+import {child, labs, } from "./inputHandler.js"
 
 const yellowStrong =    'rgb(245, 162, 1)'
 const yellowMedium =    'rgb(251, 193, 105)'
@@ -203,14 +203,6 @@ function extrapolationGraphing() {
         let diffx = (lab2.timeDate.getTime() - lab1.timeDate.getTime()) / (1000 * 60 * 60 * 24)
         let diffy = (lab2.bilirubin - lab1.bilirubin)
         let slope = diffy / diffx
-        //If <24h
-            // advice = tidlig ikterus
-        //If over lysgrense
-            // advice = transfusjon
-        //If no slope
-            //Easy extrapolation
-        //If slope
-    }
 
         //ESTIMATE TIME TO CROSSING
         //let currentLightSlope -> [1,4,((150-100)/(4-1)),100, 150]
@@ -248,19 +240,13 @@ function extrapolationGraphing() {
             myChart.data.datasets[2].spanGaps = true
             myChart.data.datasets[2].tension = 0
             myChart.update()
-            console.log("Extrapolation graph updated")
-            console.log("Labslope: " + currentLabSlope)
-            console.log("Lightslope: " + (currentLightSlope[2]))
-            console.log("ETA crossing in: " + Math.floor((xToCrossing * 100)/100) + " = " + prettyDateFromX(xCrossing))
         } else {
             myChart.data.datasets[2].data = []
             myChart.update()
-            console.log("Extrapolation graph deleted")
         }
         myChart.data.datasets[2].data = []
         myChart.update()
-        console.log("Not enough datapoints for extrapolation")
-}
+}}
 
 function prettyDateFromX(x) {
     let date = new Date(child.timeDate.getTime())

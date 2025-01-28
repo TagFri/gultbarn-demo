@@ -167,7 +167,7 @@ label {
         height: 1rem;
     }
     h3, p, h4 {
-        margin: 0.75rem 0.3rem;
+        padding: 0.75rem 0.3rem;
     }
 }
 
@@ -177,6 +177,10 @@ label {
     background-image: url("./assets/icons/journal_grey.svg");
     background-position: bottom center;
     background-size: 40%;
+}
+
+#journal-copy:hover {
+    cursor: pointer;
 }
 
 hr {
