@@ -10,7 +10,7 @@
             name="description"
             content="Pediatric bilirubin calculator to support clinical guidance">
     <title>gult barn</title>
-    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="icon" type="image/x-icon" href="./assets/icons/logo.svg">
     <!-- GOOGLE FONTS -->
@@ -49,20 +49,20 @@
         <h2>Om barnet</h2>
         <!-- BIRTH WEIGHT INPUT-->
         <label for="birth-weight">Fødselsvekt</label>
-        <input id="birth-weight" name="birth-weight" class="birthWeight full-input child-info-input" type="text" inputmode="numeric" placeholder="3500g">
+        <input id="birth-weight" name="birth-weight" class="birthWeight full-input child-input" type="text" inputmode="numeric" placeholder="3500g">
         <p id="birth-weight-error" class="no-error-message">Må være mellom 500 - 7500g</p>
         <!-- BIRTH TIME INPUT-->
         <label for="birth-date">Fødselstidpunkt</label>
         <div class="double-input">
-            <input id="birth-date" name="birt-date" class="birthTimeDate half-input child-info-input" type="text" inputmode="numeric" placeholder="dd/mm">
-            <input id="birth-time" name="birt-time" class="birthTimeDate half-input child-info-input" type="text" inputmode="numeric" placeholder="hh:mm">
+            <input id="birth-date" name="birt-date" class="birthTimeDate half-input child-input" type="text" inputmode="numeric" placeholder="dd/mm">
+            <input id="birth-time" name="birt-time" class="birthTimeDate half-input child-input" type="text" inputmode="numeric" placeholder="hh:mm">
         </div>
         <p id="birth-date-error" class="no-error-message">Dato må være mellom 01/01 og 31/12</p>
         <p id="birth-time-error" class="no-error-message">Tid må være mellom 00:00 og 23:59</p>
         <!-- GASTATION AT BIRTH-->
         <label for="gestation-week">Gestasjonsalder</label>
         <div class="double-input">
-            <input id="gestation-week" name="gestation-week" class="gestation half-input child-info-input" type="text" inputmode="numeric" placeholder="39u">
+            <input id="gestation-week" name="gestation-week" class="gestation half-input child-input" type="text" inputmode="numeric" placeholder="39u">
             <button id="add-child" class="half-input btn" >Legg til</button>
         </div>
         <p id="gestation-week-error" class="no-error-message">GA må være mellom 22 og 45</p>
@@ -109,16 +109,16 @@
     <!-- EXTRA QUESTIONS ACORDING TO GUIDELINES -->
     <!-- TODO: Legg til nøkkelspørsmål ift bilirubinverdier -->
     <!-- CLINICAL GUIDANCE / ADVICE -->
-    <div id="advice-container" class="flex-container flex-column container round-container">
-            <h3 id="advice-title">Ingen oppfølging nødvendig</h3>
-            <p id="advice-paragraph">Barnet trenger ikke videre blodprøvekontroller eller oppfølging for gulsott. Bilirubinnivåene er trygge, og det er ingen behov for lysbehandling eller annen behandling.</p>
-            <h4><span><img src="./assets/icons/flag.svg" alt="flag-icon"></span> Gi tilbakemelding</h4>
+    <div id="advice-container" class="flex-container flex-column container round-container opacity-container">
+            <h3 id="advice-title">Fagelig råd</h3>
+            <p id="advice-paragraph"><br><br><br></p>
+            <h4 id="feedback-button" class="hidden"><span><img src="./assets/icons/flag.svg" alt="flag-icon"></span> Gi tilbakemelding</h4>
     </div>
     <!-- PREFORMATTED AND FINISHED JOURNAL NOTE -->
-    <div id="journal-container" class="container round-container">
+    <div id="journal-container" class="container round-container ">
         <h3 id="journal-title">Journalføre?</h3>
         <p id="journal-paragraph">Kopier opplysninger som journalnotat</p>
-        <h4 id="journal-copy"><span><img id="journal-copy-img" src="./assets/icons/copy.svg" alt="flag-icon"></span> kopier</h4>
+        <h4 id="journal-copy" class="tooltip"><span class="tooltiptext" id="myTooltip">Kopiert</span><span><img id="journal-copy-img" src="./assets/icons/copy.svg" alt="flag-icon"></span> kopier</h4>
     </div>
 </main>
 <footer>
@@ -131,7 +131,7 @@
         <div class="flex-container flex-column right-column">
             <img src="./assets/icons/logo_black.svg" alt="Gult barn logo">
             <div class="flex-container flex-column feedback">
-                <a href="" class="link">Gi tilbakemelding</a>
+                <a href="mailto:hei@sablateknisk.no" class="link">Gi tilbakemelding</a>
                 <p class="mail">hei@sablateknisk.no</p>
             </div>
             <p>Algoritmen og nettsiden er utviklet<br>av Åge Frivoll og Vetle Mørland</p>

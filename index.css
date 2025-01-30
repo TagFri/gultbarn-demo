@@ -144,10 +144,10 @@ label {
 #advice-container {
     text-align: left;
     align-items: flex-start;
-    background-color: var(--color-yellow-light);
+    background-color: var(--color-yellow-lighter);
     /* BAKGRUNNS BILDE */
-    background-image: url("./assets/icons/no_follow_up.svg");
     background-size: 25%;
+    background-image: url("assets/icons/advice/outcome_box_inactive.svg");
     background-position: bottom right;
     padding-right: 30%;
     h4 {
@@ -171,17 +171,35 @@ label {
     }
 }
 
+
+@keyframes animatedBackground {
+    0% {
+        background-position-y: calc(100% + 30px);
+        transition-duration: 0.4s;
+    }
+    50% {
+        background-position-y: calc(100% + 20px);
+    }
+    100% {
+        background-position-y: calc(100% + 30px);
+    }
+}
+
 #journal-container {
     background-color: var(--color-grey-light);
     /* BAKGRUNNS BILDE */
     background-image: url("./assets/icons/journal_grey.svg");
-    background-position: bottom center;
-    background-size: 40%;
+    background-position: center;
+    background-position-y: calc(100% + 30px);
+    background-size: 45%;
+    transition: all 0.1s ease-in-out;
+
 }
 
 #journal-copy:hover {
     cursor: pointer;
 }
+
 
 hr {
     border: 0.005rem solid var(--color-grey);
@@ -294,7 +312,6 @@ footer {
     }
     h2, p {
         margin-bottom: 1.25rem;
-        line-height: 1.4rem;
     }
     a {
         margin-bottom: 0.5rem;
@@ -304,6 +321,7 @@ footer {
     .link {
         font-weight: bold;
         text-decoration: underline;
+        color: black;
     }
     .link:hover {
         text-decoration: none;
@@ -311,4 +329,38 @@ footer {
     }
     .link:visited {
         color: var(--color-black);
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 100px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 80%;
+    left: 50%;
+    margin-left: -50px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.8rem;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
 }

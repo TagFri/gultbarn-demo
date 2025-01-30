@@ -6,7 +6,7 @@ body {
     h4 {line-height: 1.1;   letter-spacing:  0.01rem;}
     h5 {line-height: 1.111; letter-spacing:  0.01rem;}
     h6 {line-height: 1.125; letter-spacing:  0.01rem;}
-    p {line-height: 1.1;    letter-spacing:  0.01rem;}
+    p {line-height: 1.3;    letter-spacing:  0.01rem;}
 }
 /* Font family*/
 *, h1, h2, h3, h4, h5, h6, p, input, a, li{
