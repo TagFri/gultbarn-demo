@@ -317,18 +317,18 @@ footer {
         margin-bottom: 0.5rem;
         font-size: 1.04rem;
     }
-    }
-    .link {
-        font-weight: bold;
-        text-decoration: underline;
-        color: black;
-    }
-    .link:hover {
-        text-decoration: none;
-        color: var(--color-black);
-    }
-    .link:visited {
-        color: var(--color-black);
+}
+.link {
+    font-weight: bold;
+    text-decoration: underline;
+    color: black;
+}
+.link:hover {
+    text-decoration: none;
+    color: var(--color-black);
+}
+.link:visited {
+    color: var(--color-black);
 }
 
 .tooltip {

@@ -111,6 +111,9 @@ function initiateGraph() {
                     //Turn on/off hover box on each datapoint
                     enabled: true,
                     callbacks: {
+                        title: function(context) {
+                            return ""
+                        },
                         label: function(context) {
                             //X verdi -> Dato
                             return prettyDateFromX(context.parsed.x) + " - Bilirubin: " + context.parsed.y + " mg/dl"
