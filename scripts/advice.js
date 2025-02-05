@@ -90,7 +90,7 @@ function getAdvice() {
         ||bilirubinSlope > 240
         ||lastBilirubinValue > transfusionLimit) {
         console.log("transfusion-advice")
-        return(advices[transfusion])
+        return(advices[advices.indexOf(transfusion)])
 //EARLY ICTERUS
     } else if (absolute2relativeDate(lastBilirubinDate)<1) {
         return(advices[advices.indexOf(earlyIcterus)])
@@ -127,11 +127,11 @@ function getAdvice() {
 function updateAdvice() {
     //Get advice icon
     const adviceElement = getAdvice()
+    console.log(adviceElement)
     //Create email template:
     let href = "mailto:hei@sablateknisk.no?subject=Gult barn&body="
-        href += "Hei, og takk for at du vil gi oss en tilbakemelding! Skriv så detaljert som mulig så kommer vi tilbake til deg så fort vi kan :) "
         href += "%0A%0A%0A%0A"
-        href += "AUTOGENERERT INFO FOR FEILSØKING:%0A"
+        href += "AUTOGENERERT RAPPORT:%0A"
         href += "Råd: " + adviceElement.title + "%0A"
         href += "Beskrivelse: " + adviceElement.description + "%0A%0A"
         href += "BARNETS INFO:%0A"

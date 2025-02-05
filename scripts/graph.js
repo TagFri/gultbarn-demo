@@ -22,6 +22,7 @@ function initiateGraph() {
     ctx.innerHTML = "";
     //Chart font size
     Chart.defaults.font.size = 14;
+    Chart.defaults.font.family = "Poppins"
     //todo Include change on resize window
     //Chart font family
     Chart.defaults.font.family = 'Poppins';
@@ -42,6 +43,7 @@ function initiateGraph() {
                     pointRadius: 0,     //Datapoint radis. 0 = not show
                     showLine: true,     //Show line on scatter plot
                     fill: false,        //Remove fill under graph
+                    order: 4,
                 },
                 {//DATASET 1 -> LAB VALUES
                     label: "Lab",
@@ -54,6 +56,7 @@ function initiateGraph() {
                     pointRadius: 8,
                     showLine: true,
                     fill: false,
+                    order: 1,
                 },
                 {//DATASETT 2 -> EXTRAPOLATION OF LAB VALUES
                     label: "Beregning",
@@ -67,6 +70,7 @@ function initiateGraph() {
                     pointRadius: 8,
                     showLine: true,
                     fill: false,
+                    order: 2,
                 },
                 {//DATASETT 3 -> Transfusion
                     label: "Transfusjon",
@@ -78,6 +82,7 @@ function initiateGraph() {
                     pointRadius: 8,
                     showLine: true,
                     fill: false,
+                    order: 3,
                 }
             ],
         },
@@ -165,7 +170,9 @@ function initiateGraph() {
 function updateChildGraph() {
     if (child != null) {
         let lightInfo = child.getLightLimit()
-        myChart.options.plugins.title.text = "Lysgrense for barn " + lightInfo["label"]
+        document.getElementById("graph-label").innerHTML = "Lysgrense for barn " + lightInfo["label"]
+        //Oppdater child label graf
+        //myChart.options.plugins.title.text = "Lysgrense for barn " + lightInfo["label"]
         myChart.data.datasets[0].data = lightInfo.data
         myChart.options.scales.y.max = lightInfo.data[10] + 50
         chartParameters["light-slope"] = lightInfo.slope

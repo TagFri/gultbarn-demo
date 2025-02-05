@@ -104,19 +104,22 @@
     </div>
     <!-- GRAPH -->
     <div id="graph-container" class="container opacity-container">
+        <h4 id="graph-label"></h4>
         <canvas id="graph"></canvas>
     </div>
     <!-- EXTRA QUESTIONS ACORDING TO GUIDELINES -->
     <!-- TODO: Legg til nøkkelspørsmål ift bilirubinverdier -->
     <!-- CLINICAL GUIDANCE / ADVICE -->
     <div id="advice-container" class="flex-container flex-column container round-container opacity-container">
-            <h3 id="advice-title">Fagelig råd</h3>
+        <div>
+            <h2 id="advice-title">Fagelig råd</h2>
             <p id="advice-paragraph"><br><br><br></p>
-            <h4 id="feedback-button" class="hidden"><span><img src="./assets/icons/flag.svg" alt="flag-icon"></span><a class="link">Gi tilbakemelding</a></h4>
+        </div>
+        <h4 id="feedback-button" class="hidden"><span><img src="./assets/icons/flag.svg" alt="flag-icon"></span><a class="">Gi tilbakemelding</a></h4>
     </div>
     <!-- PREFORMATTED AND FINISHED JOURNAL NOTE -->
     <div id="journal-container" class="container round-container opacity-container">
-        <h3 id="journal-title">Journalføre?</h3>
+        <h2 id="journal-title">Journalføre?</h2>
         <p id="journal-paragraph">Kopier opplysninger som journalnotat</p>
         <h4 id="journal-copy" class="tooltip"><span class="tooltiptext" id="myTooltip">Kopiert</span><span><img id="journal-copy-img" src="./assets/icons/copy.svg" alt="flag-icon"></span> kopier</h4>
     </div>
@@ -131,7 +134,7 @@
         <div class="flex-container flex-column right-column">
             <img src="./assets/icons/logo_black.svg" alt="Gult barn logo">
             <div class="flex-container flex-column feedback">
-                <a href="mailto:hei@sablateknisk.no" class="link">Gi tilbakemelding</a>
+                <a href="mailto:hei@sablateknisk.no?subject=Gult barn tilbakemelding" class="link"> Gi tilbakemelding</a>
                 <p class="mail">hei@sablateknisk.no</p>
             </div>
             <p>Algoritmen og nettsiden er utviklet<br>av Åge Frivoll og Vetle Mørland</p>

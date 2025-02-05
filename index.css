@@ -134,6 +134,7 @@ label {
     text-align: left;
     margin-top: 0.8rem;
     margin-bottom: 0.3rem;
+    font-size: 1rem;
 }
 
 
@@ -143,6 +144,7 @@ label {
 
 #advice-container, #journal-container {
     border: none;
+    padding: 2rem;
     font-size: 1rem;
     display: flex;
     flex-direction: column;
@@ -152,14 +154,20 @@ label {
     img {
         height: 1rem;
     }
-    h3, p, h4 {
+    h2, p, h4 {
         padding: 0.75rem 0.3rem;
+    }
+    a {
+        text-decoration: none;
+        color: var(--color-black);
+        padding-left: 0.5rem;
     }
 }
 
 #advice-container {
     text-align: left;
     align-items: flex-start;
+    justify-content: space-between;
     background-color: var(--color-yellow-lighter);
     /* BAKGRUNNS BILDE */
     background-size: 25%;
@@ -226,6 +234,7 @@ li {
 
 #graph-container {
     width: 98%;
+    text-align: center;
 }
 
 .individual-lab {
