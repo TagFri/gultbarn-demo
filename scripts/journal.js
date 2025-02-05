@@ -8,7 +8,6 @@ function copyContent() {
     console.log("COPYCONTENT CALLED");
 
     var image = myChart.toBase64Image();
-    console.log(image);
 
     // Fetch Advice Information
     let adviceTitle = document.getElementById("advice-title").innerHTML;

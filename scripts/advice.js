@@ -94,36 +94,41 @@ function getAdvice() {
     console.log(absolute2relativeDate(lastBilirubinDate)>14)
 
     /* ADVICE ALGORITHEM; */
-    //Transfusion
+//TRANSFUSJON NEEEDED
     if (lastBilirubinValue >= gestastionWeek * 10
         ||bilirubinSlope > 240
         ||lastBilirubinValue > transfusionLimit) {
-        console.log("transfusion-advice")
+        console.log("ADVICE: transfusion-advice")
         return(advices[advices.indexOf(transfusion)])
-//EARLY ICTERUS
+//EARLY ICTERUS!
     } else if (absolute2relativeDate(lastBilirubinDate)<1) {
+        console.log("ADVICE: early-icterus")
         return(advices[advices.indexOf(earlyIcterus)])
     }
-//Lighttherapy
+//LIGHT THERAPY NEEDED
     else if (((lastBilirubinValue >= lightlimit) && ((absolute2relativeDate(lastBilirubinDate)) >= (Object.keys(child.getLightLimit().data).includes('3') ? 3 : 4))) || (lastBilirubinValue >=   (lightlimitStart + (lightSlope * (absolute2relativeDate(lastBilirubinDate)-1))) &&  (absolute2relativeDate(lastBilirubinDate) < Object.keys(child.getLightLimit().data).includes('3') ? 3 : 4))) {
+        console.log("ADVICE: lighttherapy-advice")
         return(advices[advices.indexOf(lightTherapy)])
     }
-//blood sample follow up
+//BLOOD SAMPLE FOLLOW UP
     else if ((bilirubinSlope > 0 && newLabDate && newLabDate < lastBilirubinDate14)
         || ((Lab.getNumberOfLabs() == 1) && (currentLightLimitFromLastLab() < 50))) {
-        console.log("bloodsample-advice")
+        console.log("ADVICE: bloodsample-advice")
         return(advices[advices.indexOf(bloodSample)])
     }
 //LATE ICTERUS
     else if (absolute2relativeDate(lastBilirubinDate)>14) {
+        console.log("ADVICE: prolonged-icterus")
         return(advices[advices.indexOf(prolongedIcterus)])
     }
-//No advice
+//NO FOLLOW UP NEEDED
     else if (bilirubinSlope <= 0
-        || (newLabDate != false && newLabDate > birthDate + 14)
-        || ((Lab.getNumberOfLabs() == 1) && (currentLightLimitFromLastLab() > 50))) {
-        //todo Bilirubinslope evalurere ikke?
-        console.log("no-follow-up")
+        || (newLabDate != false && newLabDate > birthDate + 14)) {
+        console.log("ADVICE: no-follow-up")
+        return(advices[advices.indexOf(noFollowUp)])
+//NO ADVICE IN GUIDELINES
+    } else if ((Lab.getNumberOfLabs() == 1) && (currentLightLimitFromLastLab() > 50)) {
+        console.log("ADVICE: no-advice")
         return(advices[advices.indexOf(noAdvice)])
     }
 //Error handling

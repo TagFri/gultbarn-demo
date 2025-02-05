@@ -230,9 +230,14 @@ function updateLabGraph() {
 function roundToNearest(nearest, number) {return  ; }
 
 function extrapolationGraphing() {
+    //Get last lab
     let lastLab = Lab.labs[Lab.labs.length-1]
+    //Get when graph will cross the light limit
     let lightCross = lightCrossingPoint()
-    if (lightCross != null) {
+    //Get number of dates since birthdate of last lab
+    let lastLabRelativeDate = (new Date(lastLab.timeDate).getTime() - new Date(child.timeDate).getTime()) / (1000 * 60 * 60 * 24)
+    //Check that there will be a light crossing + crossing is after last lab (eliminate negative slopes of extrapolation backwards in time)
+    if (lightCross != null && lightCross.x > lastLabRelativeDate) {
         let data = []
         data.push({x: ((new Date(lastLab.timeDate).getTime() - new Date(child.timeDate).getTime()) / (1000 * 60 * 60 * 24)), y: lastLab.bilirubin})
         data.push(lightCross)
@@ -276,7 +281,7 @@ function lightCrossingPoint() {
         let timeToCrossing = diffY / labSlope
         let xValue = lastLabRelativeDate + timeToCrossing
         let yValue = child.getLightLimit().data[10]
-        if (xValue < 14 && lastLabBilirubin < child.getLightLimit().data[10]) {
+        if (xValue < (lastLabRelativeDate+14) && lastLabBilirubin < child.getLightLimit().data[10]) {
             console.log("UNDER 14 DAYS AND UNDER LIGHT LIMIT")
             return ({x: xValue, y: yValue})
         } else {
