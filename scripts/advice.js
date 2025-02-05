@@ -1,7 +1,12 @@
 import {child} from "./child.js"
 import {Lab} from "./lab.js"
 import {myChart} from "./graph.js"
-import {relativeDate2absoluteDate, absolute2relativeDate, currentLightLimitFromLastLab} from "./index.js";
+import {
+    relativeDate2absoluteDate,
+    absolute2relativeDate,
+    currentLightLimitFromLastLab,
+    printLabOverview
+} from "./index.js";
 export {updateAdvice}
 
 function getAdvice() {
@@ -122,11 +127,20 @@ function getAdvice() {
 function updateAdvice() {
     //Get advice icon
     const adviceElement = getAdvice()
-    console.log("ADVICE ELEMENT:")
-    console.log(Lab.getNumberOfLabs() == 1)
-    console.log((currentLightLimitFromLastLab() < 50))
-    console.log(adviceElement)
-
+    //Create email template:
+    let href = "mailto:hei@sablateknisk.no?subject=Gult barn&body="
+        href += "Hei, og takk for at du vil gi oss en tilbakemelding! Skriv så detaljert som mulig så kommer vi tilbake til deg så fort vi kan :) "
+        href += "%0A%0A%0A%0A"
+        href += "AUTOGENERERT INFO FOR FEILSØKING:%0A"
+        href += "Råd: " + adviceElement.title + "%0A"
+        href += "Beskrivelse: " + adviceElement.description + "%0A%0A"
+        href += "BARNETS INFO:%0A"
+        href += "Vekt:%09%09%09" + child.birthWeight + " gram%0A"
+        href += "Fødselsdato:%09%09" + child.date[0] + "/" + child.date[1] + " kl: " + child.time[0] +":" + child.time[1] + "%0A"
+        href += "Gestasjonsalder:%09" + child.gestationWeek + " uker%0A%0A"
+        href += "BILIRUBIN PRØVER:%0A"
+        href += printLabOverview()
+    document.getElementById("feedback-button").children[1].href = href
     //Update advice title
     document.getElementById("advice-title").innerHTML = adviceElement.title
     //Update advice description

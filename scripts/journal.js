@@ -1,6 +1,7 @@
 import {child} from "./child.js"
 import {Lab} from "./lab.js"
 import {myChart} from "./graph.js"
+import {printLabOverview} from "./index.js";
 export {copyContent}
 
 function copyContent() {
@@ -8,20 +9,6 @@ function copyContent() {
 
     var image = myChart.toBase64Image();
     console.log(image);
-
-    // Generate Lab Overview
-    let labOverview = "";
-    for (const lab of Lab.labs) {
-        let { time, date, bilirubin } = lab;
-        let [hour, minute] = time;
-        let [dateDay, dateMonth] = date;
-        dateDay = dateDay.toString().padStart(2, "0");
-        dateMonth = dateMonth.toString().padStart(2, "0");
-        hour = hour.toString().padStart(2, "0");
-        minute = minute.toString().padStart(2, "0");
-
-        labOverview += `${dateDay}/${dateMonth} kl. ${hour}:${minute}: ${bilirubin} µmol/L\n`;
-    }
 
     // Fetch Advice Information
     let adviceTitle = document.getElementById("advice-title").innerHTML;
@@ -37,7 +24,7 @@ function copyContent() {
         <h3>Anamnese:</h3>
         <p>Barnet er [aktivt/slapt/trøtt/irritabelt], og tar brystet [godt/dårlig]. Avføringen er [normal/blek] og urinen er [normal/mørk]. Synlig gulsott i huden er [bedre, lik, verre]. Foreldre bemerker [vektnedgang/vektoppgang].</p>
         <h3>Bilirubinverdier:</h3>
-        <p>${labOverview.replace(/\n/g, '<br>')}</p>
+        <p>${printLabOverview().replace(/\n/g, '<br>')}</p>
         <h3>Anbefaling: ${adviceTitle}</h3>
         <p>${adviceDescription}</p>
         <h3>Informasjon til pårørende:</h3>
@@ -61,7 +48,7 @@ function copyContent() {
         Foreldre bemerker vekt[nedgang/oppgang].
         
         Bilirubinverdier:
-        ${labOverview}
+        ${printLabOverview}
         
         Anbefalning: ${adviceTitle}
         ${adviceDescription}

@@ -5,7 +5,7 @@ import {child, saveChild} from './child.js';
 import {Lab, saveLab} from './lab.js';
 import {copyContent} from './journal.js';
 //Export general functions
-export {msToDay, relativeDate2absoluteDate, absolute2relativeDate, currentLightLimitFromLastLab}
+export {msToDay, relativeDate2absoluteDate, absolute2relativeDate, currentLightLimitFromLastLab, printLabOverview}
 
 masking();
 initiateGraph()
@@ -96,4 +96,20 @@ function currentLightLimitFromLastLab() {
         console.log("LAST LAB IS NOT UNDER LIGHT LIMIT")
     }
 
+}
+
+function printLabOverview() {
+    let labOverview = "";
+    for (const lab of Lab.labs) {
+        let { time, date, bilirubin } = lab;
+        let [hour, minute] = time;
+        let [dateDay, dateMonth] = date;
+        dateDay = dateDay.toString().padStart(2, "0");
+        dateMonth = dateMonth.toString().padStart(2, "0");
+        hour = hour.toString().padStart(2, "0");
+        minute = minute.toString().padStart(2, "0");
+
+        labOverview += `${dateDay}/${dateMonth} kl. ${hour}:${minute}: ${bilirubin} µmol/L\n`;
+    }
+    return labOverview
 }
