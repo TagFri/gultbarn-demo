@@ -1,5 +1,5 @@
 import {Lab} from "./lab.js";
-import {updateChildGraph} from "./graph.js"
+import {myChart, updateChildGraph, updateTransfusionLimit} from "./graph.js"
 import {timeDate, validateInputGroup} from "./validation.js"
 import {updateAdvice} from "./advice.js";
 
@@ -84,6 +84,9 @@ function saveChild() {
     }
     if (Lab.getNumberOfLabs() > 0) {
         updateAdvice()
+    }
+    if (myChart.data.datasets[3].data != []) {
+        updateTransfusionLimit()
     }
 }
 

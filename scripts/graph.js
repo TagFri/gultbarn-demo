@@ -1,6 +1,6 @@
-import {absolute2relativeDate, relativeDate2absoluteDate} from "./index.js";
+import {absolute2relativeDate, relativeDate2absoluteDate, currentLightLimitFromLastLab} from "./index.js";
 
-export {initiateGraph, updateChildGraph, updateLabGraph, myChart, updateChildLightLimit}
+export {initiateGraph, updateChildGraph, updateLabGraph, myChart, updateChildLightLimit, updateTransfusionLimit}
 import {child} from "./child.js"
 import {Lab} from "./lab.js"
 
@@ -11,6 +11,7 @@ const yellowLighter =   'rgb(255, 250, 242)'
 const black =           'rgb(11, 30, 51)'
 const grey =            'rgb(195, 199, 203)'
 const red =             'rgb(251, 65, 65)'
+const lightRed =               'rgb(255, 232, 233)'
 
 let myChart = null;
 let chartParameters = {
@@ -35,7 +36,6 @@ function initiateGraph() {
             //One dataset = one line
             datasets: [
                 {//DATASET 0 -> CHILD LIGHT LIMIT
-                    label: "Lysgrense",
                     data: [],
                     //Line properties
                     spanGaps: true,     //Make line between data
@@ -48,7 +48,6 @@ function initiateGraph() {
                     order: 4,
                 },
                 {//DATASET 1 -> LAB VALUES
-                    label: "Lab",
                     data: [],
                     spanGaps: true,
                     tension: 0,
@@ -61,7 +60,6 @@ function initiateGraph() {
                     order: 1,
                 },
                 {//DATASETT 2 -> EXTRAPOLATION OF LAB VALUES
-                    label: "Beregning",
                     data: [],
                     spanGaps: true,
                     tension: 0,
@@ -75,15 +73,17 @@ function initiateGraph() {
                     order: 2,
                 },
                 {//DATASETT 3 -> Transfusion
-                    label: "Transfusjon",
+                    label: "Transfusjonsgrense",
                     data: [],
-                    spanGaps: true,
-                    borderColor: black,
-                    backgroundColor: black,
-                    borderWidth: 3.5,
-                    pointRadius: 8,
-                    showLine: true,
-                    fill: false,
+                    //Line properties
+                    spanGaps: true,     //Make line between data
+                    tension: 0,
+                    borderColor: lightRed,//Line color
+                    backgroundColor: lightRed,
+                    borderWidth: 3.5,   //Line thickness
+                    pointRadius: 0,     //Datapoint radis. 0 = not show
+                    showLine: true,     //Show line on scatter plot
+                    fill: false,        //Remove fill under graph
                     order: 3,
                 }
             ],
@@ -104,6 +104,7 @@ function initiateGraph() {
                 legend: {
                     //Turn on/off top-description for each graph
                     display: false,
+                    //todo Filter labels til kun transfusjon
                     labels: {
                         usePointStyle: true,
                         boxWidth: 10,
@@ -304,4 +305,27 @@ function prettyDateFromX(x) {
     let years = date.getFullYear()
     years = years.toString().slice(-2)
     return (days + "/" + months + "-" + years + " kl." + hours + ":" + minutes)
+}
+
+function updateTransfusionLimit() {
+    console.log("UPDATE TRANSFUSION LIMIT CALLED")
+    console.log(currentLightLimitFromLastLab()  )
+    if (currentLightLimitFromLastLab() < 0) {
+        console.log("ABOVE LIGHT LIMIT")
+        //PREAMTURE TRANSFUSJON LIMITS FIRST 3 DAYS
+        if (child.birthWeight <= 1000) {
+            myChart.data.datasets[3].data = [{x: 0, y: 0}, {x: 1, y:175}, {x: 2, y:200}, {x: 3, y:250}, {x:10, y: 250}]
+        } else if (child.birthWeight <= 1500) {
+            myChart.data.datasets[3].data = [{x: 0, y: 0}, {x: 1, y:200}, {x: 3, y:250}, {x:10, y: 250}]
+        } else if (child.birthWeight <= 2500) {
+            myChart.data.datasets[3].data = [{x: 0, y: 0}, {x: 1, y:250}, {x: 3, y:350}, {x:10, y: 350}]
+        } else {
+            myChart.data.datasets[3].data = [{x: 0, y: 200}, {x: 3, y:400}, {x:10, y:400}]
+        }
+    } else {
+        console.log("BELOW LIGHT LIMIT")
+        myChart.data.datasets[3].data = []
+    }
+    myChart.update()
+    console.log("TRANSFUSION LIMIT UPDATED")
 }

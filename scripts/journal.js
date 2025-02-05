@@ -15,18 +15,18 @@ function copyContent() {
 
     // Assembled Journal as HTML (with <b> formatting for bold)
     let htmlJournal = `
-        <h2>Oppfølgning av bilirubinsvar</h2>
-        <h3>Barnets informasjon:</h3>
+        <h3>Oppfølgning av bilirubinsvar</h3>
+        <h4>Barnets informasjon:</h4>
         <p>Fødselstidspunkt: &emsp;${child.date[0].toString().padStart(2, "0")}/${child.date[1].toString().padStart(2, "0")} - kl. ${child.time[0].toString().padStart(2, "0")}:${child.time[1].toString().padStart(2, "0")}<br>
         Fødselsvekt: &emsp;&emsp;&emsp;${child.birthWeight} gram<br>
         Gestasjonsalder: &emsp;${child.gestationWeek} uker (dager er ikke inkludert)</p>
-        <h3>Anamnese:</h3>
+        <h4>Anamnese:</h4>
         <p>Barnet er [aktivt/slapt/trøtt/irritabelt], og tar brystet [godt/dårlig]. Avføringen er [normal/blek] og urinen er [normal/mørk]. Synlig gulsott i huden er [bedre, lik, verre]. Foreldre bemerker [vektnedgang/vektoppgang].</p>
-        <h3>Bilirubinverdier:</h3>
+        <h4>Bilirubinverdier:</h4>
         <p>${printLabOverview().replace(/\n/g, '<br>')}</p>
-        <h3>Anbefaling: ${adviceTitle}</h3>
+        <h4>Anbefaling: ${adviceTitle}</h4>
         <p>${adviceDescription}</p>
-        <h3>Informasjon til pårørende:</h3>
+        <h4>Informasjon til pårørende:</h4>
         <p>[FYLL INN INFO]</p>
         <img style="width: 100px" src="${image}" alt="Bilubinverdier"></img>
     `;

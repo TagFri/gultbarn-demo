@@ -1,11 +1,11 @@
 //Import functions
 import {masking} from './masking.js';
-import {initiateGraph} from './graph.js';
+import {initiateGraph, myChart} from './graph.js';
 import {child, saveChild} from './child.js';
 import {Lab, saveLab} from './lab.js';
 import {copyContent} from './journal.js';
 //Export general functions
-export {msToDay, relativeDate2absoluteDate, absolute2relativeDate, currentLightLimitFromLastLab, printLabOverview}
+export {msToDay, relativeDate2absoluteDate, absolute2relativeDate, currentLightLimitFromLastLab, printLabOverview, currentTransfusionLimitFromLastLab}
 
 masking();
 initiateGraph()
@@ -96,6 +96,10 @@ function currentLightLimitFromLastLab() {
         console.log("LAST LAB IS NOT UNDER LIGHT LIMIT")
     }
 
+}
+
+function currentTransfusionLimitFromLastLab() {
+    // todo -> beregn antall knekk også avstand
 }
 
 function printLabOverview() {

@@ -75,6 +75,7 @@ function getAdvice() {
 
     //Lightlimits
     let transfusionLimit = 100000;
+    //todo sjekk om lab er over transfusjonsgrense
     let lightlimitStart = child.getLightLimit().data[1];
     let lightlimit = child.getLightLimit().data[10];
     let lightSlope = child.getLightLimit().slope;
@@ -122,8 +123,9 @@ function getAdvice() {
         return(advices[advices.indexOf(prolongedIcterus)])
     }
 //NO FOLLOW UP NEEDED
+        //newLabDate == False -> if extrapolation is calculated above 14 days
     else if (bilirubinSlope <= 0
-        || (newLabDate != false && newLabDate > birthDate + 14)) {
+        || !newLabDate) {
         console.log("ADVICE: no-follow-up")
         return(advices[advices.indexOf(noFollowUp)])
 //NO ADVICE IN GUIDELINES
@@ -134,6 +136,8 @@ function getAdvice() {
 //Error handling
     else {
         console.log("error-advice")
+        console.log(newLabDate)
+        console.log(lastBilirubinDate14)
         return(advices[advices.indexOf(error)])
     }
 }
