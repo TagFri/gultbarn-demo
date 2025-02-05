@@ -106,8 +106,14 @@ function toggleOpacity(boolean) {
     if (boolean) {
         document.getElementById("lab-container").classList.add("opacity-container")
         document.getElementById("graph-container").classList.add("opacity-container")
+        document.getElementById("advice-container").classList.add("opacity-container")
+        document.getElementById("journal-container").classList.add("opacity-container")
     } else {
         document.getElementById("lab-container").classList.remove("opacity-container")
         document.getElementById("graph-container").classList.remove("opacity-container")
+        if (Lab.getNumberOfLabs() > 0) {
+            document.getElementById("advice-container").classList.remove("opacity-container")
+            document.getElementById("journal-container").classList.remove("opacity-container")
+        }
     }
 }
