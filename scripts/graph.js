@@ -86,7 +86,6 @@ function initiateGraph() {
                 }
             ],
         },
-
         options: {
             responsive: true,
             aspectRatio: 1.75,
