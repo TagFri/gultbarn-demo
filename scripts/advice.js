@@ -11,17 +11,19 @@ export {updateAdvice}
 
 function getAdvice() {
     class Advice {
-        constructor(title, description, icon) {
+        constructor(title, description, icon, color="var(--color-yellow-lighter)") {
             this.title = title
             this.description = description
             this.icon = icon
+            this.color = color
         }
     }
     let url="assets/icons/advice/"
     const noAdvice = new Advice(
         "Ingen råd fra pediatriveilederen",
         "Bilirubinverdien er lavere enn 50 µM under lysgrensa. Pediatriveilederen gir ingen konkrete råd ved ett enkelt målepunkt. Anvend klinisk skjønn, med en helhetlig vurdering av barnets klinikk og historikk.",
-        url + "no_advice.svg"
+        url + "no_advice.svg",
+        "var(--color-grey-light)"
     )
     const noFollowUp = new Advice(
         "Ingen oppfølging nødvendig",
@@ -51,9 +53,16 @@ function getAdvice() {
     const transfusion = new Advice(
         "Transfusjon anbefales",
         "Barnet har alvorlig høye bilirubinverdier. Barnet skal legges inn på sykehus umiddelbart og skal vurderes for utskiftningstransfusjon.",
-        url + "transfusion.svg"
+        url + "transfusion.svg",
+        "var(--color-light-red)"
     );
-    let advices = [noFollowUp, bloodSample, lightTherapy, prolongedIcterus, earlyIcterus, transfusion, noAdvice]
+    const error = new Advice(
+        "Obs, her har det gått galt...",
+        "Beregninger har feilet, vennligst trykk på 'Gi tilbakemelding' under, så skal vi jobbe på med å fikse feilen <3",
+        url + "error.svg",
+        "var(--color-grey-light)"
+    )
+    let advices = [noFollowUp, bloodSample, lightTherapy, prolongedIcterus, earlyIcterus, transfusion, noAdvice, error]
     if (Lab.getNumberOfLabs() == 0) {
         return(advices[advices.indexOf(noAdvice)])
     }
@@ -115,12 +124,12 @@ function getAdvice() {
         || ((Lab.getNumberOfLabs() == 1) && (currentLightLimitFromLastLab() > 50))) {
         //todo Bilirubinslope evalurere ikke?
         console.log("no-follow-up")
-        return(advices[advices.indexOf(noFollowUp)])
+        return(advices[advices.indexOf(noAdvice)])
     }
 //Error handling
     else {
-        console.log("no-advice")
-        return(advices[advices.indexOf(noAdvice)])
+        console.log("error-advice")
+        return(advices[advices.indexOf(error)])
     }
 }
 
@@ -147,6 +156,8 @@ function updateAdvice() {
     document.getElementById("advice-paragraph").innerHTML = adviceElement.description
     //Update advice icon
     document.getElementById("advice-container").style.backgroundImage = `url('${adviceElement.icon}')`;
+    //Upadte background color
+    document.getElementById("advice-container").style.backgroundColor = `${adviceElement.color}`;
     //Show feedback button
     document.getElementById("feedback-button").classList.remove("hidden")
 

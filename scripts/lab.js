@@ -1,4 +1,4 @@
-import {updateLabGraph} from "./graph.js";
+import {updateLabGraph, updateChildLightLimit} from "./graph.js";
 import {child} from "./child.js";
 import {validateInputGroup, checkYear, timeDate, errorMessages} from "./validation.js";
 import {updateAdvice} from "./advice.js";
@@ -68,6 +68,7 @@ function saveLab() {
             clearLabinput()
             displayLabs();
             updateLabGraph()
+            updateChildLightLimit()
             updateAdvice()
             document.getElementById("advice-container").classList.remove("opacity-container")
             document.getElementById("journal-container").classList.remove("opacity-container")

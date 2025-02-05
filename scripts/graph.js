@@ -1,4 +1,6 @@
-export {initiateGraph, updateChildGraph, updateLabGraph, myChart}
+import {absolute2relativeDate} from "./index.js";
+
+export {initiateGraph, updateChildGraph, updateLabGraph, myChart, updateChildLightLimit}
 import {child} from "./child.js"
 import {Lab} from "./lab.js"
 
@@ -183,6 +185,17 @@ function updateChildGraph() {
     } else {
         console.log("Child not established (from upadteChildGraph) - no graph updated")
     }
+}
+
+function updateChildLightLimit() {
+    let labDate = absolute2relativeDate(new Date(Lab.labs[Lab.getNumberOfLabs()-1].timeDate))
+    //If lab is after 10 days
+    if (labDate >= 8) {
+        //Create new point in light graph that matche lab objects
+        myChart.data.datasets[0].data[labDate+4] = (Object.values(myChart.data.datasets[0].data)[2])
+    }
+    console.log(myChart.data.datasets[0].data)
+    myChart.update()
 }
 
 function updateLabGraph() {
