@@ -74,7 +74,6 @@ function saveLab() {
             document.getElementById("journal-container").classList.remove("opacity-container")
             //extrapolationGraphing()
             document.getElementById("lab-date").focus()
-            console.log(currentLightLimitFromLastLab())
         }
         //Lab is incomplete
     } else {

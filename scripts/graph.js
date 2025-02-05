@@ -194,7 +194,6 @@ function updateChildLightLimit() {
         //Create new point in light graph that matche lab objects
         myChart.data.datasets[0].data[labDate+4] = (Object.values(myChart.data.datasets[0].data)[2])
     }
-    console.log(myChart.data.datasets[0].data)
     myChart.update()
 }
 

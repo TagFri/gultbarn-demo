@@ -148,7 +148,7 @@ function updateAdvice() {
         href += "Fødselsdato:%09%09" + child.date[0] + "/" + child.date[1] + " kl: " + child.time[0] +":" + child.time[1] + "%0A"
         href += "Gestasjonsalder:%09" + child.gestationWeek + " uker%0A%0A"
         href += "BILIRUBIN PRØVER:%0A"
-        href += printLabOverview()
+        href += printLabOverview().replace(/\n/g, '%0A')
     document.getElementById("feedback-button").children[1].href = href
     //Update advice title
     document.getElementById("advice-title").innerHTML = adviceElement.title
