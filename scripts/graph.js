@@ -1,4 +1,4 @@
-import {absolute2relativeDate} from "./index.js";
+import {absolute2relativeDate, relativeDate2absoluteDate} from "./index.js";
 
 export {initiateGraph, updateChildGraph, updateLabGraph, myChart, updateChildLightLimit}
 import {child} from "./child.js"
@@ -292,9 +292,7 @@ function lightCrossingPoint() {
 }
 
 function prettyDateFromX(x) {
-    let date = new Date(child.timeDate.getTime())
-    let time = date + (x * 1000 * 60 * 60 * 24)
-    date = new Date(time)
+    let date = relativeDate2absoluteDate(x)
     let minutes = date.getMinutes()
     if (minutes < 10) {minutes = "0" + minutes} else {minutes = minutes}
     let hours = date.getHours()
