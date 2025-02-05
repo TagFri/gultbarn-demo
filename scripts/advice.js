@@ -95,7 +95,7 @@ function getAdvice() {
 
     /* ADVICE ALGORITHEM; */
     //Transfusion
-    if (lastBilirubinValue > gestastionWeek * 10
+    if (lastBilirubinValue >= gestastionWeek * 10
         ||bilirubinSlope > 240
         ||lastBilirubinValue > transfusionLimit) {
         console.log("transfusion-advice")

@@ -1,6 +1,6 @@
 import {child} from "./child.js";
 import {Lab} from "./lab.js"
-export {validateInputGroup, timeDate, checkYear, errorMessages, inputToInteger, inputValidation}
+export {validateInputGroup, timeDate, errorMessages, inputToInteger, inputValidation}
 
 function validateInputGroup(classSelector) {
     let errorCounter = 0;
@@ -29,7 +29,17 @@ function validateInputGroup(classSelector) {
 
 //CREATE TIMEDATE FROM LOCAL DATE + TIME
 function timeDate(date, time) {
-    return(new Date(checkYear(date[1]), date[1] - 1, date[0], time[0], time[1], 0, 0))
+    //Create current time
+    const currentTime = new Date()
+    //Set actural time as current year + date info
+    let actualtime = new Date(currentTime.getFullYear(),date[1] - 1, date[0], time[0], time[1])
+    //If date info + current year is in the future, subtract one year from the year
+    if (actualtime > currentTime) {
+        actualtime = new Date(actualtime.setFullYear(actualtime.getFullYear() -1))
+    }
+    return actualtime
+
+
 }
 
 //CONVERT INPUT TO INTEGERS
@@ -82,15 +92,6 @@ function inputValidation(htmlID, intValue) {
         ) ? validation = true : validation = false;
     }
     return (validation)
-}
-
-function checkYear(month) {
-    let year = new Date().getFullYear()
-    //Check if date is larger then today (hence subtract one year
-    if (new Date(new Date().getFullYear(), month[1] - 1, month[0], 0, 0, 0, 0) > new Date()) {
-        year += -1
-    }
-    return year
 }
 
 //ADD ERROR MESSAGE

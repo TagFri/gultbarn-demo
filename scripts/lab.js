@@ -1,6 +1,6 @@
 import {updateLabGraph, updateChildLightLimit} from "./graph.js";
 import {child} from "./child.js";
-import {validateInputGroup, checkYear, timeDate, errorMessages} from "./validation.js";
+import {validateInputGroup, timeDate, errorMessages} from "./validation.js";
 import {updateAdvice} from "./advice.js";
 import {msToDay, currentLightLimitFromLastLab} from "./index.js";
 
@@ -24,27 +24,46 @@ class Lab {
             console.log("ERROR: Not enough labs to calculate slope")
         }
     }
-    constructor(bilirubin, time, date) {
+    constructor(bilirubin, time, date, year) {
         this.bilirubin = bilirubin
         this.time = time
         this.date = date
-        this.timeDate = timeDate(date, time)
+        this.timeDate = new Date(year, date[1] - 1, date[0], time[0], time[1], 0, 0)
         Lab.labs.push(this)
     }}
 
 function saveLab() {
     //Validation function and variables
     let validation = validateInputGroup(".lab-input")
-    let validatedInputs = validation[0]
+    let validatedMonth = validation[0][0][1]
+    //console.log(`Validated month: ${validatedMonth}`)
+    let validatedDay = validation[0][0][0]
+    //console.log(`Validated day: ${validatedDay}`)
+    let validatedHour = validation[0][1][0]
+    //console.log(`Validated hour: ${validatedHour}`)
+    let validatedMinute = validation[0][1][1]
+    //console.log(`Validated minute: ${validatedMinute}`)
+    let validatedBilirubin = validation[0][2]
+    //console.log(`Validated bilirubin: ${validatedBilirubin}`)
     let errorCounter = validation[1]
     //Check if lab is complete
     if (errorCounter == 0) {
+        let birthminute = child.timeDate.getMinutes()
+        let birthhour = child.timeDate.getHours()
+        let birthDay = child.timeDate.getDate()
         let birthMonth = child.timeDate.getMonth() + 1
-
+        let birthYear = child.timeDate.getFullYear()
+        console.log(`Birthday: ${birthDay}/${birthMonth}/${birthYear} @ ${birthhour}:${birthminute}`)
+        let year = null
+        if ((birthMonth + validatedMonth) % 12 <= 4 && birthMonth > validatedMonth) {
+            year = birthYear +1
+            console.log(`Lab year is birthyear +1: ${year}`)
+        } else {
+            year = birthYear
+            console.log(`Lab year = birthyear: ${year}`)
+        }
         //Calculate timedate variable
-
-        let year = checkYear(validatedInputs[0])
-        let timeDate = new Date(year, validatedInputs[0][1] - 1, validatedInputs[0][0], validatedInputs[1][0], validatedInputs[1][1], 0, 0)
+        let timeDate = new Date(year, validatedMonth - 1, validatedDay, validatedHour, validatedMinute, 0, 0)
         //Check that lab is taken after child is born
         if (timeDate < child.timeDate) {
             errorMessages("early-lab", false)
@@ -55,11 +74,15 @@ function saveLab() {
             //Save lab in labs
             let lab = new Lab(
                 //Bilirubin
-                validatedInputs[2],
+                validatedBilirubin,
                 //Date
-                validatedInputs[1],
+                [validatedHour, validatedMinute],
                 //Time
-                validatedInputs[0])
+                [validatedDay, validatedMonth],
+                year
+                )
+            console.log("SAVED LAB")
+            console.log(lab)
             //Add lab object to lab collection
             Lab.labs = Lab.labs.sort((a, b) => a.timeDate - b.timeDate)
             //Sort collection on time taken
