@@ -165,7 +165,7 @@ function initiateGraph() {
 function updateChildGraph() {
     if (child != null) {
         let lightInfo = child.getLightLimit()
-        myChart.options.plugins.title.text = lightInfo["label"]
+        myChart.options.plugins.title.text = "Lysgrense for barn " + lightInfo["label"]
         myChart.data.datasets[0].data = lightInfo.data
         myChart.options.scales.y.max = lightInfo.data[10] + 50
         chartParameters["light-slope"] = lightInfo.slope
@@ -194,9 +194,6 @@ function updateLabGraph() {
         data.push({x: timeDifference,y: lab.bilirubin})
         let lightKeys = Object.keys(child.getLightLimit().data)
         lightKeys.forEach(key => {
-            console.log("KEY: " + key)
-            console.log("TIMEDIFF " + timeDifference)
-            console.log((timeDifference > key))
             if ((key != 1 && key != 3 && key != 4) && (timeDifference > key)) {
                 //TODO ADD DATAPOINT TO LIGHT GRAPH
             }

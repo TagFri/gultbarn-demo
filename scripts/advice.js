@@ -1,7 +1,7 @@
 import {child} from "./child.js"
 import {Lab} from "./lab.js"
 import {myChart} from "./graph.js"
-import {relativeDate2absoluteDate, absolute2relativeDate} from "./index.js";
+import {relativeDate2absoluteDate, absolute2relativeDate, currentLightLimitFromLastLab} from "./index.js";
 export {updateAdvice}
 
 function getAdvice() {
@@ -14,9 +14,9 @@ function getAdvice() {
     }
     let url="assets/icons/advice/"
     const noAdvice = new Advice(
-        "Fagelig råd",
-        "<br><br>",
-        url + "outcome_box_inactive.svg"
+        "Ingen råd fra pediatriveilederen",
+        "Bilirubinverdien er lavere enn 50 µM under lysgrensa. Pediatriveilederen gir ingen konkrete råd ved ett enkelt målepunkt. Anvend klinisk skjønn, med en helhetlig vurdering av barnets klinikk og historikk.",
+        url + "no_advice.svg"
     )
     const noFollowUp = new Advice(
         "Ingen oppfølging nødvendig",
@@ -96,7 +96,7 @@ function getAdvice() {
     }
 //blood sample follow up
     else if ((bilirubinSlope > 0 && newLabDate && newLabDate < lastBilirubinDate14)
-        || lastBilirubinValue > (lightlimit - 50)) {
+        || ((Lab.getNumberOfLabs() == 1) && (currentLightLimitFromLastLab() < 50))) {
         console.log("bloodsample-advice")
         return(advices[advices.indexOf(bloodSample)])
     }
@@ -107,7 +107,7 @@ function getAdvice() {
 //No advice
     else if (bilirubinSlope <= 0
         || (newLabDate != false && newLabDate > birthDate + 14)
-        || lastBilirubinValue < (lightlimit - 50)) {
+        || ((Lab.getNumberOfLabs() == 1) && (currentLightLimitFromLastLab() > 50))) {
         //todo Bilirubinslope evalurere ikke?
         console.log("no-follow-up")
         return(advices[advices.indexOf(noFollowUp)])
@@ -122,6 +122,11 @@ function getAdvice() {
 function updateAdvice() {
     //Get advice icon
     const adviceElement = getAdvice()
+    console.log("ADVICE ELEMENT:")
+    console.log(Lab.getNumberOfLabs() == 1)
+    console.log((currentLightLimitFromLastLab() < 50))
+    console.log(adviceElement)
+
     //Update advice title
     document.getElementById("advice-title").innerHTML = adviceElement.title
     //Update advice description

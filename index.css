@@ -141,20 +141,6 @@ label {
     text-align: center;
 }
 
-#advice-container {
-    text-align: left;
-    align-items: flex-start;
-    background-color: var(--color-yellow-lighter);
-    /* BAKGRUNNS BILDE */
-    background-size: 25%;
-    background-image: url("assets/icons/advice/outcome_box_inactive.svg");
-    background-position: bottom right;
-    padding-right: 30%;
-    h4 {
-    align-self: center;
-    }
-}
-
 #advice-container, #journal-container {
     border: none;
     font-size: 1rem;
@@ -169,6 +155,17 @@ label {
     h3, p, h4 {
         padding: 0.75rem 0.3rem;
     }
+}
+
+#advice-container {
+    text-align: left;
+    align-items: flex-start;
+    background-color: var(--color-yellow-lighter);
+    /* BAKGRUNNS BILDE */
+    background-size: 25%;
+    background-image: url("assets/icons/advice/outcome_box_inactive.svg");
+    background-position: bottom right;
+    padding-right: 30%;
 }
 
 
@@ -271,12 +268,13 @@ li {
 }
 
 footer {
+    color: #000000;
     font-size: 0.9rem;
-    margin-top: 5rem;
+    margin-top: 15rem;
     width: 100vw;
     position: absolute;
     left: 0;
-    background-color: var(--color-yellow-strong);
+    background-color: var(--color-yellow-solid);
     border-radius: 75px 75px 0 0;
     .main-container {
         padding: 0 3rem;

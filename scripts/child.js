@@ -1,6 +1,9 @@
-export {child, saveChild}
+import {Lab} from "./lab.js";
 import {updateChildGraph} from "./graph.js"
 import {timeDate, validateInputGroup} from "./validation.js"
+import {updateAdvice} from "./advice.js";
+
+export {child, saveChild}
 
 let child = null
 
@@ -16,31 +19,31 @@ class Child {
     getLightLimit() {
             if (this.birthWeight < 1000) {
                 return {
-                    "label": "Under 1000g",
+                    "label": "under 1000g",
                     "data": {1: 100, 4: 150, 10: 150},
                     "slope": (150 - 100) / (4 - 1)
                 }
             } else if (this.birthWeight < 1500) {
                 return {
-                    "label": "Under 1500g",
+                    "label": "under 1500g",
                     "data": {1: 125, 4: 200, 10: 200},
                     "slope": (200 - 125) / (4 - 1)
                 }
             } else if (this.birthWeight <= 2500) {
                 return {
-                    "label": "Under 2500g",
+                    "label": "under 2500g",
                     "data": {1: 150, 4: 250, 10: 250},
                     "slope": (250 - 150) / (4 - 1)
                 }
             } else if (this.birthWeight > 2500 && this.gestationWeek < 37) {
                 return {
-                    "label": "Over 2500g + GA <37",
+                    "label": "over 2500g + GA <37",
                     "data": {1: 150, 3: 300, 10: 300},
                     "slope": (300 - 150) / (3 - 1)
                 }
             } else if (this.birthWeight > 2500 && this.gestationWeek >= 37) {
                 return {
-                    "label": "Over 2500g + GA >=37",
+                    "label": "over 2500g + GA >=37",
                     "data": {1: 175, 3: 350, 10: 350},
                     "slope": (350 - 175) / (3 - 1)
                 }
@@ -77,6 +80,9 @@ function saveChild() {
         toggleOpacity(true) // Add opacity and disable lab inputs
         //todo focus on error-input
         //todo remove graphs
+    }
+    if (Lab.getNumberOfLabs() > 0) {
+        updateAdvice()
     }
 }
 

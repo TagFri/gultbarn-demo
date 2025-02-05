@@ -2,7 +2,7 @@ import {updateLabGraph} from "./graph.js";
 import {child} from "./child.js";
 import {validateInputGroup, checkYear, timeDate, errorMessages} from "./validation.js";
 import {updateAdvice} from "./advice.js";
-import {msToDay} from "./index.js";
+import {msToDay, currentLightLimitFromLastLab} from "./index.js";
 
 export {Lab, saveLab}
 
@@ -73,6 +73,7 @@ function saveLab() {
             document.getElementById("journal-container").classList.remove("opacity-container")
             //extrapolationGraphing()
             document.getElementById("lab-date").focus()
+            console.log(currentLightLimitFromLastLab())
         }
         //Lab is incomplete
     } else {
