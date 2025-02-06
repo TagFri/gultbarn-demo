@@ -275,10 +275,10 @@ function lightCrossingPoint() {
     let lightBreak = (Object.keys(child.getLightLimit().data).includes('3')) ? 3 : 4;
     let lightPlatauDate = new Date(child.timeDate.getTime() + (1000 * 60 * 60 * 24 * lightBreak))
     let labSlope = labSlopeCalculator()
-    console.log("EXTRAPOLATING IN SLOPE")
     let lightSlope = child.getLightLimit().slope
     // Lab tatt før platå AND lab går fortere opp enn lys AND SISTE BILI VERDI + (TID TIL PLATÅ * LABSLOPE) < LYSGRENSE
     if ((lastLabDate < lightPlatauDate) && (labSlope > lightSlope) && (lastLabBilirubin + ((lightBreak - lastLabRelativeDate)* labSlope) > child.getLightLimit().data[10])) {
+        console.log("EXTRAPOLATING IN SLOPE")
         //Calculate crossing at light-slope
         let diffY = (child.getLightLimit().data[1] + (lightSlope * (lastLabRelativeDate - 1)) - lastLabBilirubin)
         let timeToCrossing = diffY / (labSlope - lightSlope)
@@ -299,6 +299,9 @@ function lightCrossingPoint() {
             console.log("No extrapolation is justified")
             return null
         }
+    } else {
+        console.log("No extrapolation is justified")
+        return null
     }
 }
 

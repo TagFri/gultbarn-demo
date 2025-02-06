@@ -12,72 +12,6 @@ import {
 export {updateAdvice}
 
 function getAdvice() {
-    class Advice {
-        constructor(advice, title, description, icon, color="var(--color-yellow-lighter)") {
-            this.advice = advice
-            this.title = title
-            this.description = description
-            this.icon = icon
-            this.color = color
-        }
-    }
-    let url="assets/icons/advice/"
-    const noAdvice = new Advice(
-        "noAdvice",
-        "Ingen råd fra pediatriveilederen",
-        "Bilirubinverdien er lavere enn 50 µM under lysgrensa. Pediatriveilederen gir ingen konkrete råd ved ett enkelt målepunkt. Anvend klinisk skjønn, med en helhetlig vurdering av barnets klinikk og historikk.",
-        url + "no_advice.svg",
-        "var(--color-grey-light)"
-    )
-    const noFollowUp = new Advice(
-        "noFollowUp",
-        "Ingen oppfølging nødvendig",
-        "Barnet trenger ikke videre blodprøvekontroller eller oppfølging for gulsott. Bilirubinnivåene er trygge, og det er ingen behov for lysbehandling eller annen behandling.",
-        url + "no_follow_up.svg"
-    );
-    const bloodSample = new Advice(
-        "bloodSample",
-        "Blodprøvekontroll anbefales",
-        `Barnet bør følges opp med en ny blodprøve for å kontrollere bilirubinnivåene. Se pediatriveilederen for diagnostiske vurderinger. <br><span class="semi-bold">Krysningstidspunkt</span> er SETTINN`,
-        url + "bloodtest.svg"
-    );
-    const lightTherapy = new Advice(
-        "lightTherapy",
-        "Lysbehandling anbefales",
-        "Barnet har bilirubinnivåer som krever lysbehandling. Behandlingen bør startes snarest mulig.",
-        url + "phototherapy.svg"
-    );
-    const prolongedIcterus = new Advice(
-        "prolongedIcterus",
-        "Prolongert ikterus - videre utredning anbefales",
-        "Barn eldre enn 14 dager med synlig ikterus skal alltid utredes med total og konjugert bilirubin – uavhengig av vektoppgang og farge på avføring/urin. Et barn med konjugert bilirubin >17 mikromol/L skal følges opp videre.\n Se pediatriveilederen for diagnostiske vurderinger.",
-        url + "prolonged_icterus.svg"
-    );
-    const earlyIcterus = new Advice(
-        "earlyIcterus",
-        "Ikterus første levedøgn - videre utredning anbefales",
-        "Ikterus som oppstår første levedøgn regnes som patologisk. Videre utredning med blodprøver anbefales som angitt i pediatriveilederen, vurder lysbehandling.",
-        url + "early_onset_icterus.svg"
-    );
-    const transfusion = new Advice(
-        "transfusion",
-        "Transfusjon anbefales",
-        "Barnet har alvorlig høye bilirubinverdier. Barnet skal legges inn på sykehus umiddelbart og skal vurderes for utskiftningstransfusjon.",
-        url + "transfusion.svg",
-        "var(--color-light-red)"
-    );
-    const error = new Advice(
-        "error",
-        "Wopsi! Noe har skjedd...",
-        "Beregninger har feilet, pc'en klikka eller verden går rett og slett under. Vanskelig å vite om du ikke sender oss en mail. Trykk på \"Gi tilbakemelding\" under så skal vi se på det så fort vi klarer!",
-        url + "error.svg",
-        "var(--color-grey-light)"
-    )
-    let advices = [noFollowUp, bloodSample, lightTherapy, prolongedIcterus, earlyIcterus, transfusion, noAdvice, error]
-    if (Lab.getNumberOfLabs() == 0) {
-        return(advices[advices.indexOf(noAdvice)])
-    }
-    console.log("GETADVICE CALLED")
     //Lab values
     let lastBilirubinValue = Lab.labs[Lab.getNumberOfLabs() - 1].bilirubin;
     let lastBilirubinDate = Lab.labs[Lab.getNumberOfLabs() - 1].timeDate;
@@ -98,6 +32,124 @@ function getAdvice() {
     if (myChart.data.datasets[2].data.length > 0) {
         newLabDate = relativeDate2absoluteDate(myChart.data.datasets[2].data[1].x)
     } else newLabDate = false
+
+    //Day info
+    let day = null
+    let crossingFormatted = null
+    if (Lab.getNumberOfLabs() > 1 && lightCrossingPoint() != null) {
+        console.log("LIGHT CROSSING POINT CALLED")
+        console.log(lightCrossingPoint())
+        let crossing = relativeDate2absoluteDate(lightCrossingPoint().x)
+        switch (crossing.getDay()) {
+            case 0:
+                day = "søn"
+                break
+            case 1:
+                day = "man"
+                break
+            case 2:
+                day = "tir"
+                break
+            case 3:
+                day = "ons"
+                break
+            case 4:
+                day = "tor"
+                break
+            case 5:
+                day = "fre"
+                break
+            case 6:
+                day = "lør"
+                break
+        }
+        crossingFormatted = absoluteDateToPrintFormat(crossing)
+    }
+
+    class Advice {
+        constructor(advice, title, description, icon, color="var(--color-yellow-lighter)") {
+            this.advice = advice
+            this.title = title
+            this.description = description
+            this.icon = icon
+            this.color = color
+        }
+    }
+    let url="assets/icons/advice/"
+    const noAdvice = new Advice(
+        "noAdvice",
+        "Ingen råd fra pediatriveilederen",
+        "Bilirubinverdien er lavere enn 50 µM under lysgrensa. Pediatriveilederen gir ingen konkrete råd ved ett enkelt målepunkt. Anvend klinisk skjønn, med en helhetlig vurdering av barnets klinikk og historikk.",
+        url + "no_advice.svg",
+        "var(--color-grey-light)"
+    );
+    const noFollowUp = new Advice(
+        "noFollowUp",
+        "Ingen oppfølging nødvendig",
+        `Trendlinjen for de to siste målepunktene er ${(bilirubinSlope>=0?"svært avflatet":"synkende")}. Blodprøvekontroll er ikke nødvendig.`,
+        url + "no_follow_up.svg"
+    );
+    let bloodsampleDescription = ``
+    if (Lab.getNumberOfLabs() == 1) {
+        bloodsampleDescription += `Bilirubinverdien er < 50 µM under lysgrensen. Barnet bør følges opp med en ny blodprøve for å kontrollere bilirubinnivåene.\n\nEr barnet sykt (sepsis, acidose, asfyksi) bør oppstart av lysbehandling vurderes.`
+    } else {
+        bloodsampleDescription += `Trendlinjen for de to siste målepunktene er stigende. Barnet bør følges opp med en ny blodprøve for å kontrollere bilirubinnivåene.<br><span class="semi-bold">Krysningstidspunkt: ${day} ${crossingFormatted}</span><br>Kliniske symptomer som slapphet, irritabel, brekninger, hypoglykemi, acidose o.l. krever grundigere utredning. Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.5-ikterus-oppfolging-etter-utskriving#:~:text=Vedvarende%20hyperbilirubinemi%3A" target="_blank">pediatriveilederen</a> for videre diagnostiske vurderinger.`
+    }
+    if (lastBilirubinValue >= lightlimit-50) {bloodsampleDescription += `<br><br><span class="semi-bold">OBS!</span> Siste bilirubinverdi er mindre enn 50 µM fra lysgrensen. Er barnet sykt (sepsis, acidose, asfyksi) bør oppstart av lysbehandling vurderes.`}
+    if (bilirubinSlope > 100) {bloodsampleDescription += `<br><br><span class="semi-bold">OBS!</span> Trendlinjen for de to siste målepunktene stiger med mer enn ≥ 100 µM per døgn. Grundigere utredning av årsak til ikterus anbefales.`}
+
+    const bloodSample = new Advice(
+        "bloodSample",
+        "Blodprøvekontroll anbefales",
+        bloodsampleDescription,
+        url + "bloodtest.svg"
+    );
+    const lightTherapy = new Advice(
+        "lightTherapy",
+        "Lysbehandling anbefales",
+        `Barnet har bilirubinnivåer som overskrider lysgrensen. Lysbehandling er anbefalt. Behandlingen bør startes snarest mulig.<br><span class=semi-cold">Varighet</span>: Det anbefales 12–24 timers lysbehandling. Varighet kan individualiseres ut i fra hvor høye TSB-verdier var ved start lysbehandling, og i henhold til lokale rutiner.<br><br>Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.1-tidlig-ikterus-forste-710-dager#:~:text=Behandling%20og%20oppf%C3%B8lging" target="_blank">pediatriveilederen</a> for videre info.`,
+        url + "phototherapy.svg"
+    );
+    const prolongedIcterus = new Advice(
+        "prolongedIcterus",
+        `Prolongert ikterus - videre utredning anbefales`,
+        `Barn eldre enn 14 dager med synlig ikterus skal alltid utredes med total og konjugert bilirubin – uavhengig av vektoppgang og farge på avføring/urin. Et barn med konjugert bilirubin >17 mikromol/L skal følges opp videre.\n\nVurder også: Hb, hvite, trombocytter, retikulocytter, ALAT, GT, TSH, FT4 og blodtype mor/barn, DAT av barnet (hvis ikke kjent tidligere).<br><br>Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.4-prolongert-ikterus-mistenkt-kolestase-1014-dagers-alder" target="_blank">pediatriveilederen</a> for videre utredning.`,
+        url + "prolonged_icterus.svg"
+    );
+    const earlyIcterus = new Advice(
+        "earlyIcterus",
+        "Ikterus første levedøgn  - videre utredning anbefales",
+        `Synlig gulsott som oppstår innen 1 døgns alder regnes alltid som patologisk. Videre utredning med blodprøver anbefales som angitt i <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.1-tidlig-ikterus-forste-710-dager#:~:text=Synlig%20gulsott%20innen%201%20d%C3%B8gns%20alder%20(alltid%20patologisk!)" target="_blank">pediatriveilederen</a>, vurder lysbehandling.`,
+        url + "early_onset_icterus.svg"
+    );
+
+    let transfusionDescription = `Barnet har svært høye bilirubinverdier, erfaren kliniker (bakvakt pediater) bør kontaktes for å vurdering av  utskiftningstransfusjon. Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.3-utskiftingstransfusjon#-helsebiblioteket-innhold-retningslinjer-pediatri-nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening-8-gulsott-og-hemolytisk-sykdom-83-utskiftingstransfusjon:~:text=og%20hemolytisk%20sykdom-,8.%203%20Utskiftingstransfusjon,-Sist%20faglig%20oppdatert" target="_blank">pediatriveilederen</a> for detaljert informasjon.`
+    if (lastBilirubinValue >= gestastionWeek * 10) {
+        transfusionDescription += `<br><br><span class="semi-bold">OBS!</span> Bilirubin er mer enn 10 x gestasjonsuke`
+    }
+    if (bilirubinSlope > 240) {
+        transfusionDescription += `<br><br><span class="semi-bold">OBS!</span> Bilirubin stiger mer enn 10 µmol/time.`
+    }
+
+    const transfusion = new Advice(
+        "transfusion",
+        "Utskiftningstransfusjon bør vurderes",
+        transfusionDescription,
+        url + "transfusion.svg",
+        "var(--color-light-red)"
+    );
+    const error = new Advice(
+        "error",
+        "Wopsi! Noe har skjedd...",
+        "Beregninger har feilet, pc'en klikka eller verden går rett og slett under. Vanskelig å vite om du ikke sender oss en mail. Trykk på \"Gi tilbakemelding\" under så skal vi se på det så fort vi klarer!",
+        url + "error.svg",
+        "var(--color-grey-light)"
+    )
+    let advices = [noFollowUp, bloodSample, lightTherapy, prolongedIcterus, earlyIcterus, transfusion, noAdvice, error]
+    if (Lab.getNumberOfLabs() == 0) {
+        return(advices[advices.indexOf(noAdvice)])
+    }
+    console.log("GETADVICE CALLED")
 
     /* ADVICE ALGORITHEM; */
 //TRANSFUSJON NEEEDED
@@ -130,8 +182,8 @@ function getAdvice() {
     }
 //NO FOLLOW UP NEEDED
         //newLabDate == False -> if extrapolation is calculated above 14 days
-    else if (bilirubinSlope <= 0
-        || !newLabDate) {
+    else if ((bilirubinSlope <= 0
+        || !newLabDate) && Lab.getNumberOfLabs() > 1) {
         console.log("ADVICE: no-follow-up")
         return(advices[advices.indexOf(noFollowUp)])
 //NO ADVICE IN GUIDELINES
@@ -148,35 +200,6 @@ function getAdvice() {
 function updateAdvice() {
     //Get advice icon
     const adviceElement = getAdvice()
-    if (adviceElement.advice === "bloodSample") {
-        let crossing = relativeDate2absoluteDate(lightCrossingPoint().x)
-        let day = null
-        switch (crossing.getDay()) {
-            case 0:
-                day = "søndag"
-                break
-            case 1:
-                day = "mandag"
-                break
-            case 2:
-                day = "tirsdag"
-                break
-            case 3:
-                day = "onsdag"
-                break
-            case 4:
-                day = "torsdag"
-                break
-            case 5:
-                day = "fredag"
-                break
-            case 6:
-                day = "lørdag"
-                break
-        }
-        let crossingFormatted = absoluteDateToPrintFormat(crossing)
-        adviceElement.description = adviceElement.description.replace("SETTINN", day + " " + crossingFormatted)
-    }
     //Create email template:
     let href = "mailto:hei@sablateknisk.no?subject=Gult barn&body="
         href += "%0A%0A%0A%0A"
