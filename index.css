@@ -320,6 +320,7 @@ footer {
         opacity: 0.4;
     }
     .right-column {
+        justify-content: flex-start;
         align-items: flex-end;
         text-align: right;
         @media (min-width: 600px) {
@@ -331,7 +332,9 @@ footer {
         @media (min-width: 992px) {
             width: 40%;
         }
-
+        > * {
+            margin-bottom: 1rem;
+        }
     }
     .left-column {
         @media (min-width: 600px) {
