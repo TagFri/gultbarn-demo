@@ -9,6 +9,15 @@ export {msToDay, relativeDate2absoluteDate, absolute2relativeDate, currentLightL
 
 masking();
 initiateGraph()
+///* ADJUST GRAPH RATIO DEPENDING ON WINDOW *///
+window.addEventListener("resize", function() {
+        let widthBrowser = document.documentElement.clientWidth
+        if (widthBrowser < 600) {
+            myChart.options.aspectRatio = 1;
+        } else if (widthBrowser >= 600) {
+            myChart.options.aspectRatio = 2.2;
+        }
+});
 
 ///* EVENT LISTENERES *////
 //Save child input info
@@ -30,7 +39,6 @@ document.getElementById("journal-copy").addEventListener("click", function() {
 )
 //Change journal icon if mouseocer
 document.getElementById("journal-copy").addEventListener("mouseover", function () {
-    document.getElementById("journal-copy-img").src = "./assets/icons/copy_filled.svg"
     document.getElementById("journal-container").style.backgroundImage = "url('./assets/icons/journal_yellow.svg')"
     document.getElementById("journal-container").style.animation = "animatedBackground 0.4s ease-in-out";
     setTimeout(function() {
@@ -39,7 +47,6 @@ document.getElementById("journal-copy").addEventListener("mouseover", function (
     )
 })
 document.getElementById("journal-copy").addEventListener("mouseout", function () {
-    document.getElementById("journal-copy-img").src = "./assets/icons/copy.svg"
     document.getElementById("journal-container").style.backgroundImage = "url('./assets/icons/journal_grey.svg')"
     document.getElementById("journal-container").style.animation = "";
 })

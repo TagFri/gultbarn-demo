@@ -18,7 +18,7 @@ let chartParameters = {
     "x-limit": null, //max x-value
     "light-slope": null //light-graph slope
 }
-
+let startAspect = (document.documentElement.clientWidth >= 600)?2.2:1;
 function initiateGraph() {
     const ctx = document.getElementById('graph');
     ctx.innerHTML = "";
@@ -89,7 +89,7 @@ function initiateGraph() {
         },
         options: {
             responsive: true,
-            aspectRatio: 1.75,
+            aspectRatio: startAspect,
             parsing: {
                 xAxisKey: 'x',
                 yAxisKey: 'y'

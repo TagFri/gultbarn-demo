@@ -154,6 +154,9 @@ label {
     }
     h2, p, h4 {
         padding: 0.75rem 0.3rem;
+        #graph-label {
+            margin: 0 auto;
+        }
     }
     a {
         text-decoration: none;
@@ -180,7 +183,7 @@ label {
     background-size: 25%;
     background-image: url("assets/icons/advice/outcome_box_inactive.svg");
     background-position: bottom right;
-    padding-right: 30%;
+    padding-right: 20%;
 }
 
 
@@ -198,24 +201,23 @@ label {
 }
 
 #journal-container {
-    justify-content: space-between;
+    justify-content: flex-start;
     background-color: var(--color-grey-light);
     /* BAKGRUNNS BILDE */
     background-image: url("./assets/icons/journal_grey.svg");
     background-position: center;
     padding-bottom: 45%;
+    background-size: 75%;
     @media (max-width: 600px) {
         background-position: bottom right;
         padding-bottom: 0;
+        background-size: 33%;
     }
+    @media (max-width: 400px) {
+        background-size: 45%
+    }
+    /* Offset y-axis to enable the jumping sequence*/
     background-position-y: calc(100% + 30px);
-    background-size: 45%;
-    @media (max-width: 992px) {
-        background-size: 37%;
-    }
-    @media (max-width: 600px) {
-        background-size: 30%;
-    }
     transition: all 0.1s ease-in-out;
 }
 
@@ -298,6 +300,7 @@ footer {
     color: #000000;
     font-size: 0.9rem;
     margin-top: 15rem;
+    @media (max-width: 600px) {margin-top: 5rem;}
     width: 100vw;
     position: absolute;
     left: 0;
@@ -335,6 +338,7 @@ footer {
     .right-column {
         justify-content: flex-start;
         align-items: flex-end;
+        padding-left: 2rem;
         @media (min-width: 600px) {
             width: 30%;
         }
@@ -353,15 +357,9 @@ footer {
     }
     .left-column {
         @media (min-width: 600px) {
-            width: 60%;
+            width: 75%;
             text-align: left;
             align-items: flex-start;
-        }
-        @media (min-width: 750px) {
-            width: 55%;
-        }
-        @media (min-width: 992px) {
-            width: 45%;
         }
     }
     .left-column, .right-column {
@@ -371,6 +369,9 @@ footer {
             align-items: center;
             display: flex;
         }
+    }
+    .half-column {
+        width: 48%;
     }
     #footer-container {
         @media (max-width: 600px) {
@@ -434,6 +435,7 @@ footer {
 @media (max-width: 992px) {
     #disclaimer {
         flex-direction: column;
+        justify-content: space-between;
         align-items: flex-start;
         text-align: left;
         > * {
