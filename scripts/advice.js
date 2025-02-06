@@ -150,6 +150,8 @@ function getAdvice() {
         return(advices[advices.indexOf(noAdvice)])
     }
     console.log("GETADVICE CALLED")
+    console.log(currentLightLimitFromLastLab())
+    console.log((Lab.getNumberOfLabs() == 1))
 
     /* ADVICE ALGORITHEM; */
 //TRANSFUSJON NEEEDED
@@ -171,7 +173,7 @@ function getAdvice() {
     }
 //BLOOD SAMPLE FOLLOW UP
     else if ((bilirubinSlope > 0 && newLabDate && newLabDate < lastBilirubinDate14)
-        || ((Lab.getNumberOfLabs() == 1) && (currentLightLimitFromLastLab() < 50))) {
+        || ((Lab.getNumberOfLabs() == 1) && (currentLightLimitFromLastLab() <= 50))) {
         console.log("ADVICE: bloodsample-advice")
         return(advices[advices.indexOf(bloodSample)])
     }

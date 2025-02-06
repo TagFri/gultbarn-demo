@@ -30,6 +30,7 @@ document.getElementById("journal-copy").addEventListener("click", function() {
 )
 //Change journal icon if mouseocer
 document.getElementById("journal-copy").addEventListener("mouseover", function () {
+    document.getElementById("journal-copy-img").src = "./assets/icons/copy_filled.svg"
     document.getElementById("journal-container").style.backgroundImage = "url('./assets/icons/journal_yellow.svg')"
     document.getElementById("journal-container").style.animation = "animatedBackground 0.4s ease-in-out";
     setTimeout(function() {
@@ -38,8 +39,17 @@ document.getElementById("journal-copy").addEventListener("mouseover", function (
     )
 })
 document.getElementById("journal-copy").addEventListener("mouseout", function () {
+    document.getElementById("journal-copy-img").src = "./assets/icons/copy.svg"
     document.getElementById("journal-container").style.backgroundImage = "url('./assets/icons/journal_grey.svg')"
     document.getElementById("journal-container").style.animation = "";
+})
+
+//Fill flag on feedback on mouseover
+document.getElementById("feedback-button").addEventListener("mouseover", function () {
+    document.getElementById("feedback-image").src = "./assets/icons/flag_filled.svg"
+})
+document.getElementById("feedback-button").addEventListener("mouseout", function () {
+    document.getElementById("feedback-image").src = "./assets/icons/flag.svg"
 })
 
 //Warning before leaving site
