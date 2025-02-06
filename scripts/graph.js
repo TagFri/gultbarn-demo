@@ -1,6 +1,5 @@
 import {absolute2relativeDate, relativeDate2absoluteDate, currentLightLimitFromLastLab} from "./index.js";
-
-export {initiateGraph, updateChildGraph, updateLabGraph, myChart, updateChildLightLimit, updateTransfusionLimit, lightCrossingPoint}
+export {initiateGraph, updateChildGraph, updateLabGraph, myChart, updateChildLightLimit, updateTransfusionLimit, lightCrossingPoint, getTransfusionLimit}
 import {child} from "./child.js"
 import {Lab} from "./lab.js"
 
@@ -176,7 +175,13 @@ function updateChildGraph() {
         //Oppdater child label graf
         //myChart.options.plugins.title.text = "Lysgrense for barn " + lightInfo["label"]
         myChart.data.datasets[0].data = lightInfo.data
-        myChart.options.scales.y.max = lightInfo.data[10] + 50
+        console.log("TEST Y-UPDATE")
+        console.log(myChart.data.datasets[0].data[3])
+        if (myChart.data.datasets[3].data[3] > lightInfo.data[10]) {
+            myChart.options.scales.y.max = myChart.data.datasets[0].data[3] + 50
+        } else {
+            myChart.options.scales.y.max = lightInfo.data[10] + 50
+        }
         chartParameters["light-slope"] = lightInfo.slope
         myChart.update()
         if (myChart.data.datasets[1].data.length > 0) {
@@ -189,6 +194,15 @@ function updateChildGraph() {
 }
 
 function updateChildLightLimit() {
+    console.log("UPDATE CHILD LIGHT LIMIT CALLED")
+    console.log(myChart.data.datasets[3].data)
+    console.log(myChart.data.datasets[3].data["3"])
+    console.log(child.getLightLimit().data[10])
+    if (myChart.data.datasets[3].data[2] > child.getLightLimit().data[10]) {
+        myChart.options.scales.y.max = myChart.data.datasets[0].data[2] + 50
+    } else {
+        myChart.options.scales.y.max = child.getLightLimit().data[10] + 50
+    }
     let labDate = absolute2relativeDate(new Date(Lab.labs[Lab.getNumberOfLabs()-1].timeDate))
     //If lab is after 10 days
     if (labDate >= 8) {
@@ -307,25 +321,37 @@ function prettyDateFromX(x) {
     return (days + "/" + months + "-" + years + " kl." + hours + ":" + minutes)
 }
 
+function getTransfusionLimit() {
+    let transfusionLimit = null
+    console.log("GETTING TRANSFUSION LIMIT CALLED")
+    let lastLabDay = absolute2relativeDate(Lab.labs[Lab.getNumberOfLabs()-1].timeDate)
+    lastLabDay = Math.floor(lastLabDay +4)
+    if (lastLabDay < 10) {lastLabDay = 10}
+    if (child.birthWeight <= 1000) {
+        transfusionLimit = [{x: 0, y: 0}, {x: 1, y:175}, {x: 2, y:200}, {x: 3, y:250}, {x:lastLabDay, y: 250}]
+    } else if (child.birthWeight <= 1500) {
+        transfusionLimit = [{x: 0, y: 0}, {x: 1, y:200}, {x: 3, y:250}, {x:lastLabDay, y: 250}]
+    } else if (child.birthWeight <= 2500) {
+        transfusionLimit = [{x: 0, y: 0}, {x: 1, y:250}, {x: 3, y:350}, {x:lastLabDay, y: 350}]
+    } else {
+        transfusionLimit = [{x: 0, y: 200}, {x: 3, y:400}, {x:lastLabDay, y:400}]
+    }
+    return transfusionLimit
+}
+
 function updateTransfusionLimit() {
     console.log("UPDATE TRANSFUSION LIMIT CALLED")
-    console.log(currentLightLimitFromLastLab()  )
-    if (currentLightLimitFromLastLab() < 0) {
-        console.log("ABOVE LIGHT LIMIT")
-        //PREAMTURE TRANSFUSJON LIMITS FIRST 3 DAYS
-        if (child.birthWeight <= 1000) {
-            myChart.data.datasets[3].data = [{x: 0, y: 0}, {x: 1, y:175}, {x: 2, y:200}, {x: 3, y:250}, {x:10, y: 250}]
-        } else if (child.birthWeight <= 1500) {
-            myChart.data.datasets[3].data = [{x: 0, y: 0}, {x: 1, y:200}, {x: 3, y:250}, {x:10, y: 250}]
-        } else if (child.birthWeight <= 2500) {
-            myChart.data.datasets[3].data = [{x: 0, y: 0}, {x: 1, y:250}, {x: 3, y:350}, {x:10, y: 350}]
+    if (Lab.getNumberOfLabs() > 0 ) {
+        if (currentLightLimitFromLastLab() < 0) {
+            console.log("ABOVE LIGHT LIMIT")
+            //Transfusion limits in graph
+            myChart.data.datasets[3].data = getTransfusionLimit()
         } else {
-            myChart.data.datasets[3].data = [{x: 0, y: 200}, {x: 3, y:400}, {x:10, y:400}]
+            console.log("BELOW LIGHT LIMIT")
+            myChart.data.datasets[3].data = []
         }
-    } else {
-        console.log("BELOW LIGHT LIMIT")
-        myChart.data.datasets[3].data = []
+        myChart.update()
+        console.log("TRANSFUSION LIMIT UPDATED")
     }
-    myChart.update()
-    console.log("TRANSFUSION LIMIT UPDATED")
-}
+    console.log("-> -> TRANSFUSJON LIMIT NOT UPDATED - NO LABS")
+    }

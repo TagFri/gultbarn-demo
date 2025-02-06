@@ -6,7 +6,8 @@ import {
     absolute2relativeDate,
     currentLightLimitFromLastLab,
     printLabOverview,
-    absoluteDateToPrintFormat
+    absoluteDateToPrintFormat,
+    currentTransfusionLimitFromLastLab
 } from "./index.js";
 export {updateAdvice}
 
@@ -37,7 +38,7 @@ function getAdvice() {
     const bloodSample = new Advice(
         "bloodSample",
         "Blodprøvekontroll anbefales",
-        `Barnet bør følges opp med en ny blodprøve for å kontrollere bilirubinnivåene. Se pediatriveilederen for diagnostiske vurderinger. <br><span class="bold">Krysningstidspunkt er SETTINN</span>`,
+        `Barnet bør følges opp med en ny blodprøve for å kontrollere bilirubinnivåene. Se pediatriveilederen for diagnostiske vurderinger. <br><span class="semi-bold">Krysningstidspunkt</span> er SETTINN`,
         url + "bloodtest.svg"
     );
     const lightTherapy = new Advice(
@@ -110,6 +111,7 @@ function getAdvice() {
         ||bilirubinSlope > 240
         ||lastBilirubinValue > transfusionLimit) {
         console.log("ADVICE: transfusion-advice")
+        currentTransfusionLimitFromLastLab()
         return(advices[advices.indexOf(transfusion)])
 //EARLY ICTERUS!
     } else if (absolute2relativeDate(lastBilirubinDate)<1) {
@@ -158,10 +160,34 @@ function updateAdvice() {
     console.log(adviceElement)
     if (adviceElement.advice === "bloodSample") {
         let crossing = relativeDate2absoluteDate(lightCrossingPoint().x)
+        let day = null
+        switch (crossing.getDay()) {
+            case 0:
+                day = "søndag"
+                break
+            case 1:
+                day = "mandag"
+                break
+            case 2:
+                day = "tirsdag"
+                break
+            case 3:
+                day = "onsdag"
+                break
+            case 4:
+                day = "torsdag"
+                break
+            case 5:
+                day = "fredag"
+                break
+            case 6:
+                day = "lørdag"
+                break
+        }
         console.log(crossing)
         let crossingFormatted = absoluteDateToPrintFormat(crossing)
         console.log(crossingFormatted)
-        adviceElement.description = adviceElement.description.replace("SETTINN", crossingFormatted)
+        adviceElement.description = adviceElement.description.replace("SETTINN", day + " " + crossingFormatted)
     }
     console.log(adviceElement)
     //Create email template:

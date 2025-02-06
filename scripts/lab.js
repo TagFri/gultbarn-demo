@@ -166,6 +166,8 @@ function removeLab(targetButton) {
     displayLabs()
     //Update Graph
     updateLabGraph()
+    //Update transfusion graph
+    getTransfusionLimit()
     //updateAdvice
     updateAdvice()
     if (Lab.getNumberOfLabs() == 0) {

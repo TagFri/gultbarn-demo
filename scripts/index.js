@@ -1,6 +1,6 @@
 //Import functions
 import {masking} from './masking.js';
-import {initiateGraph, myChart} from './graph.js';
+import {initiateGraph, myChart, getTransfusionLimit} from './graph.js';
 import {child, saveChild} from './child.js';
 import {Lab, saveLab} from './lab.js';
 import {copyContent} from './journal.js';
@@ -99,7 +99,33 @@ function currentLightLimitFromLastLab() {
 }
 
 function currentTransfusionLimitFromLastLab() {
+    console.log("CURRENT TRANSFUSSION LIMIT CALLED")
+    let lastLab = Lab.labs[Lab.labs.length - 1]
+    let lastLabDate = absolute2relativeDate(lastLab.timeDate)
+    console.log(`Last lab date: ${lastLabDate}`)
     // todo -> beregn antall knekk også avstand
+    let transfusionLimit = getTransfusionLimit()
+    console.log(transfusionLimit)
+    let transfusionsKeys = []
+    for (const coordinate of transfusionLimit) {
+        console.log(coordinate)
+        let transfusionKey = coordinate.x
+        if (lastLabDate == transfusionKey) {
+            console.log("DISTANCE TO TRANSFUSION GRAPH:")
+            console.log(coordinate.y - lastLab.bilirubin)
+            return (coordinate.y - lastLab.bilirubin)
+        }
+        transfusionsKeys.push(transfusionKey)
+    }
+    let transfusionKeyUpstream = transfusionsKeys.find((day) => day > lastLabDate)
+    let transfusionKeyDownstream = transfusionsKeys.filter((day) => day < lastLabDate)
+    transfusionKeyDownstream = transfusionKeyDownstream[transfusionKeyDownstream.length - 1]
+    console.log(`Transfusion key upstream: ${transfusionKeyUpstream}`)
+    console.log(`Transfusion key downstream: ${transfusionKeyDownstream}`)
+    let currentTransfusionSlope =
+
+    console.log("DISTANCE TO TRANSFUSION GRAPH:")
+    console.log(coordinate.y - lastLab.bilirubin)
 }
 
 function printLabOverview() {
