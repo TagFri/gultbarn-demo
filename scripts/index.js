@@ -5,7 +5,7 @@ import {child, saveChild} from './child.js';
 import {Lab, saveLab} from './lab.js';
 import {copyContent} from './journal.js';
 //Export general functions
-export {msToDay, relativeDate2absoluteDate, absolute2relativeDate, currentLightLimitFromLastLab, printLabOverview, currentTransfusionLimitFromLastLab}
+export {msToDay, relativeDate2absoluteDate, absolute2relativeDate, currentLightLimitFromLastLab, printLabOverview, currentTransfusionLimitFromLastLab,absoluteDateToPrintFormat}
 
 masking();
 initiateGraph()
@@ -116,4 +116,13 @@ function printLabOverview() {
         labOverview += `${dateDay}/${dateMonth} kl. ${hour}:${minute}: ${bilirubin} µmol/L\n`;
     }
     return labOverview
+}
+
+function absoluteDateToPrintFormat(date) {
+    let minutes = date.getMinutes().toString().padStart(2, "0")
+    let hours = date.getHours().toString().padStart(2, "0")
+    let dato = date.getDate().toString().padStart(2, "0")
+    let month = (date.getMonth()+1).toString().padStart(2, "0")
+    console.log(`Måned: ${month} og dateMonth: ${date.getMonth()}`)
+    return `${dato}/${month} kl. ${hours}:${minutes}`
 }

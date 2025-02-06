@@ -1,6 +1,6 @@
 import {absolute2relativeDate, relativeDate2absoluteDate, currentLightLimitFromLastLab} from "./index.js";
 
-export {initiateGraph, updateChildGraph, updateLabGraph, myChart, updateChildLightLimit, updateTransfusionLimit}
+export {initiateGraph, updateChildGraph, updateLabGraph, myChart, updateChildLightLimit, updateTransfusionLimit, lightCrossingPoint}
 import {child} from "./child.js"
 import {Lab} from "./lab.js"
 

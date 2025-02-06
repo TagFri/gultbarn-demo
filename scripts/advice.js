@@ -1,17 +1,19 @@
 import {child} from "./child.js"
 import {Lab} from "./lab.js"
-import {myChart} from "./graph.js"
+import {myChart,lightCrossingPoint} from "./graph.js"
 import {
     relativeDate2absoluteDate,
     absolute2relativeDate,
     currentLightLimitFromLastLab,
-    printLabOverview
+    printLabOverview,
+    absoluteDateToPrintFormat
 } from "./index.js";
 export {updateAdvice}
 
 function getAdvice() {
     class Advice {
-        constructor(title, description, icon, color="var(--color-yellow-lighter)") {
+        constructor(advice, title, description, icon, color="var(--color-yellow-lighter)") {
+            this.advice = advice
             this.title = title
             this.description = description
             this.icon = icon
@@ -20,43 +22,51 @@ function getAdvice() {
     }
     let url="assets/icons/advice/"
     const noAdvice = new Advice(
+        "noAdvice",
         "Ingen råd fra pediatriveilederen",
         "Bilirubinverdien er lavere enn 50 µM under lysgrensa. Pediatriveilederen gir ingen konkrete råd ved ett enkelt målepunkt. Anvend klinisk skjønn, med en helhetlig vurdering av barnets klinikk og historikk.",
         url + "no_advice.svg",
         "var(--color-grey-light)"
     )
     const noFollowUp = new Advice(
+        "noFollowUp",
         "Ingen oppfølging nødvendig",
         "Barnet trenger ikke videre blodprøvekontroller eller oppfølging for gulsott. Bilirubinnivåene er trygge, og det er ingen behov for lysbehandling eller annen behandling.",
         url + "no_follow_up.svg"
     );
     const bloodSample = new Advice(
+        "bloodSample",
         "Blodprøvekontroll anbefales",
-        `Barnet bør følges opp med en ny blodprøve for å kontrollere bilirubinnivåene. Se pediatriveilederen for diagnostiske vurderinger. <br><span class="bold">Krysningstidspunkt om ${"fuck"} døgn</span>`,
+        `Barnet bør følges opp med en ny blodprøve for å kontrollere bilirubinnivåene. Se pediatriveilederen for diagnostiske vurderinger. <br><span class="bold">Krysningstidspunkt er SETTINN</span>`,
         url + "bloodtest.svg"
     );
     const lightTherapy = new Advice(
+        "lightTherapy",
         "Lysbehandling anbefales",
         "Barnet har bilirubinnivåer som krever lysbehandling. Behandlingen bør startes snarest mulig.",
         url + "phototherapy.svg"
     );
     const prolongedIcterus = new Advice(
+        "prolongedIcterus",
         "Prolongert ikterus - videre utredning anbefales",
         "Barn eldre enn 14 dager med synlig ikterus skal alltid utredes med total og konjugert bilirubin – uavhengig av vektoppgang og farge på avføring/urin. Et barn med konjugert bilirubin >17 mikromol/L skal følges opp videre.\n Se pediatriveilederen for diagnostiske vurderinger.",
         url + "prolonged_icterus.svg"
     );
     const earlyIcterus = new Advice(
+        "earlyIcterus",
         "Ikterus første levedøgn - videre utredning anbefales",
         "Ikterus som oppstår første levedøgn regnes som patologisk. Videre utredning med blodprøver anbefales som angitt i pediatriveilederen, vurder lysbehandling.",
         url + "early_onset_icterus.svg"
     );
     const transfusion = new Advice(
+        "transfusion",
         "Transfusjon anbefales",
         "Barnet har alvorlig høye bilirubinverdier. Barnet skal legges inn på sykehus umiddelbart og skal vurderes for utskiftningstransfusjon.",
         url + "transfusion.svg",
         "var(--color-light-red)"
     );
     const error = new Advice(
+        "error",
         "Obs, her har det gått galt...",
         "Beregninger har feilet, vennligst trykk på 'Gi tilbakemelding' under, så skal vi jobbe på med å fikse feilen <3",
         url + "error.svg",
@@ -145,6 +155,14 @@ function getAdvice() {
 function updateAdvice() {
     //Get advice icon
     const adviceElement = getAdvice()
+    console.log(adviceElement)
+    if (adviceElement.advice === "bloodSample") {
+        let crossing = relativeDate2absoluteDate(lightCrossingPoint().x)
+        console.log(crossing)
+        let crossingFormatted = absoluteDateToPrintFormat(crossing)
+        console.log(crossingFormatted)
+        adviceElement.description = adviceElement.description.replace("SETTINN", crossingFormatted)
+    }
     console.log(adviceElement)
     //Create email template:
     let href = "mailto:hei@sablateknisk.no?subject=Gult barn&body="
