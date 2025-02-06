@@ -290,7 +290,7 @@ footer {
     left: 0;
     background-color: var(--color-yellow-solid);
     border-radius: 75px 75px 0 0;
-    .main-container, #algorithm-flowchart {
+    .main-container, #algorithm-flowchart, #disclaimer {
         padding: 0 3rem;
         max-width: 1200px;
         margin: 2rem auto;
