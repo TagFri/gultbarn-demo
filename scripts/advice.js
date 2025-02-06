@@ -85,8 +85,6 @@ function getAdvice() {
     let bilirubinSlope = Lab.getLabSlope();
 
     //Lightlimits
-    let transfusionLimit = 100000;
-    //todo sjekk om lab er over transfusjonsgrense
     let lightlimitStart = child.getLightLimit().data[1];
     let lightlimit = child.getLightLimit().data[10];
     let lightSlope = child.getLightLimit().slope;
@@ -109,7 +107,7 @@ function getAdvice() {
 //TRANSFUSJON NEEEDED
     if (lastBilirubinValue >= gestastionWeek * 10
         ||bilirubinSlope > 240
-        ||lastBilirubinValue > transfusionLimit) {
+        ||currentTransfusionLimitFromLastLab() <= 0) {
         console.log("ADVICE: transfusion-advice")
         currentTransfusionLimitFromLastLab()
         return(advices[advices.indexOf(transfusion)])

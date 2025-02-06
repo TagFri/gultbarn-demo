@@ -102,7 +102,6 @@ function currentTransfusionLimitFromLastLab() {
     console.log("CURRENT TRANSFUSSION LIMIT CALLED")
     let lastLab = Lab.labs[Lab.labs.length - 1]
     let lastLabDate = absolute2relativeDate(lastLab.timeDate)
-    console.log(`Last lab date: ${lastLabDate}`)
     // todo -> beregn antall knekk også avstand
     let transfusionLimit = getTransfusionLimit()
     console.log(transfusionLimit)
@@ -117,15 +116,24 @@ function currentTransfusionLimitFromLastLab() {
         }
         transfusionsKeys.push(transfusionKey)
     }
+    console.log(`Transfusionskeys: ${transfusionsKeys}`)
     let transfusionKeyUpstream = transfusionsKeys.find((day) => day > lastLabDate)
     let transfusionKeyDownstream = transfusionsKeys.filter((day) => day < lastLabDate)
     transfusionKeyDownstream = transfusionKeyDownstream[transfusionKeyDownstream.length - 1]
-    console.log(`Transfusion key upstream: ${transfusionKeyUpstream}`)
-    console.log(`Transfusion key downstream: ${transfusionKeyDownstream}`)
-    let currentTransfusionSlope =
-
+    let slopeCoordinates = []
+    for (const coordinates of transfusionLimit) {
+        if (transfusionKeyUpstream == coordinates.x) {
+            slopeCoordinates.push(coordinates)
+        } else if (transfusionKeyDownstream == coordinates.x) {
+            slopeCoordinates.push(coordinates)
+        }
+    }
+    console.log(slopeCoordinates)
+    let slope = (slopeCoordinates[1].y - slopeCoordinates[0].y) / (slopeCoordinates[1].x - slopeCoordinates[0].x)
+    let currentTransfusionLimit = slope * (lastLabDate - transfusionKeyDownstream) + slopeCoordinates[0].y
     console.log("DISTANCE TO TRANSFUSION GRAPH:")
-    console.log(coordinate.y - lastLab.bilirubin)
+    console.log(currentTransfusionLimit - lastLab.bilirubin)
+    return (currentTransfusionLimit - lastLab.bilirubin)
 }
 
 function printLabOverview() {
