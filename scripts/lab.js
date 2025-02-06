@@ -2,7 +2,7 @@ import {updateLabGraph, updateChildLightLimit, updateTransfusionLimit} from "./g
 import {child} from "./child.js";
 import {validateInputGroup, timeDate, errorMessages} from "./validation.js";
 import {updateAdvice} from "./advice.js";
-import {msToDay, updateYaxis} from "./index.js";
+import {absolute2relativeDate, msToDay, updateYaxis} from "./index.js";
 
 export {Lab, saveLab}
 
@@ -23,6 +23,9 @@ class Lab {
         } else {
             console.log("ERROR: Not enough labs to calculate slope")
         }
+    }
+    static getRelativeDate() {
+        return absolute2relativeDate(timeDate)
     }
     constructor(bilirubin, time, date, year) {
         this.bilirubin = bilirubin

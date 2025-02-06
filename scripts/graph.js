@@ -341,11 +341,14 @@ function getTransfusionLimit() {
 function updateTransfusionLimit() {
     console.log("UPDATE TRANSFUSION LIMIT CALLED")
     if (Lab.getNumberOfLabs() > 0 ) {
-        if (currentLightLimitFromLastLab() < 0) {
-            console.log("ABOVE LIGHT LIMIT")
+        //Above light limit or first day:
+        if (currentLightLimitFromLastLab() < 0 || absolute2relativeDate(Lab.labs[Lab.getNumberOfLabs()-1].timeDate) < 1) {
+            console.log("ABOVE LIGHT LIMIT OR FIRST DAY")
             //Transfusion limits in graph
             myChart.data.datasets[3].data = getTransfusionLimit()
             myChart.update()
+        } else {
+            console.log("UNDER LIGHT LIMIT")
         }
     }
     console.log("-> -> TRANSFUSJON LIMIT NOT UPDATED - NO LABS")
