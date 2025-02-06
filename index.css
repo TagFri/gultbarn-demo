@@ -197,8 +197,13 @@ label {
     background-position: center;
     background-position-y: calc(100% + 30px);
     background-size: 45%;
+    @media (max-width: 992px) {
+        background-size: 37%;
+    }
+    @media (max-width: 600px) {
+        background-size: 30%;
+    }
     transition: all 0.1s ease-in-out;
-
 }
 
 #journal-copy:hover {

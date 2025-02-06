@@ -157,7 +157,6 @@ function getAdvice() {
 function updateAdvice() {
     //Get advice icon
     const adviceElement = getAdvice()
-    console.log(adviceElement)
     if (adviceElement.advice === "bloodSample") {
         let crossing = relativeDate2absoluteDate(lightCrossingPoint().x)
         let day = null
@@ -184,9 +183,7 @@ function updateAdvice() {
                 day = "lørdag"
                 break
         }
-        console.log(crossing)
         let crossingFormatted = absoluteDateToPrintFormat(crossing)
-        console.log(crossingFormatted)
         adviceElement.description = adviceElement.description.replace("SETTINN", day + " " + crossingFormatted)
     }
     console.log(adviceElement)
