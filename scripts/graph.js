@@ -217,10 +217,6 @@ function updateLabGraph() {
     let data = []
     let maxBilli = null
     for (const lab of Lab.labs) {
-        //adjust Y-axis to always be 50 over light-limit or labpoints
-        if (lab.bilirubin > myChart.options.scales.y.max || lab.bilirubin > child.getLightLimit().data[10]) {
-            myChart.options.scales.y.max = Math.round((lab.bilirubin+50)/50) * 50
-        }
         //Get relative X-value
         let timeDifference = (new Date(lab.timeDate).getTime() - new Date(child.timeDate).getTime()) / (1000 * 60 * 60 * 24)
         //Add lab to graph
@@ -346,12 +342,8 @@ function updateTransfusionLimit() {
             console.log("ABOVE LIGHT LIMIT")
             //Transfusion limits in graph
             myChart.data.datasets[3].data = getTransfusionLimit()
-        } else {
-            console.log("BELOW LIGHT LIMIT")
-            myChart.data.datasets[3].data = []
+            myChart.update()
         }
-        myChart.update()
-        console.log("TRANSFUSION LIMIT UPDATED")
     }
     console.log("-> -> TRANSFUSJON LIMIT NOT UPDATED - NO LABS")
     }

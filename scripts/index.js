@@ -5,7 +5,7 @@ import {child, saveChild} from './child.js';
 import {Lab, saveLab} from './lab.js';
 import {copyContent} from './journal.js';
 //Export general functions
-export {msToDay, relativeDate2absoluteDate, absolute2relativeDate, currentLightLimitFromLastLab, printLabOverview, currentTransfusionLimitFromLastLab,absoluteDateToPrintFormat}
+export {msToDay, relativeDate2absoluteDate, absolute2relativeDate, currentLightLimitFromLastLab, printLabOverview, currentTransfusionLimitFromLastLab,absoluteDateToPrintFormat, updateYaxis}
 
 masking();
 initiateGraph()
@@ -104,10 +104,8 @@ function currentTransfusionLimitFromLastLab() {
     let lastLabDate = absolute2relativeDate(lastLab.timeDate)
     // todo -> beregn antall knekk også avstand
     let transfusionLimit = getTransfusionLimit()
-    console.log(transfusionLimit)
     let transfusionsKeys = []
     for (const coordinate of transfusionLimit) {
-        console.log(coordinate)
         let transfusionKey = coordinate.x
         if (lastLabDate == transfusionKey) {
             console.log("DISTANCE TO TRANSFUSION GRAPH:")
@@ -116,7 +114,6 @@ function currentTransfusionLimitFromLastLab() {
         }
         transfusionsKeys.push(transfusionKey)
     }
-    console.log(`Transfusionskeys: ${transfusionsKeys}`)
     let transfusionKeyUpstream = transfusionsKeys.find((day) => day > lastLabDate)
     let transfusionKeyDownstream = transfusionsKeys.filter((day) => day < lastLabDate)
     transfusionKeyDownstream = transfusionKeyDownstream[transfusionKeyDownstream.length - 1]
@@ -128,7 +125,6 @@ function currentTransfusionLimitFromLastLab() {
             slopeCoordinates.push(coordinates)
         }
     }
-    console.log(slopeCoordinates)
     let slope = (slopeCoordinates[1].y - slopeCoordinates[0].y) / (slopeCoordinates[1].x - slopeCoordinates[0].x)
     let currentTransfusionLimit = slope * (lastLabDate - transfusionKeyDownstream) + slopeCoordinates[0].y
     console.log("DISTANCE TO TRANSFUSION GRAPH:")
@@ -157,6 +153,39 @@ function absoluteDateToPrintFormat(date) {
     let hours = date.getHours().toString().padStart(2, "0")
     let dato = date.getDate().toString().padStart(2, "0")
     let month = (date.getMonth()+1).toString().padStart(2, "0")
-    console.log(`Måned: ${month} og dateMonth: ${date.getMonth()}`)
     return `${dato}/${month} kl. ${hours}:${minutes}`
+}
+
+function updateYaxis() {
+    console.log("UPDATE Y-AXIS CALLED")
+    //adjust Y-axis to always be 50 over light-limit / labs / transfustion:
+    let maxYValue = 0
+
+    //Find highest lab
+    for (const lab of Lab.labs) {
+        if (lab.bilirubin > maxYValue) {
+            maxYValue = lab.bilirubin
+        }
+    }
+    //Find highest point on light limit
+    for (const [key, value] of Object.entries(child.getLightLimit().data)) {
+        if (value > maxYValue) {
+            maxYValue = value
+        }
+    }
+    //Find highest point on transfusion limit
+    if (myChart.data.datasets[3].data.length > 0) {
+        for (const [key, value] of Object.entries(getTransfusionLimit())) {
+            if (value.y > maxYValue) {
+                maxYValue = value.y
+            }
+        }
+    }
+    console.log(`Max Y-value: ${maxYValue}, current max Y-value: ${myChart.options.scales.y.max}`)
+    if (maxYValue > myChart.options.scales.y.max-50 || maxYValue < myChart.options.scales.y.max-50) {
+        myChart.options.scales.y.max = Math.round((maxYValue+50)/50) * 50
+        myChart.update()
+    } else {
+        console.log("Graph Y-value is already higher than current max Y-value")
+    }
 }

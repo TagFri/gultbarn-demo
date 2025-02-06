@@ -14,7 +14,6 @@ class Child {
         this.time = time
         this.gestationWeek = gestationWeek
         this.timeDate = timeDate(this.date, this.time)
-        console.log(`Barnets timedate: ${this.timeDate}`)
     }
 
     getLightLimit() {

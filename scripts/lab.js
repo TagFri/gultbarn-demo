@@ -2,7 +2,7 @@ import {updateLabGraph, updateChildLightLimit, updateTransfusionLimit} from "./g
 import {child} from "./child.js";
 import {validateInputGroup, timeDate, errorMessages} from "./validation.js";
 import {updateAdvice} from "./advice.js";
-import {msToDay, currentLightLimitFromLastLab} from "./index.js";
+import {msToDay, updateYaxis} from "./index.js";
 
 export {Lab, saveLab}
 
@@ -53,23 +53,17 @@ function saveLab() {
         let birthDay = child.timeDate.getDate()
         let birthMonth = child.timeDate.getMonth() + 1
         let birthYear = child.timeDate.getFullYear()
-        console.log(`Birthday: ${birthDay}/${birthMonth}/${birthYear} @ ${birthhour}:${birthminute}`)
         let year = null
         if ((birthMonth + validatedMonth) % 12 <= 4 && birthMonth > validatedMonth) {
             year = birthYear +1
-            console.log(`Lab year is birthyear +1: ${year}`)
         } else {
             year = birthYear
-            console.log(`Lab year = birthyear: ${year}`)
         }
         //Calculate timedate variable
         let timeDate = new Date(year, validatedMonth - 1, validatedDay, validatedHour, validatedMinute, 0, 0)
         //Check that lab is taken after child is born
         if (timeDate < child.timeDate) {
             errorMessages("early-lab", false)
-            console.log("ERROR: Lab is taken before child is born")
-            console.log(`Timedate ${timeDate}`)
-            console.log(`ChildTime ${child.timeDate}`)
         } else {
             //Save lab in labs
             let lab = new Lab(
@@ -82,7 +76,6 @@ function saveLab() {
                 year
                 )
             console.log("SAVED LAB")
-            console.log(lab)
             //Add lab object to lab collection
             Lab.labs = Lab.labs.sort((a, b) => a.timeDate - b.timeDate)
             //Sort collection on time taken
@@ -93,6 +86,7 @@ function saveLab() {
             updateLabGraph()
             updateChildLightLimit()
             updateTransfusionLimit()
+            updateYaxis()
             updateAdvice()
             document.getElementById("advice-container").classList.remove("opacity-container")
             document.getElementById("journal-container").classList.remove("opacity-container")
@@ -168,6 +162,8 @@ function removeLab(targetButton) {
     updateLabGraph()
     //Update transfusion graph
     updateTransfusionLimit()
+    //update y-axis
+    updateYaxis()
     //updateAdvice
     updateAdvice()
     if (Lab.getNumberOfLabs() == 0) {

@@ -68,8 +68,8 @@ function getAdvice() {
     );
     const error = new Advice(
         "error",
-        "Obs, her har det gått galt...",
-        "Beregninger har feilet, vennligst trykk på 'Gi tilbakemelding' under, så skal vi jobbe på med å fikse feilen <3",
+        "Wopsi! Noe har skjedd...",
+        "Beregninger har feilet, pc'en klikka eller verden går rett og slett under. Vanskelig å vite om du ikke sender oss en mail. Trykk på \"Gi tilbakemelding\" under så skal vi se på det så fort vi klarer!",
         url + "error.svg",
         "var(--color-grey-light)"
     )
@@ -98,10 +98,6 @@ function getAdvice() {
     if (myChart.data.datasets[2].data.length > 0) {
         newLabDate = relativeDate2absoluteDate(myChart.data.datasets[2].data[1].x)
     } else newLabDate = false
-
-    console.log("TEST")
-    console.log(lastBilirubinDate)
-    console.log(absolute2relativeDate(lastBilirubinDate)>14)
 
     /* ADVICE ALGORITHEM; */
 //TRANSFUSJON NEEEDED
@@ -145,9 +141,6 @@ function getAdvice() {
     }
 //Error handling
     else {
-        console.log("error-advice")
-        console.log(newLabDate)
-        console.log(lastBilirubinDate14)
         return(advices[advices.indexOf(error)])
     }
 }
@@ -184,7 +177,6 @@ function updateAdvice() {
         let crossingFormatted = absoluteDateToPrintFormat(crossing)
         adviceElement.description = adviceElement.description.replace("SETTINN", day + " " + crossingFormatted)
     }
-    console.log(adviceElement)
     //Create email template:
     let href = "mailto:hei@sablateknisk.no?subject=Gult barn&body="
         href += "%0A%0A%0A%0A"
