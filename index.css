@@ -285,10 +285,16 @@ footer {
     left: 0;
     background-color: var(--color-yellow-solid);
     border-radius: 75px 75px 0 0;
-    .main-container {
+    .main-container, #algorithm-flowchart {
         padding: 0 3rem;
         max-width: 1200px;
-        margin: 5rem auto;
+        margin: 2rem auto;
+    }
+    #algorithm-flowchart {
+        display: block;
+    }
+    .main-container {
+        margin-top: 5rem;
     }
 
     .flex-container {
@@ -298,7 +304,7 @@ footer {
     .flex-column {
         flex-direction: column;
     }
-    img {
+    .logo {
         margin-top: 3rem;
         width: 11rem;
         height: auto;
