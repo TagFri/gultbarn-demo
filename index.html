@@ -132,9 +132,11 @@
         <div class="flex-container flex-column left-column">
             <p class="small-text">Version 1.0 (01. februar 2025)</p>
             <h2>Laget med kjærlighet for barneavdelingen ved Sørlandet Sykehus</h2>
-            <p>Gultbarn bruker en metode der det estimerte tidspunktet for blodprøvekontroll beregnes ved å finne skjæringspunktet mellom en ekstrapolert kurve basert på de to siste bilirubinmålingene og lysgrensen for det aktuelle barnet. Denne tilnærmingen er ikke beskrevet i norske retningslinjer, men gir et nyttig grunnlag for tolkning av laboratorieverdier og trender.<br><br>Rådene i denne algoritmen er basert på Pediatriveilederen, og lysgrensene bygger på konsensus fra Interessegruppen i nyfødtmedisin, Norsk Barnelegeforening (2006, revidert 2016). All data behandles lokalt på din enhet og sendes aldri til eksterne servere. Algoritmen er utviklet med mål om å støtte kliniske vurderinger, men vi tar forbehold om feil eller mangler. Behandlende kliniker oppfordres alltid til å gjøre en selvstendig vurdering basert på barnets helhetlige situasjon.</p>
+            <p>Gultbarn er et klinisk verktøy for presis oppfølging av nyfødte med gulsott. Den bakenforliggende algoritmen gir anbefalinger og råd som speiler pediatriveilederen basert på barnets fødselsvekt, gestasjonsalder og bilirubinverdier.<br><br>Vi bruker en metode der det estimerte tidspunktet for blodprøvekontroll beregnes ved å finne skjæringspunktet mellom en ekstrapolert kurve, utledet fra de to siste bilirubinmålingene, og lysgrensen tilpasset det aktuelle barnet. Selv om denne metoden ikke er beskrevet i de norske retningslinjene, gir den et nyttig grunnlag for tolkning av laboratorieverdiers utvikling.</p>
+            <h2>Algoritmen som driver nettsiden</h2>
+            <p>Rådene i denne algoritmen er basert på Pediatriveilederen, og lysgrensene bygger på konsensus fra Interessegruppen i nyfødtmedisin, Norsk Barnelegeforening (2006, revidert 2016). All data behandles lokalt på din enhet og sendes aldri til eksterne servere. Algoritmen er utviklet med mål om å støtte kliniske vurderinger, men vi tar forbehold om feil eller mangler. Behandlende kliniker oppfordres alltid til å gjøre en selvstendig vurdering basert på barnets helhetlige situasjon.</p>
         </div>
-        <div class="flex-container flex-column right-column">
+        <div class="flex-container flex-column right-column right-text">
             <img class="logo" src="./assets/icons/logo_black.svg" alt="Gult barn logo">
             <div class="flex-container flex-column feedback">
                 <a href="mailto:hei@sablateknisk.no?subject=Gult barn tilbakemelding" class="link"> Gi tilbakemelding</a>
@@ -144,19 +146,26 @@
         </div>
     </div>
     <img id="algorithm-flowchart" src="./assets/icons/algorithm.svg" alt="Algorithm">
-    <p id="disclaimer" class="small-text">
-        1 Lysgrensene bygger på konsensus fra Interessegruppen i nyfødtmedisin, Norsk Barnelegeforening (2006, revidert 2016). Grafene for lysgrensene i gultbarn er laget ved lineær regresjon med følgende punkter:
-        <br><br>
-        2 Transfusjonsgrensene er hentet fra Pediatriveilederens kapittel 8.3 om uskiftningsreaksjon. Grafene for transfusjonsgrensene er alget ved lineær regresjon med følgende punkter:
-        Prematur < 1000 g : 1. døgn: >175 μmol/l, 2. døgn: >200 μmol/l, 3. døgn: >250 μmol/l.
-        Prematur 1000-1500 g: 1. døgn: >200 μmol/l, 2. døgn: >225 μmol/l, 3. døgn: >250μmol/l.
-        Prematur 1500-2500 g: 1. døgn: >250 μmol/l, 2. døgn: >300 μmol/l, 3. døgn: >350 μmol/l.
-        <br>
-        Ettersom det ikke er angitt spesifikke verdier etter det tredje levedøgnet for premature, har vi antatt at grensene for transfusjon flater ut på samme verdi etter dette tidspunktet.
-        <br><br>
-        3 Pediatrivilederende anbefaller at det skal tas total serum bilirubin ved  ”grenseverdier” (ca. 30–50 µM) under lysgrensen. Vi har valgt det konservative ytterpunktet 50 µM.
-        <br><br>
-        4 Når krysningspunktet mellom ekstrapolert graf og lysgrensen ligger mer enn 14 dager frem i tid, anses denne som avflatet og vil resultere i råd om ingen oppfølging. Dette er en egendefinert definisjon i mangel på tydeligere retningslinjer.</p>
+    <div id="disclaimer" class="flex-container">
+        <div class="disclaimer right-column">
+            <p class="small-text">
+                1 Lysgrensene bygger på konsensus fra Interessegruppen i nyfødtmedisin, Norsk Barnelegeforening (2006, revidert 2016). Grafene for lysgrensene i gultbarn er laget ved lineær regresjon med følgende punkter:
+                <br><br>
+                2 Transfusjonsgrensene er hentet fra Pediatriveilederens kapittel 8.3 om uskiftningsreaksjon. Grafene for transfusjonsgrensene er alget ved lineær regresjon med følgende punkter:
+                Prematur < 1000 g : 1. døgn: >175 μmol/l, 2. døgn: >200 μmol/l, 3. døgn: >250 μmol/l.
+                Prematur 1000-1500 g: 1. døgn: >200 μmol/l, 2. døgn: >225 μmol/l, 3. døgn: >250μmol/l.
+                Prematur 1500-2500 g: 1. døgn: >250 μmol/l, 2. døgn: >300 μmol/l, 3. døgn: >350 μmol/l.
+                <br>
+                Ettersom det ikke er angitt spesifikke verdier etter det tredje levedøgnet for premature, har vi antatt at grensene for transfusjon flater ut på samme verdi etter dette tidspunktet.
+            </p>
+        </div>
+        <div class="disclaimer left-column">
+            <p class="small-text">
+                3 Pediatrivilederende anbefaller at det skal tas total serum bilirubin ved  ”grenseverdier” (ca. 30–50 µM) under lysgrensen. Vi har valgt det konservative ytterpunktet 50 µM.
+                <br><br>
+                4 Når krysningspunktet mellom ekstrapolert graf og lysgrensen ligger mer enn 14 dager frem i tid, anses denne som avflatet og vil resultere i råd om ingen oppfølging. Dette er en egendefinert definisjon i mangel på tydeligere retningslinjer.
+            </p>
+        </div>
 </footer>
 </body>
 </html>

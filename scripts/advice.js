@@ -160,27 +160,28 @@ function getAdvice() {
         ||currentTransfusionLimitFromLastLab() <= 0) {
         console.log("ADVICE: transfusion-advice")
         currentTransfusionLimitFromLastLab()
-        return(advices[advices.indexOf(transfusion)])
-//EARLY ICTERUS!
-    } else if (absolute2relativeDate(lastBilirubinDate)<1) {
-        console.log("ADVICE: early-icterus")
-        return(advices[advices.indexOf(earlyIcterus)])
+        return (advices[advices.indexOf(transfusion)])
     }
 //LIGHT THERAPY NEEDED
     else if (((lastBilirubinValue >= lightlimit) && ((absolute2relativeDate(lastBilirubinDate)) >= (Object.keys(child.getLightLimit().data).includes('3') ? 3 : 4))) || (lastBilirubinValue >=   (lightlimitStart + (lightSlope * (absolute2relativeDate(lastBilirubinDate)-1))) &&  (absolute2relativeDate(lastBilirubinDate) < Object.keys(child.getLightLimit().data).includes('3') ? 3 : 4))) {
         console.log("ADVICE: lighttherapy-advice")
         return(advices[advices.indexOf(lightTherapy)])
     }
-//BLOOD SAMPLE FOLLOW UP
-    else if ((bilirubinSlope > 0 && newLabDate && newLabDate < lastBilirubinDate14)
-        || ((Lab.getNumberOfLabs() == 1) && (currentLightLimitFromLastLab() <= 50))) {
-        console.log("ADVICE: bloodsample-advice")
-        return(advices[advices.indexOf(bloodSample)])
+//EARLY ICTERUS!
+    else if (absolute2relativeDate(lastBilirubinDate)<1) {
+        console.log("ADVICE: early-icterus")
+        return(advices[advices.indexOf(earlyIcterus)])
     }
 //LATE ICTERUS
     else if (absolute2relativeDate(lastBilirubinDate)>14) {
         console.log("ADVICE: prolonged-icterus")
         return(advices[advices.indexOf(prolongedIcterus)])
+    }
+//BLOOD SAMPLE FOLLOW UP
+    else if ((bilirubinSlope > 0 && newLabDate && newLabDate < lastBilirubinDate14)
+        || ((Lab.getNumberOfLabs() == 1) && (currentLightLimitFromLastLab() <= 50))) {
+        console.log("ADVICE: bloodsample-advice")
+        return(advices[advices.indexOf(bloodSample)])
     }
 //NO FOLLOW UP NEEDED
         //newLabDate == False -> if extrapolation is calculated above 14 days

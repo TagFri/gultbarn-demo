@@ -335,7 +335,6 @@ footer {
     .right-column {
         justify-content: flex-start;
         align-items: flex-end;
-        text-align: right;
         @media (min-width: 600px) {
             width: 30%;
         }
@@ -348,6 +347,9 @@ footer {
         > * {
             margin-bottom: 1rem;
         }
+    }
+    .right-text {
+        text-align: right;
     }
     .left-column {
         @media (min-width: 600px) {
@@ -428,4 +430,18 @@ footer {
     border-width: 5px;
     border-style: solid;
     border-color: #555 transparent transparent transparent;
+}
+@media (max-width: 992px) {
+    #disclaimer {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        > * {
+            margin-bottom: 1rem;
+            width: 90%;
+            @media (max-width: 600px) {
+                width: 100%;
+            }
+        }
+    }
 }
