@@ -11,7 +11,7 @@ masking();
 initiateGraph()
 
 ///* STATISTICS *///
-let apiURL = "https://i70hzn59ha.execute-api.us-east-1.amazonaws.com/startUp"
+let apiURL = "https://i70hzn59ha.execute-api.us-east-1.amazonaws.com/startUp/gultBarnStatistics"
 let apiKey = "egFZwylnMe1Sk5PBAr31Y724ppi5NMJ6aJ3vl6g9"
     //todo change to enviormental variable
 
@@ -27,6 +27,7 @@ async function updateCount(clickID) {
             body: JSON.stringify({buttonID: clickID})
         });
         let result = await response.json();
+
         console.log(result);
     } catch (error) {
         console.error(error);
