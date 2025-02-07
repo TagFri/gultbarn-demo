@@ -78,7 +78,7 @@ function saveLab() {
                 [validatedDay, validatedMonth],
                 year
                 )
-            updateCount("addedLabs")
+            updateCount("addedLab")
             console.log("SAVED LAB")
             //Add lab object to lab collection
             Lab.labs = Lab.labs.sort((a, b) => a.timeDate - b.timeDate)
