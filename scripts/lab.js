@@ -124,7 +124,6 @@ function displayLabs() {
         button.classList.add("remove-lab")
         button.addEventListener("click", function (event) {
             removeLab(event.target)
-            updateCount("removedLabs")
         })
         const image = document.createElement("img")
         image.src = "./assets/icons/remove.svg"
@@ -153,6 +152,7 @@ function displayLabs() {
 }
 
 function removeLab(targetButton) {
+    updateCount("removedLabs")
     //Remove from Labs array
     for (let i = 0; i < Lab.labs.length; i++) {
         //
