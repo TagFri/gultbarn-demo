@@ -18,7 +18,7 @@ async function updateCount(clickID) {
         let response = await fetch(apiURL, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({clickID})
+            body: JSON.stringify({buttonID: clickID})
         });
         let result = await response.json();
         console.log(result);
