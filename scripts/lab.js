@@ -78,6 +78,7 @@ function saveLab() {
                 [validatedDay, validatedMonth],
                 year
                 )
+            updateCount("addedLabs")
             console.log("SAVED LAB")
             //Add lab object to lab collection
             Lab.labs = Lab.labs.sort((a, b) => a.timeDate - b.timeDate)
@@ -121,9 +122,9 @@ function displayLabs() {
         li.classList.add("individual-lab")
         const button = document.createElement("button")
         button.classList.add("remove-lab")
-        button.onclick = updateCount('removedLabs')
         button.addEventListener("click", function (event) {
             removeLab(event.target)
+            updateCount("removedLabs")
         })
         const image = document.createElement("img")
         image.src = "./assets/icons/remove.svg"

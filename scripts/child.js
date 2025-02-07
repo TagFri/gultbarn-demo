@@ -2,6 +2,7 @@ import {Lab} from "./lab.js";
 import {myChart, updateChildGraph, updateTransfusionLimit} from "./graph.js"
 import {timeDate, validateInputGroup} from "./validation.js"
 import {updateAdvice} from "./advice.js";
+import {updateCount} from "./index.js";
 
 export {child, saveChild}
 
@@ -72,6 +73,7 @@ function saveChild() {
         toggleOpacity(false)
         //Create child graph
         updateChildGraph()
+        updateCount("addedChild")
         //Focus on lab-date
         document.getElementById("lab-date").focus()
         //If not valid = remove complete icon, turn on opacity, auto-focus on error input and remove graph

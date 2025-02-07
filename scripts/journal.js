@@ -6,7 +6,6 @@ export {copyContent}
 
 function copyContent() {
     console.log("COPYCONTENT CALLED");
-
     var image = myChart.toBase64Image();
 
     // Fetch Advice Information
