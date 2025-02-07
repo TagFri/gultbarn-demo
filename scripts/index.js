@@ -11,13 +11,19 @@ masking();
 initiateGraph()
 
 ///* STATISTICS *///
-let apiURL = "https://4oo1yvfrt7.execute-api.us-east-1.amazonaws.com/default/gultBarnStatistics"
+let apiURL = "https://i70hzn59ha.execute-api.us-east-1.amazonaws.com/startUp"
+let apiKey = "egFZwylnMe1Sk5PBAr31Y724ppi5NMJ6aJ3vl6g9"
+    //todo change to enviormental variable
 
 async function updateCount(clickID) {
     try {
         let response = await fetch(apiURL, {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
+            headers: {
+                "Content-Type": "application/json",
+                //Sends the api key
+                "x-api-key": apiKey
+            },
             body: JSON.stringify({buttonID: clickID})
         });
         let result = await response.json();
