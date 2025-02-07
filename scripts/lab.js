@@ -2,7 +2,7 @@ import {updateLabGraph, updateChildLightLimit, updateTransfusionLimit} from "./g
 import {child} from "./child.js";
 import {validateInputGroup, timeDate, errorMessages} from "./validation.js";
 import {updateAdvice} from "./advice.js";
-import {absolute2relativeDate, msToDay, updateYaxis} from "./index.js";
+import {absolute2relativeDate, msToDay, updateCount, updateYaxis} from "./index.js";
 
 export {Lab, saveLab}
 
@@ -121,6 +121,7 @@ function displayLabs() {
         li.classList.add("individual-lab")
         const button = document.createElement("button")
         button.classList.add("remove-lab")
+        button.onclick = updateCount('removedLabs')
         button.addEventListener("click", function (event) {
             removeLab(event.target)
         })

@@ -5,10 +5,34 @@ import {child, saveChild} from './child.js';
 import {Lab, saveLab} from './lab.js';
 import {copyContent} from './journal.js';
 //Export general functions
-export {msToDay, relativeDate2absoluteDate, absolute2relativeDate, currentLightLimitFromLastLab, printLabOverview, currentTransfusionLimitFromLastLab,absoluteDateToPrintFormat, updateYaxis}
+export {msToDay, relativeDate2absoluteDate, absolute2relativeDate, currentLightLimitFromLastLab, printLabOverview, currentTransfusionLimitFromLastLab,absoluteDateToPrintFormat, updateYaxis, updateCount}
 
 masking();
 initiateGraph()
+
+///* STATISTICS *///
+let apiURL = "https://4oo1yvfrt7.execute-api.us-east-1.amazonaws.com/default/gultBarnStatistics"
+
+async function updateCount(clickID) {
+    try {
+        let response = await fetch(apiURL, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({clickID})
+        });
+        let result = await response.json();
+        console.log(result);
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+// Attach event listeners to buttons instead of using onclick in HTML
+document.getElementById("add-child").addEventListener("click", () => updateCount("addedChild"));
+document.getElementById("add-lab").addEventListener("click", () => updateCount("addedLabs"));
+document.getElementById("journal-copy").addEventListener("click", () => updateCount("copiedJournals"));
+document.getElementById("feedback-button").addEventListener("click", () => updateCount("feedbackGiven"));
+
 ///* ADJUST GRAPH RATIO DEPENDING ON WINDOW *///
 window.addEventListener("resize", function() {
         let widthBrowser = document.documentElement.clientWidth
