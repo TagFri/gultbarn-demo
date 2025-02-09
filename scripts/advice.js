@@ -119,7 +119,7 @@ function getAdvice() {
     const earlyIcterus = new Advice(
         "earlyIcterus",
         "Ikterus første levedøgn  - videre utredning anbefales",
-        `Synlig gulsott som oppstår innen 1 døgns alder regnes alltid som patologisk. Videre utredning med blodprøver anbefales som angitt i <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.1-tidlig-ikterus-forste-710-dager#:~:text=Synlig%20gulsott%20innen%201%20d%C3%B8gns%20alder%20(alltid%20patologisk!)" target="_blank">pediatriveilederen</a>, vurder lysbehandling.`,
+        `Synlig gulsott som oppstår innen 1 døgns alder regnes alltid som patologisk. Videre utredning med blodprøver anbefales som angitt i <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.1-tidlig-ikterus-forste-710-dager#:~:text=Synlig%20gulsott%20innen%201%20d%C3%B8gns%20alder%20(alltid%20patologisk!)" target="_blank">pediatriveilederen</a>, vurder lysbehandling evt. transfusjon/IVIG ved svært høye verdier.`,
         url + "early_onset_icterus.svg"
     );
 
@@ -178,8 +178,12 @@ function getAdvice() {
         return(advices[advices.indexOf(prolongedIcterus)])
     }
 //BLOOD SAMPLE FOLLOW UP
+        //Positive light curve and extrapolation is within 14 days
     else if ((bilirubinSlope > 0 && newLabDate && newLabDate < lastBilirubinDate14)
-        || ((Lab.getNumberOfLabs() == 1) && (currentLightLimitFromLastLab() <= 50))) {
+        // OR Single lab that's 50 from light limit
+        || ((Lab.getNumberOfLabs() == 1) && (currentLightLimitFromLastLab() <= 50))
+        //OR bilirubin value is above 280 with a slope thats decreasing less than 20/day
+        || (lastBilirubinValue > 280 && bilirubinSlope > -20)) {
         console.log("ADVICE: bloodsample-advice")
         return(advices[advices.indexOf(bloodSample)])
     }
