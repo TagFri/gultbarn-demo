@@ -321,6 +321,9 @@ function prettyDateFromX(x) {
 }
 
 function getTransfusionLimit() {
+    if (Lab.getNumberOfLabs() == 0) {
+        return []
+    }
     let transfusionLimit = null
     console.log("GETTING TRANSFUSION LIMIT CALLED")
     let lastLabDay = absolute2relativeDate(Lab.labs[Lab.getNumberOfLabs()-1].timeDate)

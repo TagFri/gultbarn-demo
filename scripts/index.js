@@ -208,9 +208,11 @@ function updateYaxis() {
     let maxYValue = 0
 
     //Find highest lab
-    for (const lab of Lab.labs) {
-        if (lab.bilirubin > maxYValue) {
-            maxYValue = lab.bilirubin
+    if (Lab.labs.length > 0) {
+        for (const lab of Lab.labs) {
+            if (lab.bilirubin > maxYValue) {
+                maxYValue = lab.bilirubin
+            }
         }
     }
     //Find highest point on light limit

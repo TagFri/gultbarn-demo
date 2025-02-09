@@ -12,12 +12,23 @@ import {
 export {updateAdvice}
 
 function getAdvice() {
+    console.log("GETADVICE CALLED")
+    console.log(Lab.getNumberOfLabs())
     //Lab values
-    let lastBilirubinValue = Lab.labs[Lab.getNumberOfLabs() - 1].bilirubin;
-    let secoundLastBilirubinValue = Lab.labs[Lab.getNumberOfLabs() - 2].bilirubin;
-    let lastBilirubinDate = Lab.labs[Lab.getNumberOfLabs() - 1].timeDate;
-    let lastBilirubinDate14 = new Date(lastBilirubinDate).setDate(lastBilirubinDate.getDate() + 14);
-    let bilirubinSlope = Lab.getLabSlope();
+    let lastBilirubinValue
+    let secoundLastBilirubinValue
+    let lastBilirubinDate
+    let lastBilirubinDate14
+    let bilirubinSlope
+    if (Lab.getNumberOfLabs() >= 1) {
+        lastBilirubinValue = Lab.labs[Lab.getNumberOfLabs() - 1].bilirubin;
+        lastBilirubinDate = Lab.labs[Lab.getNumberOfLabs() - 1].timeDate;
+        lastBilirubinDate14 = new Date(lastBilirubinDate).setDate(lastBilirubinDate.getDate() + 14);
+        bilirubinSlope = Lab.getLabSlope();
+    }
+    if (Lab.getNumberOfLabs() >= 2) {
+        secoundLastBilirubinValue = Lab.labs[Lab.getNumberOfLabs() - 2].bilirubin;
+    }
 
     //Lightlimits
     let lightlimitStart = child.getLightLimit().data[1];
@@ -143,6 +154,13 @@ function getAdvice() {
         `Synlig gulsott som oppstår innen 1 døgns alder regnes alltid som patologisk. Videre utredning med blodprøver anbefales som angitt i <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.1-tidlig-ikterus-forste-710-dager#:~:text=Synlig%20gulsott%20innen%201%20d%C3%B8gns%20alder%20(alltid%20patologisk!)" target="_blank">pediatriveilederen</a>, vurder lysbehandling evt. transfusjon/IVIG ved svært høye verdier.`,
         url + "early_onset_icterus.svg"
     );
+    const deactivated = new Advice(
+        "deactivated",
+        "Fagelig råd",
+        "<br><br><br>",
+        url + "outcome_box_inactive.svg"
+
+    )
 
     let transfusionDescription = `Barnet har svært høye bilirubinverdier, erfaren kliniker (bakvakt pediater) bør kontaktes for å vurdering av  utskiftningstransfusjon. Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.3-utskiftingstransfusjon#-helsebiblioteket-innhold-retningslinjer-pediatri-nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening-8-gulsott-og-hemolytisk-sykdom-83-utskiftingstransfusjon:~:text=og%20hemolytisk%20sykdom-,8.%203%20Utskiftingstransfusjon,-Sist%20faglig%20oppdatert" target="_blank">pediatriveilederen</a> for detaljert informasjon.`
     if (lastBilirubinValue >= gestastionWeek * 10) {
@@ -166,9 +184,9 @@ function getAdvice() {
         url + "error.svg",
         "var(--color-grey-light)"
     )
-    let advices = [noFollowUp, bloodSample, lightTherapy, prolongedIcterus, earlyIcterus, transfusion, noAdvice, error]
+    let advices = [noFollowUp, bloodSample, lightTherapy, prolongedIcterus, earlyIcterus, transfusion, noAdvice, error, deactivated]
     if (Lab.getNumberOfLabs() == 0) {
-        return(advices[advices.indexOf(noAdvice)])
+        return(advices[advices.indexOf(deactivated)])
     }
     console.log("GETADVICE CALLED")
     console.log(currentLightLimitFromLastLab())
@@ -218,6 +236,8 @@ function getAdvice() {
     } else if ((Lab.getNumberOfLabs() == 1) && (currentLightLimitFromLastLab() > 50)) {
         console.log("ADVICE: no-advice")
         return(advices[advices.indexOf(noAdvice)])
+    } else if (Lab.getNumberOfLabs() == 0) {
+        return(advices[advices.indexOf(deactivated)])
     }
 //Error handling
     else {
