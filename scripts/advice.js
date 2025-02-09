@@ -92,6 +92,8 @@ function getAdvice() {
     let bloodsampleDescription = ``
     if (Lab.getNumberOfLabs() == 1) {
         bloodsampleDescription += `Bilirubinverdien er < 50 µM under lysgrensen. Barnet bør følges opp med en ny blodprøve for å kontrollere bilirubinnivåene.\n\nEr barnet sykt (sepsis, acidose, asfyksi) bør oppstart av lysbehandling vurderes.`
+    } else if (lastBilirubinValue >= 280 && bilirubinSlope > -20) {
+        bloodsampleDescription += `Målingene er fortsatt høye, og trendlinjen for de to siste målepunktene er ${(bilirubinSlope < 0)?'svakt synkende':'svakt stigende'}. Barnet bør følges opp med en ny blodprøve for å kontrollere bilirubinnivåene.<br><br>Kliniske symptomer som slapphet, irritabel, brekninger, hypoglykemi, acidose o.l. krever grundigere utredning. Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.5-ikterus-oppfolging-etter-utskriving#:~:text=Vedvarende%20hyperbilirubinemi%3A" target="_blank">pediatriveilederen</a> for videre diagnostiske vurderinger.`
     } else {
         bloodsampleDescription += `Trendlinjen for de to siste målepunktene er stigende. Barnet bør følges opp med en ny blodprøve for å kontrollere bilirubinnivåene.<br><span class="semi-bold">Krysningstidspunkt: ${day} ${crossingFormatted}</span><br>Kliniske symptomer som slapphet, irritabel, brekninger, hypoglykemi, acidose o.l. krever grundigere utredning. Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.5-ikterus-oppfolging-etter-utskriving#:~:text=Vedvarende%20hyperbilirubinemi%3A" target="_blank">pediatriveilederen</a> for videre diagnostiske vurderinger.`
     }
@@ -183,7 +185,7 @@ function getAdvice() {
         // OR Single lab that's 50 from light limit
         || ((Lab.getNumberOfLabs() == 1) && (currentLightLimitFromLastLab() <= 50))
         //OR bilirubin value is above 280 with a slope thats decreasing less than 20/day
-        || (lastBilirubinValue > 280 && bilirubinSlope > -20)) {
+        || (lastBilirubinValue >= 280 && bilirubinSlope > -20)) {
         console.log("ADVICE: bloodsample-advice")
         return(advices[advices.indexOf(bloodSample)])
     }
