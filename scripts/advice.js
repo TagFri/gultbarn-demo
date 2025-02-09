@@ -14,6 +14,7 @@ export {updateAdvice}
 function getAdvice() {
     //Lab values
     let lastBilirubinValue = Lab.labs[Lab.getNumberOfLabs() - 1].bilirubin;
+    let secoundLastBilirubinValue = Lab.labs[Lab.getNumberOfLabs() - 2].bilirubin;
     let lastBilirubinDate = Lab.labs[Lab.getNumberOfLabs() - 1].timeDate;
     let lastBilirubinDate14 = new Date(lastBilirubinDate).setDate(lastBilirubinDate.getDate() + 14);
     let bilirubinSlope = Lab.getLabSlope();
@@ -110,7 +111,7 @@ function getAdvice() {
     let bloodsampleDescription = ``
     if (Lab.getNumberOfLabs() == 1) {
         bloodsampleDescription += `Bilirubinverdien er < 50 µM under lysgrensen. Barnet bør følges opp med en ny blodprøve for å kontrollere bilirubinnivåene.\n\nEr barnet sykt (sepsis, acidose, asfyksi) bør oppstart av lysbehandling vurderes.`
-    } else if (lastBilirubinValue >= 280 && bilirubinSlope > -20) {
+    } else if (secoundLastBilirubinValue >=280 && lastBilirubinValue >= 280 && bilirubinSlope > -20) {
         bloodsampleDescription += `Målingene er fortsatt høye, og trendlinjen for de to siste målepunktene er ${(bilirubinSlope < 0)?'svakt synkende':'svakt stigende'}. Barnet bør følges opp med en ny blodprøve for å kontrollere bilirubinnivåene.<br><br>Kliniske symptomer som slapphet, irritabel, brekninger, hypoglykemi, acidose o.l. krever grundigere utredning. Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.5-ikterus-oppfolging-etter-utskriving#:~:text=Vedvarende%20hyperbilirubinemi%3A" target="_blank">pediatriveilederen</a> for videre diagnostiske vurderinger.`
     } else {
         bloodsampleDescription += `Trendlinjen for de to siste målepunktene er stigende. Barnet bør følges opp med en ny blodprøve for å kontrollere bilirubinnivåene.<br><span class="semi-bold">Krysningstidspunkt: ${day} ${crossingFormatted}</span><br>Kliniske symptomer som slapphet, irritabel, brekninger, hypoglykemi, acidose o.l. krever grundigere utredning. Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.5-ikterus-oppfolging-etter-utskriving#:~:text=Vedvarende%20hyperbilirubinemi%3A" target="_blank">pediatriveilederen</a> for videre diagnostiske vurderinger.`
