@@ -66,6 +66,24 @@ function getAdvice() {
         crossingFormatted = absoluteDateToPrintFormat(crossing)
     }
 
+// Lab values
+    console.log("secoundLastBilirubinValue:", secoundLastBilirubinValue);
+    console.log("lastBilirubinValue:", lastBilirubinValue);
+    console.log("bilirubinSlope:", bilirubinSlope);
+
+// Lightlimits
+    console.log("lightlimit:", lightlimit);
+    console.log("lightSlope:", lightSlope);
+
+// Childinfo
+    console.log("gestastionWeek:", gestastionWeek);
+    console.log("birthDate:", birthDate);
+
+// Extrapolationinfo
+    console.log("newLabDate:", newLabDate);
+    console.log("day:", day);
+    console.log("crossingFormatted:", crossingFormatted);
+
     class Advice {
         constructor(advice, title, description, icon, color="var(--color-yellow-lighter)") {
             this.advice = advice
