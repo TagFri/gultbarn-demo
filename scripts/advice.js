@@ -222,14 +222,20 @@ function getAdvice() {
         // OR Single lab that's 50 from light limit
         || ((Lab.getNumberOfLabs() == 1) && (currentLightLimitFromLastLab() <= 50))
         //OR bilirubin value is above 280 with a slope thats decreasing less than 20/day
-        || (lastBilirubinValue >= 280 && bilirubinSlope > -20)) {
+        || (!(lastBilirubinValue <=280 && bilirubinSlope <= -20)) && bilirubinSlope != undefined) {
         console.log("ADVICE: bloodsample-advice")
+        console.log((bilirubinSlope > 0 && newLabDate && newLabDate < lastBilirubinDate14))
+        console.log((Lab.getNumberOfLabs() == 1) && (currentLightLimitFromLastLab() <= 50))
+        console.log(!(lastBilirubinValue <=280 && bilirubinSlope <= -20))
+        console.log(lastBilirubinValue)
+        console.log(bilirubinSlope)
         return(advices[advices.indexOf(bloodSample)])
     }
 //NO FOLLOW UP NEEDED
         //newLabDate == False -> if extrapolation is calculated above 14 days
-    else if ((bilirubinSlope <= 0
-        || !newLabDate) && Lab.getNumberOfLabs() > 1) {
+    else if ((bilirubinSlope <= 0 || !newLabDate)
+        && Lab.getNumberOfLabs() > 1
+        && (lastBilirubinValue <=280 && bilirubinSlope <= -20)) {
         console.log("ADVICE: no-follow-up")
         return(advices[advices.indexOf(noFollowUp)])
 //NO ADVICE IN GUIDELINES
