@@ -256,16 +256,18 @@ function updateAdvice() {
     const adviceElement = getAdvice()
     //Create email template:
     let href = "mailto:hei@sablateknisk.no?subject=Gult barn&body="
-        href += "%0A%0A%0A%0A"
-        href += "AUTOGENERERT RAPPORT:%0A"
-        href += "Råd: " + adviceElement.title + "%0A"
-        href += "Beskrivelse: " + adviceElement.description + "%0A%0A"
-        href += "BARNETS INFO:%0A"
-        href += "Vekt:%09%09%09" + child.birthWeight + " gram%0A"
-        href += "Fødselsdato:%09%09" + child.date[0] + "/" + child.date[1] + " kl: " + child.time[0] +":" + child.time[1] + "%0A"
-        href += "Gestasjonsalder:%09" + child.gestationWeek + " uker%0A%0A"
-        href += "BILIRUBIN PRØVER:%0A"
-        href += printLabOverview().replace(/\n/g, '%0A')
+    href += "%0A%0A%0A%0A"
+    href += "AUTOGENERERT RAPPORT:%0A"
+    href += document.getElementById("tech-version").innerText+ "%0A"
+    href += document.getElementById("clinical-version").innerText + "%0A%0A"
+    href += "Råd: " + adviceElement.title + "%0A"
+    href += "Beskrivelse: " + adviceElement.description + "%0A%0A"
+    href += "BARNETS INFO:%0A"
+    href += "Vekt:%09%09%09" + child.birthWeight + " gram%0A"
+    href += "Fødselsdato:%09%09" + child.date[0] + "/" + child.date[1] + " kl: " + child.time[0] + ":" + child.time[1] + "%0A"
+    href += "Gestasjonsalder:%09" + child.gestationWeek + " uker%0A%0A"
+    href += "BILIRUBIN PRØVER:%0A"
+    href += printLabOverview().replace(/\n/g, '%0A')
     document.getElementById("feedback-button").children[1].href = href
     //Update advice title
     document.getElementById("advice-title").innerHTML = adviceElement.title

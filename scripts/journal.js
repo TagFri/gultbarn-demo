@@ -27,6 +27,8 @@ function copyContent() {
         <p>${adviceDescription}</p>
         <h4>Informasjon til pårørende:</h4>
         <p>[FYLL INN INFO]</p>
+        
+        <p>Dersom barnet blir synelig gulere, må dere ta med barnet tilbake til barselavdelingen for å måle bilirubin. Dette er særlig viktig dersom barnet skulle bli påfallende slapt og ikke vil ta brystet, eller blir urolig/irritabel. Ring xxx xx xxx for å avtale prøven med barselavdelingen </p>
         <img style="width: 100px" src="${image}" alt="Bilubinverdier"></img>
     `;
 
