@@ -156,7 +156,7 @@ function getAdvice() {
     );
     const deactivated = new Advice(
         "deactivated",
-        "Fagelig råd",
+        "Faglig råd",
         "<br><br><br>",
         url + "outcome_box_inactive.svg"
 
