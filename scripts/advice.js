@@ -116,7 +116,7 @@ function getAdvice() {
     const noFollowUp = new Advice(
         "noFollowUp",
         "Ingen oppfølging nødvendig",
-        `Trendlinjen for de to siste målepunktene er ${(bilirubinSlope>=0?"svært avflatet":"synkende")}. Blodprøvekontroll er ikke nødvendig.`,
+        `Trendlinjen for de to siste målepunktene er ${(bilirubinSlope>=0?"svært avflatet":"synkende")}. Blodprøvekontroll er ikke nødvendig.<br><br>Foreldre bes å ta kontakt med helsestasjonen dersom de mener barnet får økende ikterus eller om ikterus vedvarer 3 uker etter siste kontakt, eller om barnet virker slapt eller sykt.`,
         url + "no_follow_up.svg"
     );
     let bloodsampleDescription = ``
