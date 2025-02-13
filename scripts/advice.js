@@ -198,8 +198,14 @@ function getAdvice() {
     console.log(getTransfusionLimit())
 
     /* ADVICE ALGORITHEM; */
+    if (lastBilirubinValue >= gestastionWeek * 10
+        ||bilirubinSlope > 240) {
+        console.log("ADVICE: transfusion-advice")
+        currentTransfusionLimitFromLastLab()
+        return (advices[advices.indexOf(transfusion)])
+    }
 //EARLY ICTERUS
-    if (absolute2relativeDate(lastBilirubinDate) < 1) {
+    else if (absolute2relativeDate(lastBilirubinDate) < 1) {
         console.log("ADVICE: early-icterus")
         return(advices[advices.indexOf(earlyIcterus)])
     }
