@@ -152,7 +152,7 @@ function displayLabs() {
 }
 
 function removeLab(targetButton) {
-    updateCount("removedLabs")
+    //updateCount("removedLabs")
     //Remove from Labs array
     for (let i = 0; i < Lab.labs.length; i++) {
         //

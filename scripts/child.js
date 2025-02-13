@@ -73,7 +73,7 @@ function saveChild() {
         toggleOpacity(false)
         //Create child graph
         updateChildGraph()
-        updateCount("addedChild")
+        //updateCount("addedChild")
         //Focus on lab-date
         document.getElementById("lab-date").focus()
         //If not valid = remove complete icon, turn on opacity, auto-focus on error input and remove graph

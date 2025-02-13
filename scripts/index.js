@@ -35,8 +35,8 @@ async function updateCount(clickID) {
 };
 
 // Attach event listeners to buttons instead of using onclick in HTML
-document.getElementById("journal-copy").addEventListener("click", () => updateCount("copiedJournals"));
-document.getElementById("feedback-button").addEventListener("click", () => updateCount("feedbackGiven"));
+//document.getElementById("journal-copy").addEventListener("click", () => updateCount("copiedJournals"));
+//document.getElementById("feedback-button").addEventListener("click", () => updateCount("feedbackGiven"));
 
 ///* ADJUST GRAPH RATIO DEPENDING ON WINDOW *///
 window.addEventListener("resize", function() {
