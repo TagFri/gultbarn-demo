@@ -30,19 +30,19 @@ class Child {
                     "data": {1: 125, 4: 200, 10: 200},
                     "slope": (200 - 125) / (4 - 1)
                 }
-            } else if (this.birthWeight <= 2500) {
+            } else if (this.birthWeight < 2500) {
                 return {
                     "label": "under 2500g",
                     "data": {1: 150, 4: 250, 10: 250},
                     "slope": (250 - 150) / (4 - 1)
                 }
-            } else if (this.birthWeight > 2500 && this.gestationWeek < 37) {
+            } else if (this.birthWeight >= 2500 && this.gestationWeek < 37) {
                 return {
                     "label": "over 2500g + GA <37",
                     "data": {1: 150, 3: 300, 10: 300},
                     "slope": (300 - 150) / (3 - 1)
                 }
-            } else if (this.birthWeight > 2500 && this.gestationWeek >= 37) {
+            } else if (this.birthWeight >= 2500 && this.gestationWeek >= 37) {
                 return {
                     "label": "over 2500g + GA >=37",
                     "data": {1: 175, 3: 350, 10: 350},

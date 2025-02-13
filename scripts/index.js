@@ -181,15 +181,9 @@ function currentTransfusionLimitFromLastLab() {
 function printLabOverview() {
     let labOverview = "";
     for (const lab of Lab.labs) {
-        let { time, date, bilirubin } = lab;
-        let [hour, minute] = time;
-        let [dateDay, dateMonth] = date;
-        dateDay = dateDay.toString().padStart(2, "0");
-        dateMonth = dateMonth.toString().padStart(2, "0");
-        hour = hour.toString().padStart(2, "0");
-        minute = minute.toString().padStart(2, "0");
-
-        labOverview += `${dateDay}/${dateMonth} kl. ${hour}:${minute}: ${bilirubin} µmol/L\n`;
+        let labDate = new Date(lab.timeDate)
+        let relativeDate = Math.round(absolute2relativeDate(labDate)*100)/100;
+        labOverview += `Dag: ${relativeDate}: ${lab.bilirubin} µmol/L\n`;
     }
     return labOverview
 }

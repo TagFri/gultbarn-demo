@@ -12,13 +12,23 @@ function copyContent() {
     let adviceTitle = document.getElementById("advice-title").innerHTML;
     let adviceDescription = document.getElementById("advice-paragraph").innerHTML;
 
+    //Anonymiser barnets data:
+    let barnetsVekt = null;
+    let gestation = null;
+    if (child.birthWeight < 1000) { barnetsVekt = "<1000gram" }
+    else if (child.birthWeight < 1500) { barnetsVekt = "1000-1499gram" }
+    else if (child.birthWeight < 2500) { barnetsVekt = "1500-2499gram" }
+    else if (child.birthWeight > 2500) { barnetsVekt = ">=2500" }
+    if (child.gestationWeek < 37) {gestation = "<37uker"}
+    else if (child.gestationWeek >= 37) {gestation = ">=37uker"}
+
     // Assembled Journal as HTML (with <b> formatting for bold)
     let htmlJournal = `
         <h3>Oppfølgning av bilirubinsvar</h3>
         <h4>Barnets informasjon:</h4>
-        <p>Fødselstidspunkt: &emsp;${child.date[0].toString().padStart(2, "0")}/${child.date[1].toString().padStart(2, "0")} - kl. ${child.time[0].toString().padStart(2, "0")}:${child.time[1].toString().padStart(2, "0")}<br>
-        Fødselsvekt: &emsp;&emsp;&emsp;${child.birthWeight} gram<br>
-        Gestasjonsalder: &emsp;${child.gestationWeek} uker (dager er ikke inkludert)</p>
+        <p>Fødselstidspunkt: &emsp;Fjernet for personvern <!--${child.date[0].toString().padStart(2, "0")}/${child.date[1].toString().padStart(2, "0")} - kl. ${child.time[0].toString().padStart(2, "0")}:${child.time[1].toString().padStart(2, "0")}--><br>
+        Fødselsvekt: &emsp;&emsp;&emsp;${barnetsVekt}<br>
+        Gestasjonsalder: &emsp;${gestation}</p>
         <h4>Anamnese:</h4>
         <p>Barnet er [aktivt/slapt/trøtt/irritabelt], og tar brystet [godt/dårlig]. Avføringen er [normal/blek] og urinen er [normal/mørk]. Synlig gulsott i huden er [bedre, lik, verre]. Foreldre bemerker [vektnedgang/vektoppgang].</p>
         <h4>Bilirubinverdier:</h4>
@@ -37,9 +47,9 @@ function copyContent() {
         Oppfølgning av bilirubinsvar:
         
         Barnets info:
-        Fødselstidspunkt: ${child.date[0]}/${child.date[1]} - kl. ${child.time[0]}:${child.time[1]}
-        Fødselsvekt: ${child.birthWeight} gram
-        Gestasjonsalder: ${child.gestationWeek} uker
+        Fødselstidspunkt: Fjernet for personvern
+        Fødselsvekt: ${barnetsVekt} gram
+        Gestasjonsalder: ${gestation}
         
         Anamnestisk informasjon:
         Barnet er [aktivt/slapt/trøtt/irritabelt], og tar [godt/dårlig] til brystet.

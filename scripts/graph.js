@@ -330,11 +330,11 @@ function getTransfusionLimit() {
     lastLabDay = Math.floor(lastLabDay +4)
     if (lastLabDay < 10) {lastLabDay = 10}
     if (child.birthWeight <= 1000) {
-        transfusionLimit = [{x: 0, y: 0}, {x: 1, y:175}, {x: 2, y:200}, {x: 3, y:250}, {x:lastLabDay, y: 250}]
+        transfusionLimit = [{x: 1, y:175}, {x: 2, y:200}, {x: 3, y:250}, {x:lastLabDay, y: 250}]
     } else if (child.birthWeight <= 1500) {
-        transfusionLimit = [{x: 0, y: 0}, {x: 1, y:200}, {x: 3, y:250}, {x:lastLabDay, y: 250}]
+        transfusionLimit = [{x: 1, y:200}, {x: 3, y:250}, {x:lastLabDay, y: 250}]
     } else if (child.birthWeight <= 2500) {
-        transfusionLimit = [{x: 0, y: 0}, {x: 1, y:250}, {x: 3, y:350}, {x:lastLabDay, y: 350}]
+        transfusionLimit = [{x: 1, y:250}, {x: 3, y:350}, {x:lastLabDay, y: 350}]
     } else {
         transfusionLimit = [{x: 0, y: 200}, {x: 3, y:400}, {x:lastLabDay, y:400}]
     }

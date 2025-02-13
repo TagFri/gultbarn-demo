@@ -1,6 +1,6 @@
 import {child} from "./child.js"
 import {Lab} from "./lab.js"
-import {myChart,lightCrossingPoint} from "./graph.js"
+import {myChart, lightCrossingPoint, getTransfusionLimit} from "./graph.js"
 import {
     relativeDate2absoluteDate,
     absolute2relativeDate,
@@ -191,10 +191,18 @@ function getAdvice() {
     console.log("GETADVICE CALLED")
     console.log(currentLightLimitFromLastLab())
     console.log((Lab.getNumberOfLabs() == 1))
+    console.log("LAST LAB");
+    console.log(absolute2relativeDate(lastBilirubinDate))
+    console.log(getTransfusionLimit())
 
     /* ADVICE ALGORITHEM; */
+//EARLY ICTERUS
+    if (absolute2relativeDate(lastBilirubinDate) < 1) {
+        console.log("ADVICE: early-icterus")
+        return(advices[advices.indexOf(earlyIcterus)])
+    }
 //TRANSFUSJON NEEEDED
-    if (lastBilirubinValue >= gestastionWeek * 10
+    else if (lastBilirubinValue >= gestastionWeek * 10
         ||bilirubinSlope > 240
         ||currentTransfusionLimitFromLastLab() <= 0) {
         console.log("ADVICE: transfusion-advice")
@@ -205,11 +213,6 @@ function getAdvice() {
     else if (((lastBilirubinValue >= lightlimit) && ((absolute2relativeDate(lastBilirubinDate)) >= (Object.keys(child.getLightLimit().data).includes('3') ? 3 : 4))) || (lastBilirubinValue >=   (lightlimitStart + (lightSlope * (absolute2relativeDate(lastBilirubinDate)-1))) &&  (absolute2relativeDate(lastBilirubinDate) < Object.keys(child.getLightLimit().data).includes('3') ? 3 : 4))) {
         console.log("ADVICE: lighttherapy-advice")
         return(advices[advices.indexOf(lightTherapy)])
-    }
-//EARLY ICTERUS!
-    else if (absolute2relativeDate(lastBilirubinDate)<1) {
-        console.log("ADVICE: early-icterus")
-        return(advices[advices.indexOf(earlyIcterus)])
     }
 //LATE ICTERUS
     else if (absolute2relativeDate(lastBilirubinDate)>14) {
@@ -263,9 +266,18 @@ function updateAdvice() {
     href += "Råd: " + adviceElement.title + "%0A"
     href += "Beskrivelse: " + adviceElement.description + "%0A%0A"
     href += "BARNETS INFO:%0A"
-    href += "Vekt:%09%09%09" + child.birthWeight + " gram%0A"
-    href += "Fødselsdato:%09%09" + child.date[0] + "/" + child.date[1] + " kl: " + child.time[0] + ":" + child.time[1] + "%0A"
-    href += "Gestasjonsalder:%09" + child.gestationWeek + " uker%0A%0A"
+    let barnetsVekt = null;
+    let gestation = null;
+    if (child.birthWeight < 1000) { barnetsVekt = "<1000gram" }
+    else if (child.birthWeight < 1500) { barnetsVekt = "1000-1499gram" }
+    else if (child.birthWeight < 2500) { barnetsVekt = "1500-2500gram" }
+    else if (child.birthWeight > 2500) { barnetsVekt = "2500-3500gram" }
+    if (child.gestationWeek < 37) {gestation = "<37uker"}
+    else if (child.gestationWeek >= 37) {gestation = ">=37uker"}
+    href += "Vekt:%09%09%09" + barnetsVekt + "%0A";
+    //href += "Fødselsdato:%09%09" + child.date[0] + "/" + child.date[1] + " kl: " + child.time[0] + ":" + child.time[1] + "%0A"
+    href += "Fødselsdato:%09%09" + "Fjernet gr. personvern%0A%0A";
+    href += "Gestasjonsalder:%09" + gestation + "%0A%0A"
     href += "BILIRUBIN PRØVER:%0A"
     href += printLabOverview().replace(/\n/g, '%0A')
     document.getElementById("feedback-button").children[1].href = href
