@@ -1,4 +1,7 @@
 /* -- RESPONSIVE DESIGN BREAKPOINT AND LAYOUT --*/
+body {
+    margin: 0.5rem;
+}
 /* MOBILE -> SINGLE COLUMN VIEW */
 @media (max-width: 600px) {
     main {
@@ -43,8 +46,13 @@
 }
 /* DESKTOP -> SPECILIZED DESKTOP VIEW */
 @media (min-width: 992px) {
+    body {
+        max-width: 1400px;
+        padding: 0 1rem;
+        margin: 1rem auto;
+    }
     main {
-        grid-template-columns:  330px 1.9fr 0.85fr;
+        grid-template-columns:  400px 1.9fr 0.85fr;
         grid-template-rows:     1fr auto;
                                 /* row-s, col-s, row-e, col-s*/
         #child-container    {grid-area: 1 / 1 / 2 / 2;}

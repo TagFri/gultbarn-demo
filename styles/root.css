@@ -1,0 +1,18 @@
+:root {
+    /* COLORS */
+    --color-primary-extra-strong: #F5A201;
+    --color-primary-strong: #FFB72E;
+    --color-primary-medium: #FBC169;
+    --color-primary-light: #FFE2B1;
+    --color-primary-extra-light: #FFFAF2;
+    --color-black: #0B1E33;
+    --color-black-light: #1F365D;
+    --color-white: #FFFFFF;
+    --color-grey: #DBDDE2;
+    --color-grey-light: #F5F9FA;
+    --color-red: #FB4141;
+    --color-light-red: #FFE8E9;
+    --color-green: #C4E047;
+    --arrow-icon: url(https://upload.wikimedia.org/wikipedia/commons/9/9d/Caret_down_font_awesome_whitevariation.svg);
+    --font-family: "Poppins", sans-serif;
+}

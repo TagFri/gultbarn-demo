@@ -1,0 +1,154 @@
+.round-container {
+    border-radius: 1.5rem;
+    padding: 1.5rem;
+}
+
+/*
+----- BUTTON
+ */
+.btn {
+    /* Style */
+    background: var(--color-black);
+    color: white;
+    border-radius: 1rem;
+    border: none;
+    text-decoration: none;
+    text-align: center;
+    padding: 0 5%;
+
+    /* Interactivity */
+    cursor: pointer;
+    transition: background 100ms ease-in-out,
+    transform 100ms ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+/*-> ON CLICK */
+.btn:active {
+    transform: scale(0.97);
+}
+/*-> ON FOCUS / HOVER */
+.btn:focus, .btn:hover {
+    background: var(--color-primary-extra-strong);
+    color: var(--color-black);
+    outline: none;
+}
+
+
+/*
+----- TYPOGRAPHY
+*/
+.red-font {
+    color: var(--color-red);
+}
+
+/*
+----- LINKS
+*/
+.link {
+    font-weight: bold;
+    text-decoration: underline;
+    color: black;
+    text-decoration: underline;
+    color: var(--color-black);
+    padding-left: 0;
+}
+
+/*-> ON HOVER */
+.link:hover {
+    text-decoration: none;
+    color: var(--color-black);
+}
+/*-> VISITED */
+.link:visited {
+    color: var(--color-black);
+}
+
+a {
+    text-decoration: none;
+    color: var(--color-black);
+}
+
+/*
+----- FORMS
+*/
+
+/*
+- INPUT + SELECT
+*/
+input, select {
+    padding: 0.5rem 0.75rem;
+    border-radius: 1rem;
+    border: 0.07rem solid var(--color-grey);
+    cursor: pointer;
+}
+
+/*
+- INPUT
+*/
+/*-> FOCUS */
+input:focus, select:focus {
+    outline: 0.1rem solid var(--color-primary-medium);
+    outline-offset: -0.075rem;
+}
+/*-> INVALID */
+.invalid-input {
+    outline: 0.1rem solid var(--color-red);
+    outline-offset: -0.075rem;
+}
+
+/*
+- SELECT
+/* Removes standard arrow and colours*/
+.custom-select select {
+    appearance: none;
+    background-color: var(--color-white);
+    color: var(--color-black);
+}
+/* Hover colours */
+.custom-select select:hover {
+}
+
+/* Add arrow */
+.custom-select {
+    position: relative;
+}
+.custom-select::before,
+.custom-select::after {
+    --size: 0.3rem;
+    position: absolute;
+    content: "";
+    right: 1rem;
+    pointer-events: none; /* Avoid event on pointer */
+}
+/* ADD COURSER UP */
+/*
+.custom-select::before {
+    / * Arrow created with borders* /
+    border-left: var(--size) solid transparent;
+    border-right: var(--size) solid transparent;
+    border-bottom: var(--size) solid var(--color-black);
+    top: 40%;
+}
+*/
+/* ADD COURSER DOWN */
+.custom-select::after {
+    /* Arrow created with borders*/
+    border-left: var(--size) solid transparent;
+    border-right: var(--size) solid transparent;
+    border-top: var(--size) solid var(--color-black);
+    top: 45%; /* 55% if both are in use*/
+}
+
+/* DATEPICKER */
+input[type="date"]{
+    background-color: var(--color-white);
+    font-family: var(--font-family);
+    color: var(--color-black);
+}
+::-webkit-calendar-picker-indicator{
+    background-color: var(--color-white);
+    color: var(--color-black);
+    cursor: pointer;
+}
+

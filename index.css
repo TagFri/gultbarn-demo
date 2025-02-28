@@ -1,15 +1,3 @@
-body {
-    margin: 0.5rem;
-}
-
-@media (min-width: 992px) {
-    body {
-        max-width: 1200px;
-        padding: 0 1rem;
-        margin: 1rem auto;
-    }
-}
-
 #graph-label {
     margin: 0 auto;
 }
@@ -57,82 +45,29 @@ header {
 }
 
 .round-container {
-    border-radius: 1.5rem;
-    padding: 1.5rem;
     text-align: center;
 }
 
 /* INDIVIDUAL CONTAINER STYLES */
 #child-container, #lab-container {
     border: 0.07rem solid var(--color-grey);
-    input {
-        padding: 0.5rem 0.75rem;
-        border-radius: 1rem;
-        border: 0.07rem solid var(--color-grey);
-    }
-}
-
-input:focus{
-    outline: 0.1rem solid var(--color-yellow-medium);
-    outline-offset: -0.075rem;
-}
-
-.invalid-input {
-    outline: 0.1rem solid var(--color-red);
-    outline-offset: -0.075rem;
-}
-
-.valid-input {
-    outline: 0.1rem solid var(--color-green);
-    outline-offset: -0.075rem;
-}
-
-.red-font {
-    color: var(--color-red);
 }
 
 .double-input {
     display: flex;
     justify-content: space-between;
-    > #bilirubin-value {
-        width: 50%;
-    }
-    > .btn {
-        /* Style */
-        background: var(--color-black);
-        color: white;
-        border-radius: 1rem;
-        border: none;
-        text-decoration: none;
-        text-align: center;
-        padding: 0 5%;
-
-        /* Interactivity */
-        cursor: pointer;
-        transition: background 100ms ease-in-out,
-        transform 100ms ease;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-    }
-    /* ON CLICK */
-    > .btn:active {
-        transform: scale(0.97);
-    }
-    /* ON FOCUS */
-    > .btn:focus, > .btn:hover {
-        outline: none;
-        background: var(--color-yellow-strong);
-        color: var(--color-black);
-    }
 }
 .full-input {
-    width: 90%;
+    width: 100%;
 }
-.half-input {
-    width: 37%;
+.half-first-input {
+    width: 45%;
+}
+.half-secound-input {
+    width: 29%;
 }
 
-label {
+label, legend{
     display: block;
     text-align: left;
     margin-top: 0.8rem;
@@ -141,7 +76,7 @@ label {
 }
 
 
-#birth-date, #birth-time, #gestation-week, #gestation-day {
+#birthDate, #birthTime, #gestation{
     text-align: center;
 }
 
@@ -163,18 +98,10 @@ label {
         }
     }
     a {
-        text-decoration: none;
-        color: var(--color-black);
         padding-left: 0.5rem;
     }
-    .link {
-        text-decoration: underline;
-        color: var(--color-black);
-        padding-left: 0;
-    }
     .link:hover {
-        text-decoration: none;
-        color: var(--color-yellow-strong);
+        color: var(--color-primary-extra-strong);
     }
 }
 
@@ -182,7 +109,7 @@ label {
     text-align: left;
     align-items: flex-start;
     justify-content: space-between;
-    background-color: var(--color-yellow-lighter);
+    background-color: var(--color-primary-extra-light);
     /* BAKGRUNNS BILDE */
     background-size: 25%;
     background-image: url("assets/icons/advice/outcome_box_inactive.svg");
@@ -308,7 +235,7 @@ footer {
     width: 100vw;
     position: absolute;
     left: 0;
-    background-color: var(--color-yellow-solid);
+    background-color: var(--color-primary-strong);
     border-radius: 75px 75px 0 0;
     .main-container, #algorithm-flowchart, #disclaimer {
         padding: 0 3rem;
@@ -390,18 +317,7 @@ footer {
         font-size: 1.04rem;
     }
 }
-.link {
-    font-weight: bold;
-    text-decoration: underline;
-    color: black;
-}
-.link:hover {
-    text-decoration: none;
-    color: var(--color-black);
-}
-.link:visited {
-    color: var(--color-black);
-}
+
 
 .tooltip {
     position: relative;

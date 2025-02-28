@@ -1,5 +1,6 @@
 /* Line height and spacing */
 body {
+    color: var(--color-black);
     h1 {line-height: 1;     letter-spacing:  -0.01rem;}
     h2 {line-height: 1.067; letter-spacing:  0.03rem;}
     h3 {line-height: 1.083; letter-spacing:  0.02rem;}
@@ -10,7 +11,7 @@ body {
 }
 /* Font family*/
 *, h1, h2, h3, h4, h5, h6, p, input, a, li{
-    font-family: "Poppins", sans-serif;
+    font-family: var(--font-family);
 }
 /* Bold text*/
 .semi-bold {
