@@ -56,25 +56,25 @@
         <label for="birthWeight">Fødselsvekt</label>
         <div class="custom-select">
             <select id="birthWeight" name="birth-weight" data-validation="birthWeight" class="full-input">
-                <option><1000 gram</option>
-                <option>1000-1499 gram</option>
-                <option>1500-2499 gram</option>
-                <option value="2500" selected>>2500 gram</option>
+                <option value="999">< 1000 gram</option>
+                <option value="1000">1000 - 1499 gram</option>
+                <option value="1500">1500 - 2499 gram</option>
+                <option value="2500" selected>≥ 2500 gram</option>
             </select>
         </div>
         <!-- BIRTH TIME INPUT-->
         <label for="birthDate">Fødselstidpunkt</label>
         <div class="double-input">
-            <input id="birthDate" name="birt-date" data-validation="date" class="birthTimeDate half-first-input child-input" type="date">
-            <input id="birthTime" name="birt-time" data-validation="time" class="birthTimeDate half-secound-input child-input" type="time">
+            <input id="birthDate" name="birt-date" data-validation="date" class="birthTimeDate half-input child-input" type="text"inputmode="numeric" placeholder="dd/mm">
+            <input id="birthTime" name="birt-time" data-validation="time" class="birthTimeDate half-input child-input" type="text"inputmode="numeric" placeholder="hh:mm">
         </div>
         <p id="birthDate-error" class="no-error-message">Dato må være mellom 01/01 og 31/12</p>
         <p id="birthTime-error" class="no-error-message">Tid må være mellom 00:00 og 23:59</p>
         <!-- GASTATION AT BIRTH-->
         <label for="gestationWeek">Gestasjonsuke</label>
         <div class="double-input">
-            <input id="gestationWeek" name="gestation" data-validation="gestation" class="gestation half-first-input child-input" type="text" inputmode="numeric" placeholder="39u">
-            <button id="add-child" class="half-secound-input btn" tabindex="0">Legg til</button>
+            <input id="gestationWeek" name="gestation" data-validation="gestation" class="gestation half-input child-input" type="text" inputmode="numeric" placeholder="39u">
+            <button id="add-child" class="half-input btn" tabindex="0">Legg til</button>
         </div>
         <p id="gestation-error" class="no-error-message">GA må være mellom 22 og 45</p>
     </div>

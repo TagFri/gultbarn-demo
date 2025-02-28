@@ -60,11 +60,8 @@ header {
 .full-input {
     width: 100%;
 }
-.half-first-input {
-    width: 45%;
-}
-.half-secound-input {
-    width: 29%;
+.half-input {
+    width: 40%;
 }
 
 label, legend{
