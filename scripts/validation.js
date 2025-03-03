@@ -5,6 +5,7 @@ import { currentChild } from "./index.js";
 //--RUNNING VALIDATION AND ERROR ON ALL INPUTS
 
 function validateInputs(inputData) {
+    console.log("Validating inputs")
     //Start variables
     let errorCounter = 0
     let dateComponents = {}
@@ -138,6 +139,7 @@ function validateInputs(inputData) {
 
         //Set bilirubin date
         else if (inputData.bilirubinDate) {
+            console.log("BILIRUBIN DATE")
             let childDateTime = currentChild.birthDateTime;
             let childDateTimePlussThreeMonths
             if (childDateTime.getMonth() <= 8) {

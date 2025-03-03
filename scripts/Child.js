@@ -1,6 +1,7 @@
 export { Child }
 
-import { bilirubinOpacity } from "./index.js";
+import { bilirubinOpacity } from "./opacityFilters.js";
+
 class Child {
     #birthWeight;
      #gestationWeek;
