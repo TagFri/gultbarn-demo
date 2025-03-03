@@ -152,3 +152,20 @@ input[type="date"]{
     cursor: pointer;
 }
 
+/* HIDE ELEMENTS FROM SCREEN, BUT NOT SCREE-READERS*/
+/* For non-natively-focusable elements. For natively focusable elements */
+/* Use .visually-hidden:not(:focus):not(:active) */
+.visually-hidden {
+    border-width: 0 !important;
+    clip: rect(1px, 1px, 1px, 1px) !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    position: absolute !important;
+    white-space: nowrap !important;
+    width: 1px !important;
+}
+
+.hidden {
+    display: none;
+}
