@@ -189,14 +189,6 @@ li {
     justify-content: space-between;
 }
 
-.error-message {
-    display: block;
-    text-align: left;
-    color: var(--color-red);
-    font-size: 0.8rem;
-    margin: 0.5rem 0;
-}
-
 #crossing-info {
     text-align: center;
 }
@@ -206,7 +198,7 @@ li {
     position: relative;
 }
 
-#complete-icon {
+#complete-icon, #incomplete-icon {
     position: absolute;
     height: 2.25rem;
     right: -15px;

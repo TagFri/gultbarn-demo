@@ -1,4 +1,4 @@
-export {validateInputs}
+export {validateInputs, errorMessages}
 import { between } from "./generalFunction.js";
 import { currentChild } from "./index.js";
 

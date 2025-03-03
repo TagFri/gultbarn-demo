@@ -51,6 +51,7 @@
     <!-- INFO ABOUT CHILD -->
     <div id="child-container" class="container round-container">
         <img id="complete-icon" class="hidden" src="./assets/icons/checkmark.svg" alt="complete-icon">
+        <img id="incomplete-icon" class="hidden" src="./assets/icons/exlamation.svg" alt="incomplete-icon">
         <h2>Om barnet</h2>
         <!-- BIRTH WEIGHT INPUT-->
         <label for="birthWeight">Fødselsvekt</label>
@@ -80,7 +81,8 @@
             <input id="gestationWeek" data-validation="gestationWeek" class="gestation half-input child-input" type="text" inputmode="numeric" placeholder="39u">
             <button id="save-child" class="half-input btn" tabindex="0">Legg til</button>
         </div>
-        <p id="gestationWeek-error" class="hidden">GA må være mellom 22 og 45</p>
+        <p id="gestationWeek-error" class="hidden error-message">GA må være mellom 22 og 45</p>
+        <p id="updateChild-error" class="hidden error-message">Klarte ikke å oppdatere barn</p>
     </div>
     <!-- LAB CONTAINER-->
     <div id="bilirubin-container" class="container round-container opacity-container">
@@ -101,6 +103,7 @@
             <button id="add-bilirubin" class="half-input btn" disabled tabindex="0">Legg til</button>
         </div>
         <p id="bilirubinValue-error" class="hidden">Bilirubin må være mellom 0 og 1000</p>
+        <p id="bilirubinExists-error" class="hidden">Det er tatt en prøve på dette tidspunktet</p>
         <!-- LAB VALUES LIST-->
         <hr>
         <ul id="bilirubin-icons">

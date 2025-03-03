@@ -1,4 +1,4 @@
-export {msToDays, daysToMs, daysToAbsoluteDate, daysRelativeToReferenceDate}
+export {msToDays, daysToMs, daysToAbsoluteDate, daysRelativeToReferenceDate, leadingZero}
 
 //Converts millisecounds to relative days
 function msToDays(millisecounds) {
@@ -16,6 +16,11 @@ function daysToAbsoluteDate(referenceDate, relativeDays) {
 }
 
 //Absolute Date as relative days (float) to Reference Date
-function daysRelativeToReferenceDate(relativeDays, absoluteDate) {
-    return (new Date(absoluteDate.getTime() - (new Date(relativeDays / (1000 * 60 * 60 * 24))).getTime()));
+function daysRelativeToReferenceDate(referenceDate, absoluteDate) {
+    return (absoluteDate.getTime() - referenceDate.getTime()) / (1000 * 60 * 60 * 24);
+}
+
+//Insert leading zero for date/time <10:
+function leadingZero(number) {
+    return (number < 10) ? '0' + number : number;
 }

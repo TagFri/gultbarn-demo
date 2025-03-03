@@ -166,6 +166,23 @@ input[type="date"]{
     width: 1px !important;
 }
 
+/* ERROR HANDLING */
+
+.error-message {
+    color: var(--color-red);
+}
+
+.success-message {
+    color: var(--color-green);
+}
+
+.success-message, .error-message {
+    display: block;
+    text-align: left;
+    font-size: 0.8rem;
+    margin: 0.5rem 0;
+}
+
 .hidden {
     display: none;
 }

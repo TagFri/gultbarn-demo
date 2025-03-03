@@ -1,12 +1,15 @@
 import {masking} from "./masking.js";
-import {validateInputs} from './validation.js';
+import {validateInputs, errorMessages} from './validation.js';
 import {Child} from "./Child.js";
-import {Bilirubin, SerumBilirubin, TranscutanousBilirubin} from "./Bilirubin.js";
-import {daysRelativeToReferenceDate} from "./dateFunctions.js";
+import {Bilirubin, saveBilirubin} from "./Bilirubin.js";
 import {displayBilirubin} from "./displayBilirubin.js";
 
-export { currentChild , currentBilirubins}
+export { currentChild, bilirubinOpacity}
 
+document.getElementById("test-btn").addEventListener("click", (event) => {
+    console.log(Bilirubin.allBilirubins)
+    console.log(Bilirubin.numberOfBilirubins)
+})
 
 //** CUSTOM INPUT MASKING
 masking()
@@ -25,18 +28,20 @@ document.getElementById("save-child").addEventListener("click", (event) => {
 
     //If validated -> saveChild
     if(validatedInputs) {
+
         //Add birthWeight
         validatedInputs["birthWeight"] = parseInt(document.getElementById("birthWeight").value);
+
+        //Save child
         saveChild(validatedInputs);
-        //Remove opacity and enable bilirubin inputs
-        enableOpacity(false)
+
     } else {
         // If not validated, turn on opacity again
-        enableOpacity(true)
+        bilirubinOpacity(true)
         console.log("Invalid inputs")
 }});
 
-function enableOpacity(boolean) {
+function bilirubinOpacity(boolean) {
     document.getElementById("bilirubinDate").disabled = boolean;
     document.getElementById("bilirubinTime").disabled = boolean;
     document.getElementById("bilirubinValue").disabled = boolean;
@@ -45,14 +50,10 @@ function enableOpacity(boolean) {
     if (boolean) {
         document.getElementById("bilirubin-container").classList.add("opacity-container");
         document.getElementById("graph-container").classList.add("opacity-container");
-        document.getElementById("advice-container").classList.add("opacity-container");
-        document.getElementById("journal-container").classList.add("opacity-container");
     } else {
         document.getElementById("bilirubin-container").classList.remove("opacity-container");
         document.getElementById("bilirubinDate").focus()
         document.getElementById("graph-container").classList.remove("opacity-container");
-        document.getElementById("advice-container").classList.remove("opacity-container");
-        document.getElementById("journal-container").classList.remove("opacity-container");
     }
 }
 
@@ -68,8 +69,7 @@ document.getElementById("add-bilirubin").addEventListener("click", (event) => {
     //If validated -> saveChild
     if(validatedInputs) {
         console.log("BILIRUBIN VALIDATED")
-        saveBilirubin(validatedInputs);
-        displayBilirubin()
+        saveBilirubin(validatedInputs)
     } else {
         console.log("Invalid inputs")
     }});
@@ -80,7 +80,7 @@ document.getElementById("add-bilirubin").addEventListener("click", (event) => {
 //**
 
 let currentChild;
-let currentBilirubins = []
+
 let currentGraph;
 let currentAdvice;
 let currentJournal;
@@ -92,30 +92,41 @@ let currentJournal;
 function saveChild(validatedInputs) {
     if(currentChild === undefined) {
         currentChild = new Child(validatedInputs);
-    } else {
-        currentChild.update(validatedInputs);
+    }
+    //Update child object
+    else {
+
+        //Save previpus child state
+        let previousChild = {
+            birthWeight: currentChild.birthWeight,
+            gestationWeek: currentChild.gestationWeek,
+            birthDateTime: currentChild.birthDateTime
+        }
+
+        //Update current child
+        currentChild.update(validatedInputs)
+
+        //Change in time
+        if (previousChild.birthDateTime != currentChild.birthDateTime) {
+
+            //UPDATE BILIRUBIN RELATIVE DAYS
+            Bilirubin.updateAllBilirubinDates(previousChild.birthDateTime, currentChild.birthDateTime)
+
+            //DISPLAY UPDATES updates
+            displayBilirubin()
+
+            // Redraw graphs
+            // Rerun advíces
+
+            //UPDATE LIGHT GRAPHS
+
+            //UPDATE TRANSDUSION GRAPHS
+
+
+        }
     }
 }
 
-//**
-//**** CREATE OR UPDATE BILIRUBINS
-//**
+function rerunGraphsAdvice() {
 
-function saveBilirubin(validatedInputs) {
-    let relativeDays = daysRelativeToReferenceDate(currentChild.birthDateTime, validatedInputs.dateTime);
-    currentBilirubins.push(new SerumBilirubin(validatedInputs.bilirubinValue, relativeDays));
-    console.log("BILIRUBIN SAVING")
 }
-
-//**
-//**** GRAPHING
-//**
-
-//If save is sucessfull -> run business logic
-
-//- Advice
-
-//- Graph
-
-
-//- Journal

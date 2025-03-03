@@ -1,68 +1,145 @@
-import {daysToMs, msToDays} from './dateFunctions.js'
-export {Bilirubin, SerumBilirubin, TranscutanousBilirubin }
+import {daysRelativeToReferenceDate, daysToAbsoluteDate, daysToMs, msToDays} from './dateFunctions.js'
+import { currentChild } from "./index.js";
+import { errorMessages } from "./validation.js";
+import {displayBilirubin} from "./displayBilirubin.js";
+
+export {Bilirubin, SerumBilirubin, TranscutanousBilirubin, removeBilirubin, saveBilirubin}
 
 class Bilirubin {
 
-    //STATICS VARIABLES
-
     //List of all labs
+    static numberOfBilirubins = 0;
     static allBilirubins = [];
-    static numberOflabs = 0;
-
-    //STATIC METHODSs
-    static get getNumberOfLabs(){return this.numberOflabs}
-    static get getLabs(){return this.allBilirubins}
 
     //Update time of all labs
-    static updateAllDates(diffInMs) {
-        //Loop thrugh all labs
-        for (let bilirubin of this.allBilirubins) {
-            //Add difference to current lab
+    static updateAllBilirubinDates(oldDateTime, newDateTime) {
+        const changeInDays = (oldDateTime - newDateTime) / (1000 * 60 * 60 * 24);
 
-            lab.relativeDays(msToDays(daysToMs(lab.relativeDays) + diffInMs));msToDays
+        //Loop thrugh all labs
+        for (let bilirubin of Bilirubin.allBilirubins) {
+            bilirubin.relativeDays = bilirubin.relativeDays + changeInDays;
         }
+        return true;
     }
 
     //Variables
-    #bilirubinValue;
-    #relativeDays;
+    #bilirubinValueVal;
+    #relativeDaysVal;
 
     constructor(bilirubinValue, relativeDays) {
-        this.#bilirubinValue = bilirubinValue;
-        this.#relativeDays = relativeDays;
+        this.#bilirubinValueVal = bilirubinValue;
+        this.#relativeDaysVal = relativeDays;
 
-        Bilirubin.numberOflabs += 1;
+        //Push itself to static array for superclass
+        Bilirubin.allBilirubins.push(this);
+
+        //Add total number of bilirubin tests
+        Bilirubin.numberOfBilirubins += 1;
+
+        //Sort bilirubin array according to date
+        Bilirubin.allBilirubins.sort((a, b) => a.relativeDays - b.relativeDays);
+
+        return true;
     }
 
     //GETTERS
     get bilirubinValue() {
-        return this.#bilirubinValue;
+        return this.#bilirubinValueVal;
     }
     get relativeDays() {
-        return this.#relativeDays;
+        return this.#relativeDaysVal;
     }
 
     //SETTERS
     set bilirubinValue(bilirubinValue) {
-        this.#bilirubinValue = bilirubinValue;
+        this.#bilirubinValueVal = bilirubinValue;
     }
-    set relativeDats(relativeDays) {
-        this.#relativeDays = relativeDays;
+    set relativeDays(relativeDays) {
+        this.#relativeDaysVal = relativeDays;
     }
-    set relativeDays(relativeDays) {}
 }
 
 class SerumBilirubin extends Bilirubin {
 
     constructor(bilirubinValue, relativeDays) {
         super(bilirubinValue, relativeDays);
-        Bilirubin.allBilirubins.push(this)
     }
 }
 
 class TranscutanousBilirubin extends Bilirubin {
     constructor(bilirubinValue, relativeDays) {
+        //Call Bilirubin class constructor
         super(bilirubinValue, relativeDays);
-        Bilirubin.allBilirubins.push(this)
+    }
+}
+
+function saveBilirubin(validatedInputs) {
+
+    //Convert absolute date to relative days
+    let relativeDays = daysRelativeToReferenceDate(currentChild.birthDateTime, validatedInputs.dateTime);
+
+    //Check if the bilirubin dateTime exists from before:
+    let exists = false;
+    for (let bilirubin of Bilirubin.allBilirubins) {
+        if (bilirubin.relativeDays == relativeDays) {
+            exists = true;
+
+            //display error msg
+            errorMessages("bilirubinExists", false)
+            break
+        }
+    }
+
+    //If lab doesnt exists
+    if (!exists) {
+
+        //Create new bilirubin object
+        new SerumBilirubin(validatedInputs.bilirubinValue, relativeDays);
+
+        //Remove error message
+        errorMessages("bilirubinExists", true)
+
+        //Display labs and reset input
+        displayBilirubin()
+        document.getElementById("bilirubinDate").value = "";
+        document.getElementById("bilirubinTime").value = "";
+        document.getElementById("bilirubinValue").value = "";
+        document.getElementById("bilirubinDate").focus()
+    }
+
+}
+
+function removeBilirubin(targetButton) {
+    console.log("REMOVE BILIRUBIN")
+
+    //Check if it's found
+    let bilirubinFound = false;
+
+    //Setup loop for all bilirubin labs
+    for (let i = 0; i < Bilirubin.numberOfBilirubins; i++) {
+
+        //Check if current bilirubin lab relative days = parent elements that's pushed
+        if (Bilirubin.allBilirubins[i].relativeDays == targetButton.parentElement.parentElement.id) {
+
+            //Remove matching bilirubin object
+            Bilirubin.allBilirubins.splice(i, 1);
+
+            //Set to found (to exclude error msg)
+            bilirubinFound = true;
+
+            //Display new list of bilirubin values
+            displayBilirubin()
+
+            //Save time, break loop
+            break;
+        }
+    }
+    bilirubinFound? console.log("BILIRUBIN FOUND") : errorMessage("bilirubin-list", true)
+
+    //Turn on opacity on advice and journal of bilirubin is less then zero:
+    Bilirubin.numberOfBilirubins --;
+    if (Bilirubin.numberOfBilirubins == 0) {
+        document.getElementById("advice-container").classList.add("opacity-container")
+        document.getElementById("journal-container").classList.add("opacity-container")
     }
 }
