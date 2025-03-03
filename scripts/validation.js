@@ -1,106 +1,185 @@
-import {child} from "./child.js";
-import {Lab} from "./lab.js"
-export {validateInputGroup, timeDate, errorMessages, inputToInteger, inputValidation}
+export {validateInputs, errorMessages}
+import { between } from "./generalFunction.js";
+import { currentChild } from "./index.js";
 
-function validateInputGroup(classSelector) {
-    let errorCounter = 0;
-    let inputs = document.querySelectorAll(classSelector)
-    let validatedInputs = []
-    //Loop through all inputs
-    for (const input of inputs) {
-        //Get value and ID
-        let inputID = input.id
-        let inputValue = inputToInteger(input.value);
-        //VALIDATION OF INPUT.
-        if (inputValidation(inputID, inputValue)) {
-            //Remove error message
-            errorMessages(inputID, true)
-            //Add validated input
-            validatedInputs.push(inputValue)
+//--RUNNING VALIDATION AND ERROR ON ALL INPUTS
+
+function validateInputs(inputData) {
+    //Start variables
+    let errorCounter = 0
+    let dateComponents = {}
+    let validatedInputs = {}
+
+    //** VALIDATION LIBRARY FOR DAYS IN RELATIONSHIP TO MONTH:
+    const dateValidation = {
+            0: 31, // January
+            1: 29, // February (inc. leap years)
+            2: 31, // March
+            3: 30, // April
+            4: 31, // May
+            5: 30, //June
+            6: 31, //July
+            7: 31, //August
+            8: 30, //September
+            9: 31, //Oktober
+            10: 30, //November
+            11: 31, //Desember
+    }
+
+    //** LOOP THROUGH ALL VALUES
+    for (const [key, value] of Object.entries(inputData)) {
+
+        //MAKE LOCAL VARIABLES FOR READABILITY
+        let inputValue = value
+        let htmlID = key
+
+        //* TRIM TO PURE INTEGER VALUES
+        if (htmlID == "birthDate" || htmlID == "bilirubinDate") {
+            //Converts dd/mm -> [dd:int,mm:int]
+            inputValue = {
+                date: parseInt(inputValue.substring(0, 2)),
+                month: parseInt(inputValue.substring(3, 5))-1
+            }
+
+        } else if (htmlID == "birthTime" || htmlID == "bilirubinTime") {
+            //Converts hh/mm -> [dd:int,mm:int]
+            inputValue = {
+                hour: parseInt(inputValue.substring(0, 2)),
+                minute: parseInt(inputValue.substring(3, 5))
+            }
         } else {
-            //Add error message + error counter
-            errorMessages(inputID, false)
-            errorCounter +=1;
+            //Converts 39u / 100 µmol/L to pure integers
+            inputValue = parseInt(inputValue
+                .replace("u", "") //For gestationWeek
+                .replace(" µmol/L", "")) //For bilirubinValues
+        }
+
+        //**VALIDATION
+        switch (htmlID) {
+            case "bilirubinDate":
+            case "birthDate": {
+                //If month or date is not within librabry specifications
+                if(between(inputValue.month, 0, 11) || between(inputValue.date, 1, dateValidation[inputValue.month])) {
+                    dateComponents["month"] = inputValue.month
+                    dateComponents["date"] = inputValue.date
+                    errorMessages(htmlID, true)
+                } else {
+                    errorCounter += 1
+                    errorMessages(htmlID, false)
+                }
+                break;
+            }
+            case "bilirubinTime":
+            case "birthTime": {
+                //If month or date is not within librabry specifications
+                if (between(inputValue.hour, 0, 23) && between(inputValue.minute, 0, 59)) {
+                    dateComponents["hour"] = inputValue.hour
+                    dateComponents["minute"] = inputValue.minute
+                    errorMessages(htmlID, true)
+                } else {
+                    errorCounter += 1
+                    errorMessages(htmlID, false)
+                }
+                break;
+            }
+            case "gestationWeek": {
+                if (between(inputValue, 22, 45)) {
+                    validatedInputs["gestationWeek"] = inputValue,
+                        errorMessages(htmlID, true)
+                } else {
+                    errorCounter += 1
+                    errorMessages(htmlID, false)
+                }
+                break;
+            }
+            case "bilirubinValue": {
+                if (between(inputValue, 0, 1000) ) {
+                    validatedInputs["bilirubinValue"] = inputValue,
+                    errorMessages(htmlID, true)
+                } else {
+                    errorCounter += 1
+                    errorMessages(htmlID, false)
+                }
+                break;
+            }
         }
     }
-    return [validatedInputs, errorCounter]
+
+    //If all inputs are validated
+    if (errorCounter == 0) {
+
+        //** If date is in the future, subtract one year
+        const now = new Date();
+        let year = now.getFullYear();
+        //If date is in the future, subtract one year
+        if (dateComponents.month > now.getMonth()) {
+            year = now.getFullYear() - 1;
+        } else if (dateComponents.month == now.getMonth()) {
+            if (dateComponents.date > now.getDate()) {
+                year = now.getFullYear() - 1;
+            } else if (dateComponents.date == now.getDate()) {
+                if (dateComponents.hour > now.getHours()) {
+                    year = now.getFullYear() - 1;
+                } else if (dateComponents.hour == now.getHours()) {
+                    if (dateComponents.minute > now.getMinutes()) {
+                        year = now.getFullYear() - 1;
+                    } else if (dateComponents.minute == now.getMinutes()) {
+                        year = now.getFullYear() - 1;
+                    }
+                }
+            }
+        }
+
+        //Set child birthdate
+        if (inputData.birthDate) {
+            validatedInputs["dateTime"] = new Date(year, dateComponents.month, dateComponents.date, dateComponents.hour, dateComponents.minute);
+            return validatedInputs
+        }
+
+        //Set bilirubin date
+        else if (inputData.bilirubinDate) {
+            let childDateTime = currentChild.birthDateTime;
+            let childDateTimePlussThreeMonths
+            if (childDateTime.getMonth() <= 8) {
+                let tempDate = new Date(childDateTime)
+                tempDate.setMonth(tempDate.getMonth() + 3)
+                childDateTimePlussThreeMonths = tempDate
+            } else {
+                let tempDate = new Date(childDateTime)
+                tempDate.setFullYear(tempDate.getFullYear() + 1)
+                tempDate.setMonth(tempDate.getMonth() -11 +3)
+                childDateTimePlussThreeMonths = tempDate
+            }
+
+            let bilirubinDateTime = new Date(year, dateComponents.month, dateComponents.date, dateComponents.hour, dateComponents.minute);
+            if (bilirubinDateTime < childDateTime) {
+                console.log("bilirubin date is before child birthdate")
+                errorMessages("early-bilirubin", false)
+                return false
+            } else if (childDateTimePlussThreeMonths < bilirubinDateTime) {
+                errorMessages("late-bilirubin", false)
+                console.log("bilirubin date is more then 3 months after child birthdate")
+                return false
+            } else {
+                errorMessages("early-bilirubin", true)
+                errorMessages("late-bilirubin", true)
+                validatedInputs["dateTime"] = bilirubinDateTime;
+            }
+        }
+        return validatedInputs
+    } else {
+        return false
+    }
+    //Debugging:
+    console.log("Finished validating");
+
 }
 
-
-//CREATE TIMEDATE FROM LOCAL DATE + TIME
-function timeDate(date, time) {
-    //Create current time
-    const currentTime = new Date()
-    //Set actural time as current year + date info
-    let actualtime = new Date(currentTime.getFullYear(),date[1] - 1, date[0], time[0], time[1])
-    //If date info + current year is in the future, subtract one year from the year
-    if (actualtime > currentTime) {
-        actualtime = new Date(actualtime.setFullYear(actualtime.getFullYear() -1))
+function errorMessages(htmlID, valid) {
+    if (document.getElementById(htmlID + "-error")) {
+        document.getElementById(htmlID + "-error").classList.add(valid ? "hidden" : "error-message")
+        document.getElementById(htmlID + "-error").classList.remove(valid ? "error-message" : "hidden")
+    } else {
+        console.log("No error message for " + htmlID + " found")
     }
-    return actualtime
-
-
-}
-
-//CONVERT INPUT TO INTEGERS
-function inputToInteger(input) {
-    //Format values: remove masking and split minutes/hours & months/days
-    let integerOutput = null
-    if (/[gud]/.test(input)) {
-        integerOutput = parseInt(input.substring(0, input.length - 1))
-    } else if ((/µmol\/L/).test(input)) {
-        integerOutput = parseInt(input.substring(0, input.length - 6))
-    } else if (/[:/]/.test(input)) {
-        let ddhh = parseInt(input.substring(0, 2)) // days or hours
-        let mmmm = parseInt(input.substring(3, 5)) // months or minutes
-        integerOutput = [ddhh, mmmm]
-    }
-    return (integerOutput)
-}
-
-//VALIDATE INPUTS
-function inputValidation(htmlID, intValue) {
-    //If time/date, remove id before (eg. birth-time -> time)
-    let validationID = htmlID
-    if (validationID.includes("time") || validationID.includes("date")) {
-        validationID = validationID.substring(validationID.indexOf("-") + 1)
-    }
-    let validation = null
-    //Valid input ranges for each HTML ID
-    const validationCriteria = {
-        "birth-weight": [500, 7500],
-        "date": [[1, 31], [1, 12]],
-        "time": [[0, 23], [0, 59]],
-        "gestation-week": [22, 45],
-        "bilirubin-value": [0, 1000],
-    }
-    //Validate time/date input
-    let sorting = validationID.includes("time") ? "time" : "date";
-    if (validationID.includes("time") || validationID.includes("date")) {
-        (intValue != null
-            && intValue[0] >= validationCriteria[sorting][0][0]
-            && intValue[0] <= validationCriteria[sorting][0][1]
-            && intValue[1] >= validationCriteria[sorting][1][0]
-            && intValue[1] <= validationCriteria[sorting][1][1])
-            ? validation = true : validation = false;
-    }
-    //Validates all other inputs (gram/weeks/days/mikromol)
-    else {
-        (intValue != null
-            && intValue >= validationCriteria[validationID][0]
-            && intValue <= validationCriteria[validationID][1]
-        ) ? validation = true : validation = false;
-    }
-    return (validation)
-}
-
-//ADD ERROR MESSAGE
-function errorMessages(id, valid) {
-    //Add class dependent on valid input or not (true/false)
-    let addCss = valid ? "no-error-message" : "error-message"
-    let removeCss = valid ? "error-message" : "no-error-message"
-    //Target element
-    let errorId = id + "-error"
-    document.getElementById(errorId).classList.add(addCss)
-    document.getElementById(errorId).classList.remove(removeCss)
 }

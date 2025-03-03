@@ -22,9 +22,10 @@
     </style>
     <!-- STYLESHEETS -->
     <link rel="stylesheet" href="./styles/reset.css">
-    <link rel="stylesheet" href="./styles/colors.css">
+    <link rel="stylesheet" href="styles/root.css">
     <link rel="stylesheet" href="./styles/typography.css">
     <link rel="stylesheet" href="./styles/responsive.css">
+    <link rel="stylesheet" href="./styles/modules.css">
     <link rel="stylesheet" href="./index.css">
 </head>
 <body>
@@ -49,60 +50,75 @@
 <main id="main">
     <!-- INFO ABOUT CHILD -->
     <div id="child-container" class="container round-container">
-        <img id="complete-icon" class="hidden" src="assets/icons/checkmark.svg" alt="complete-icon">
+        <img id="complete-icon" class="hidden" src="./assets/icons/checkmark.svg" alt="complete-icon">
+        <img id="incomplete-icon" class="hidden" src="./assets/icons/exlamation.svg" alt="incomplete-icon">
         <h2>Om barnet</h2>
         <!-- BIRTH WEIGHT INPUT-->
-        <label for="birth-weight">Fødselsvekt</label>
-        <input id="birth-weight" name="birth-weight" class="birthWeight full-input child-input" type="text" inputmode="numeric" placeholder="3500g">
-        <p id="birth-weight-error" class="no-error-message">Må være mellom 500 - 7500g</p>
+        <label for="birthWeight">Fødselsvekt</label>
+        <div class="custom-select">
+            <select id="birthWeight" data-validation="birthWeight" class="full-input">
+                <option value="999">< 1000 gram</option>
+                <option value="1000">1000 - 1499 gram</option>
+                <option value="1500">1500 - 2499 gram</option>
+                <option value="2500" selected>≥ 2500 gram</option>
+            </select>
+        </div>
         <!-- BIRTH TIME INPUT-->
-        <label for="birth-date">Fødselstidpunkt</label>
-        <div class="double-input">
-            <input id="birth-date" name="birt-date" class="birthTimeDate half-input child-input" type="text" inputmode="numeric" placeholder="dd/mm">
-            <input id="birth-time" name="birt-time" class="birthTimeDate half-input child-input" type="text" inputmode="numeric" placeholder="hh:mm">
-        </div>
-        <p id="birth-date-error" class="no-error-message">Dato må være mellom 01/01 og 31/12</p>
-        <p id="birth-time-error" class="no-error-message">Tid må være mellom 00:00 og 23:59</p>
+        <fieldset>
+            <legend>Fødselstidspunkt</legend>
+            <div class="double-input">
+                <label for="birthDate" class="visually-hidden">Fødselsdato og måned</label>
+                <input id="birthDate" data-validation="date" class="birthTimeDate half-input" type="text"inputmode="numeric" placeholder="dd/mm">
+                <label for="birthTime" class="visually-hidden">Fødselstidspunkt</label>
+                <input id="birthTime" data-validation="time" class="birthTimeDate half-input" type="text"inputmode="numeric" placeholder="hh:mm">
+            </div>
+            <p id="birthDate-error" class="hidden">Dato må være mellom 01/01 og 31/12</p>
+            <p id="birthTime-error" class="hidden">Tid må være mellom 00:00 og 23:59</p>
+        </fieldset>
         <!-- GASTATION AT BIRTH-->
-        <label for="gestation-week">Gestasjonsalder</label>
+        <label for="gestationWeek">Gestasjonsuke</label>
         <div class="double-input">
-            <input id="gestation-week" name="gestation-week" class="gestation half-input child-input" type="text" inputmode="numeric" placeholder="39u">
-            <button id="add-child" class="half-input btn" tabindex="0">Legg til</button>
+            <input id="gestationWeek" data-validation="gestationWeek" class="gestation half-input child-input" type="text" inputmode="numeric" placeholder="39u">
+            <button id="save-child" class="half-input btn" tabindex="0">Legg til</button>
         </div>
-        <p id="gestation-week-error" class="no-error-message">GA må være mellom 22 og 45</p>
+        <p id="gestationWeek-error" class="hidden error-message">GA må være mellom 22 og 45</p>
+        <p id="updateChild-error" class="hidden error-message">Klarte ikke å oppdatere barn</p>
     </div>
     <!-- LAB CONTAINER-->
-    <div id="lab-container" class="container round-container opacity-container">
+    <div id="bilirubin-container" class="container round-container opacity-container">
         <!-- ADD NEW LAB VALUE-->
         <h2>Legg til målinger</h2>
-        <label for="lab-date">Tidspunkt for prøve</label>
+        <label for="bilirubinDate">Tidspunkt for prøve</label>
         <div class="double-input">
-            <input class="half-input lab-input" id="lab-date" type="text" inputmode="numeric" placeholder="dd/mm" disabled>
-            <input class="half-input lab-input" id="lab-time" type="text" inputmode="numeric" placeholder="hh:mm" disabled>
+            <input class="half-input bilirubin-input" id="bilirubinDate" data-validation="date" type="text" inputmode="numeric" placeholder="dd/mm" disabled>
+            <input class="half-input bilirubin-input" id="bilirubinTime" data-validation="time" type="text" inputmode="numeric" placeholder="hh:mm" disabled>
         </div>
-        <p id="lab-date-error" class="no-error-message">Dato må være mellom 01/01 og 31/12</p>
-        <p id="lab-time-error" class="no-error-message">Tid må være mellom 00:00 og 23:59</p>
-        <p id="early-lab-error" class="no-error-message">Før fødseltidspunkt eller frem i tid</p>
-        <label for="bilirubin-value">Bilirubinverdi</label>
+        <p id="bilirubinDate-error" class="hidden">Dato må være mellom 01/01 og 31/12</p>
+        <p id="bilirubinTime-error" class="hidden">Tid må være mellom 00:00 og 23:59</p>
+        <p id="early-bilirubin-error" class="hidden">Lab er før fødsel eller frem i tid</p>
+        <p id="late-bilirubin-error" class="hidden">Lab er >3 mnd etter fødsel</p>
+        <label for="bilirubinValue">Bilirubinverdi</label>
         <div class="double-input">
-            <input id="bilirubin-value" class="half-input lab-input"  type="text" inputmode="numeric" placeholder="120 µmol/L" disabled>
-            <button id="add-lab" class="half-input btn" disabled tabindex="0">Legg til</button>
+            <input id="bilirubinValue" class="half-input lab-input"  data-validation="bilirubinValue" type="text" inputmode="numeric" placeholder="120 µmol/L" disabled>
+            <button id="add-bilirubin" class="half-input btn" disabled tabindex="0">Legg til</button>
         </div>
-        <p id="bilirubin-value-error" class="no-error-message">Bilirubin må være mellom 0 og 1000</p>
+        <p id="bilirubinValue-error" class="hidden">Bilirubin må være mellom 0 og 1000</p>
+        <p id="bilirubinExists-error" class="hidden">Det er tatt en prøve på dette tidspunktet</p>
         <!-- LAB VALUES LIST-->
         <hr>
-        <ul id="lab-icons">
-            <li class="lab-icons-list">
+        <ul id="bilirubin-icons">
+            <li class="bilirubin-icons-list">
                 <p></p>
                 <img src="./assets/icons/blood-sample-opace.svg" alt="blodprove-icon">
                 <img src="./assets/icons/calender-opace.svg" alt="calendar-icon">
                 <img src="./assets/icons/time-opace.svg" alt="time-icon">
             </li>
         </ul>
-        <ul id="lab-list">
-            <li class="individual-lab">
+        <ul id="bilirubin-list">
+            <li class="individual-bilirubin">
             </li>
         </ul>
+        <p class="bilirubin-list-error hidden">Klarte ikke å fjerne lab'verdien fra systemet</p>
     </div>
     <!-- GRAPH -->
     <div id="graph-container" class="container opacity-container">
@@ -164,9 +180,10 @@
             <p class="small-text">
                 3 Pediatrivilederende anbefaller at det skal tas total serum bilirubin ved  ”grenseverdier” (ca. 30–50 µM) under lysgrensen. Vi har valgt det konservative ytterpunktet 50 µM.
                 <br><br>
-                4 Nr krysningspunktet mellom ekstrapolert graf og lysgrensen ligger mer enn 14 dager frem i tid, anses denne som avflatet og vil resultere i råd om ingen oppfølging. Dette er en egendefinert definisjon i mangel på tydeligere retningslinjer.
+                4 Når krysningspunktet mellom ekstrapolert graf og lysgrensen ligger mer enn 14 dager frem i tid, anses denne som avflatet og vil resultere i råd om ingen oppfølging. Dette er en egendefinert definisjon i mangel på tydeligere retningslinjer.
             </p>
         </div>
+    </div>
 </footer>
 </body>
 </html>
