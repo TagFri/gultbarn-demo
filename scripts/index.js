@@ -3,72 +3,40 @@ import {validateInputs, errorMessages} from './validation.js';
 import {Child} from "./Child.js";
 import {Bilirubin, saveBilirubin} from "./Bilirubin.js";
 import {displayBilirubin} from "./displayBilirubin.js";
+import {bilirubinOpacity } from "./opacityFilters.js";
 
 export { currentChild, bilirubinOpacity}
 
 //** CUSTOM INPUT MASKING
 masking()
 
-//** SAVE CHILD INFO
 
+//** HANDLE CHILD SAVE BUTTON
 //Event listener
-document.getElementById("save-child").addEventListener("click", (event) => {
+document.querySelectorAll(".save-btn").forEach(button => button.addEventListener("click", (event) => {
+    //Get container ID -> child-container || bilirubin-container
+    const containerID = event.target.parentElement.parentElement.id
 
-    //Validate child inputs -> returns false || {validated inputs}
-    let validatedInputs = validateInputs({
-            birthDate: document.getElementById("birthDate").value,
-            birthTime: document.getElementById("birthTime").value,
-            gestationWeek: document.getElementById("gestationWeek").value,
-    });
+    //Get all inputs elements, including selct for birthweight
+    let selectInpID = [...document.querySelectorAll(`#${containerID} select`), ...document.querySelectorAll(`#${containerID} input`)]
 
-    //If validated -> saveChild
+    //Create a shallow JSON from all elements
+    let unvalidatedInp = {}
+    for (let i=0; i < selectInpID.length; i++) {
+        unvalidatedInp[selectInpID[i].id] = selectInpID[i].value;
+    }
+
+    //Validate input
+    let validatedInputs = validateInputs(unvalidatedInp)
     if(validatedInputs) {
-
-        //Add birthWeight
-        validatedInputs["birthWeight"] = parseInt(document.getElementById("birthWeight").value);
-
-        //Save child
-        saveChild(validatedInputs);
-
+        containerID == "child-container"? saveChild(validatedInputs) : saveBilirubin(validatedInputs)
+        console.log(`${containerID} VALIDATED`)
     } else {
-        // If not validated, turn on opacity again
-        bilirubinOpacity(true)
-        console.log("Invalid inputs")
-}});
-
-function bilirubinOpacity(boolean) {
-    document.getElementById("bilirubinDate").disabled = boolean;
-    document.getElementById("bilirubinTime").disabled = boolean;
-    document.getElementById("bilirubinValue").disabled = boolean;
-    document.getElementById("add-bilirubin").disabled = boolean;
-
-    if (boolean) {
-        document.getElementById("bilirubin-container").classList.add("opacity-container");
-        document.getElementById("graph-container").classList.add("opacity-container");
-    } else {
-        document.getElementById("bilirubin-container").classList.remove("opacity-container");
-        document.getElementById("bilirubinDate").focus()
-        document.getElementById("graph-container").classList.remove("opacity-container");
+        console.log(`${containerID} NOT VALIDATED`)
     }
 }
-
-
-//Listen on save bilirubin button -> Validate -> Create bilirubin from JSON
-document.getElementById("add-bilirubin").addEventListener("click", (event) => {
-    //Validate child inputs -> returns false / {validated inputs}
-    let validatedInputs = validateInputs({
-        bilirubinDate: document.getElementById("bilirubinDate").value,
-        bilirubinTime: document.getElementById("bilirubinTime").value,
-        bilirubinValue: document.getElementById("bilirubinValue").value,
-    });
-    //If validated -> saveChild
-    if(validatedInputs) {
-        console.log("BILIRUBIN VALIDATED")
-        saveBilirubin(validatedInputs)
-    } else {
-        console.log("Invalid inputs")
-    }});
-
+)
+);
 
 //**
 //**** VARIABLE STORAGE
