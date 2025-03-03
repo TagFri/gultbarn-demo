@@ -6,11 +6,6 @@ import {displayBilirubin} from "./displayBilirubin.js";
 
 export { currentChild, bilirubinOpacity}
 
-document.getElementById("test-btn").addEventListener("click", (event) => {
-    console.log(Bilirubin.allBilirubins)
-    console.log(Bilirubin.numberOfBilirubins)
-})
-
 //** CUSTOM INPUT MASKING
 masking()
 
