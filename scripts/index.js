@@ -11,7 +11,7 @@ export { currentChild, bilirubinOpacity}
 masking()
 
 
-//** HANDLE CHILD SAVE BUTTON
+//** HANDLE SAVE BUTTON
 //Event listener
 document.querySelectorAll(".save-btn").forEach(button => button.addEventListener("click", (event) => {
     //Get container ID -> child-container || bilirubin-container
