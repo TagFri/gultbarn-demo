@@ -60,7 +60,8 @@ function validateInputs(inputData) {
             case "bilirubinDate":
             case "birthDate": {
                 //If month or date is not within librabry specifications
-                if(between(inputValue.month, 0, 11) || between(inputValue.date, 1, dateValidation[inputValue.month])) {
+                if(between(inputValue.month, 0, 11) && between(inputValue.date, 1, dateValidation[inputValue.month])) {
+                    console.log(`Validateing date: ${inputValue.date} between: 1 and ${dateValidation[inputValue.month]} }`)
                     dateComponents["month"] = inputValue.month
                     dateComponents["date"] = inputValue.date
                     errorMessages(htmlID, true)
@@ -177,11 +178,18 @@ function validateInputs(inputData) {
 
 }
 
-function errorMessages(htmlID, valid) {
-    if (document.getElementById(htmlID + "-error")) {
-        document.getElementById(htmlID + "-error").classList.add(valid ? "hidden" : "error-message")
-        document.getElementById(htmlID + "-error").classList.remove(valid ? "error-message" : "hidden")
-    } else {
-        console.log("No error message for " + htmlID + " found")
-    }
+function errorMessages(htmlID, show, timeout) {
+        if (document.getElementById(htmlID + "-error")) {
+            document.getElementById(htmlID + "-error").classList.add(show ? "hidden" : "error-message")
+            document.getElementById(htmlID + "-error").classList.remove(show ? "error-message" : "hidden")
+        } else {
+            console.log("No error message for " + htmlID + " found")
+        }
+
+        if (timeout) {
+            setTimeout(() => {
+                document.getElementById(htmlID + "-error").classList.add("hidden")
+            }, 2000)
+        }
+
 }
