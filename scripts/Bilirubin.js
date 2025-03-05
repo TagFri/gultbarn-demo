@@ -17,8 +17,22 @@ class Bilirubin {
 
         //Loop thrugh all labs
         for (let bilirubin of Bilirubin.allBilirubins) {
+
+            //Update relative days
             bilirubin.relativeDays = bilirubin.relativeDays + changeInDays;
+
         }
+
+        //Delete labs before new birth date
+        for (let i = 0; i < Bilirubin.allBilirubins.length; i++) {
+            if (Bilirubin.allBilirubins[i].relativeDays < 0) {
+                Bilirubin.allBilirubins.splice(i, 1);
+                errorMessages("bilirubinBeforeRemoved", false, true)
+                i--;
+            }
+        }
+
+        displayBilirubin()
         return true;
     }
 
