@@ -60,7 +60,7 @@ class Child {
 
         //If keydown on child input values -> require a new save
         for (let input of document.querySelector("#child-container").querySelectorAll("input")) {
-            input.addEventListener("change", () => {
+            input.addEventListener("keydown", () => {
                 requireSave()
             })
         }
