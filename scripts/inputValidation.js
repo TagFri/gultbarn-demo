@@ -1,11 +1,10 @@
 export {validateInputs, errorMessages}
-import { between } from "./generalFunction.js";
-import { currentChild } from "./index.js";
+import { between } from "./generalFunctions.js";
+import { currentChild } from "./Child.js";
 
 //--RUNNING VALIDATION AND ERROR ON ALL INPUTS
 
 function validateInputs(inputData) {
-    console.log("Validating inputs")
     //Start variables
     let errorCounter = 0
     let dateComponents = {}
@@ -104,6 +103,9 @@ function validateInputs(inputData) {
                 }
                 break;
             }
+            case "birthWeight": {
+                validatedInputs["birthWeight"] = inputValue
+            }
         }
     }
 
@@ -189,7 +191,7 @@ function errorMessages(htmlID, show, timeout) {
         if (timeout) {
             setTimeout(() => {
                 document.getElementById(htmlID + "-error").classList.add("hidden")
-            }, 2000)
+            }, 7500)
         }
 
 }
