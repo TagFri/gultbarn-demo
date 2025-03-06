@@ -1,15 +1,29 @@
-import {masking} from "./masking.js";
-import {validateInputs, errorMessages} from './validation.js';
-import {Child} from "./Child.js";
-import {Bilirubin, saveBilirubin} from "./Bilirubin.js";
-import {displayBilirubin} from "./displayBilirubin.js";
-import {bilirubinOpacity } from "./opacityFilters.js";
+import {inputMasking} from "./inputMasking.js";
+import {validateInputs, errorMessages} from './inputValidation.js';
+import {saveChild, currentChild} from "./Child.js";
+import {saveBilirubin} from "./Bilirubin.js";
+import {bilirubinOpacity } from "./inpustOpacityFilter.js";
+import {initiateGraph } from "./graph.js";
 
-export { currentChild, bilirubinOpacity}
+export {bilirubinOpacity}
+
+//**
+//**** VARIABLE STORAGE
+//**
+
+let currentLightGraph;
+let currentTransfusionGraph;
+let currentBilirubinGraph;
+let currentExtrapolationGraph;
+let currentAdvice;
+let currentJournal;
+
 
 //** CUSTOM INPUT MASKING
-masking()
+inputMasking()
 
+//** GRAPH
+initiateGraph()
 
 //** HANDLE SAVE BUTTON
 //Event listener
@@ -28,68 +42,11 @@ document.querySelectorAll(".save-btn").forEach(button => button.addEventListener
 
     //Validate input
     let validatedInputs = validateInputs(unvalidatedInp)
+
     if(validatedInputs) {
         containerID == "child-container"? saveChild(validatedInputs) : saveBilirubin(validatedInputs)
         console.log(`${containerID} VALIDATED`)
     } else {
         console.log(`${containerID} NOT VALIDATED`)
     }
-}
-)
-);
-
-//**
-//**** VARIABLE STORAGE
-//**
-
-let currentChild;
-
-let currentGraph;
-let currentAdvice;
-let currentJournal;
-
-//**
-//**** CREATE OR UPDATE CHILD
-//**
-
-function saveChild(validatedInputs) {
-    if(currentChild === undefined) {
-        currentChild = new Child(validatedInputs);
-    }
-    //Update child object
-    else {
-
-        //Save previpus child state
-        let previousChild = {
-            birthWeight: currentChild.birthWeight,
-            gestationWeek: currentChild.gestationWeek,
-            birthDateTime: currentChild.birthDateTime
-        }
-
-        //Update current child
-        currentChild.update(validatedInputs)
-
-        //Change in time
-        if (previousChild.birthDateTime != currentChild.birthDateTime) {
-
-            //UPDATE BILIRUBIN RELATIVE DAYS
-            Bilirubin.updateAllBilirubinDates(previousChild.birthDateTime, currentChild.birthDateTime)
-
-            //DISPLAY UPDATES updates
-            displayBilirubin()
-
-            // Redraw graphs
-            // Rerun advíces
-
-            //UPDATE LIGHT GRAPHS
-
-            //UPDATE TRANSDUSION GRAPHS
-
-
-        }
-    }
-}
-
-function rerunGraphsAdvice() {
-
-}
+}));

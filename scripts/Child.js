@@ -1,11 +1,16 @@
-export { Child }
+import { Bilirubin } from "./Bilirubin.js";
+import { bilirubinOpacity } from "./inpustOpacityFilter.js";
+import { updateLightLimit } from "./graphLightLimit.js";
+import { updateTransfusionGraph} from "./graphTransfusionlimit.js";
 
-import { bilirubinOpacity } from "./opacityFilters.js";
+export { Child, saveChild, currentChild }
+
+let currentChild;
 
 class Child {
     #birthWeight;
-     #gestationWeek;
-     #birthDateTime;
+    #gestationWeek;
+    #birthDateTime;
 
     constructor(validatedInputs) {
         //** CHILD VARIABLES
@@ -75,4 +80,47 @@ class Child {
     set birthWeight(value) { parseInt(this.#birthWeight = value); }
     set gestationWeek(value) { parseInt(this.#gestationWeek = value); }
     set birthDateTime(value) { new Date(this.#birthDateTime = value); }
+}
+
+function saveChild(validatedInputs) {
+    console.log(validatedInputs)
+
+    //If child is created for the first time
+    if(currentChild === undefined) {
+        currentChild = new Child(validatedInputs);
+        console.log(currentChild)
+        console.log(currentChild.birthWeight)
+        updateLightLimit()
+    }
+
+    //Update child, if already created
+    else {
+
+        //Save previpus child state
+        let previousChild = {
+            birthWeight: currentChild.birthWeight,
+            gestationWeek: currentChild.gestationWeek,
+            birthDateTime: currentChild.birthDateTime
+        }
+
+        //Update current child
+        currentChild.update(validatedInputs)
+
+        //If change in birth time -> update all labs
+        if (previousChild.birthDateTime != currentChild.birthDateTime) {
+
+            //Update bilirubins relative days
+            Bilirubin.updateAllBilirubinDates(previousChild.birthDateTime, currentChild.birthDateTime)
+        }
+
+        //If change in weight or gestational week -> update child light limit
+        if ((previousChild.gestationWeek != currentChild.gestationWeek) || (previousChild.birthWeight != currentChild.birthWeight)) {
+            updateLightLimit()
+        }
+
+        //If change in birthWeight, update transfusion graph
+        if (previousChild.birthWeight != currentChild.birthWeight) {
+            updateTransfusionGraph(currentChild.birthWeight)
+        }
+        }
 }

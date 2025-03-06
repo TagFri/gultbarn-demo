@@ -1,7 +1,10 @@
-import {daysRelativeToReferenceDate, daysToAbsoluteDate, daysToMs, msToDays} from './dateFunctions.js'
-import { currentChild } from "./index.js";
-import { errorMessages } from "./validation.js";
+import {daysRelativeToReferenceDate, daysToAbsoluteDate, daysToMs, msToDays} from './generalFunctions.js'
+import { currentChild } from "./Child.js";
+import { errorMessages } from "./inputValidation.js";
 import {displayBilirubin} from "./displayBilirubin.js";
+import {updateBilirubinGraph} from "./graphBilirubin.js";
+import {distanceToGraph, displayTransfusionGraph, toggleTransfusionGraph} from "./graph.js"
+import {updateTransfusionGraph} from "./graphTransfusionlimit.js"
 
 export {Bilirubin, SerumBilirubin, TranscutanousBilirubin, removeBilirubin, saveBilirubin}
 
@@ -20,7 +23,6 @@ class Bilirubin {
 
             //Update relative days
             bilirubin.relativeDays = bilirubin.relativeDays + changeInDays;
-
         }
 
         //Delete labs before new birth date
@@ -32,8 +34,21 @@ class Bilirubin {
             }
         }
 
-        displayBilirubin()
+        //Redisplay bilirubins and graph
+        updateBilirubinListAndGraph()
+
         return true;
+    }
+
+    static lastBilirubin() {
+        return Bilirubin.allBilirubins.slice().reverse()[0]
+    }
+
+    static lastBilirubinSlope() {
+        let reverseBillibinArray = Bilirubin.allBilirubins.slice().reverse()
+        let diffY = reverseBillibinArray[0].bilirubinValue - reverseBillibinArray[1].bilirubinValue
+        let diffX = reverseBillibinArray[0].relativeDays - reverseBillibinArray[1].relativeDays
+        return diffY / diffX
     }
 
     //Variables
@@ -71,6 +86,7 @@ class Bilirubin {
     set relativeDays(relativeDays) {
         this.#relativeDaysVal = relativeDays;
     }
+
 }
 
 class SerumBilirubin extends Bilirubin {
@@ -113,8 +129,22 @@ function saveBilirubin(validatedInputs) {
         //Remove error message
         errorMessages("bilirubinExists", true)
 
-        //Display labs and reset input
+        //Display bilirubins
         displayBilirubin()
+
+        //Update bilirubin graph
+        updateBilirubinGraph()
+
+        //Insert transfusion graph if it doesn't exist, are more then 24h since statrt and over light limit
+        if (displayTransfusionGraph == false && relativeDays >= 1 && distanceToGraph("lightLimit", relativeDays, validatedInputs.bilirubinValue) <= 0) {
+            console.log(distanceToGraph("lightLimit", relativeDays, validatedInputs.bilirubinValue))
+
+            //Set display transfusion to true
+            toggleTransfusionGraph()
+            updateTransfusionGraph(currentChild.birthWeight)
+        }
+
+        //Remove bilirubin inputs, and focuis back on date to add a new one
         document.getElementById("bilirubinDate").value = "";
         document.getElementById("bilirubinTime").value = "";
         document.getElementById("bilirubinValue").value = "";
@@ -141,8 +171,8 @@ function removeBilirubin(targetButton) {
             //Set to found (to exclude error msg)
             bilirubinFound = true;
 
-            //Display new list of bilirubin values
-            displayBilirubin()
+            //Display new list of bilirubin values + update graph
+            updateBilirubinListAndGraph()
 
             //Save time, break loop
             break;
@@ -156,4 +186,9 @@ function removeBilirubin(targetButton) {
         document.getElementById("advice-container").classList.add("opacity-container")
         document.getElementById("journal-container").classList.add("opacity-container")
     }
+}
+
+function updateBilirubinListAndGraph() {
+    displayBilirubin()
+    updateBilirubinGraph()
 }

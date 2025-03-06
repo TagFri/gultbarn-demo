@@ -1,7 +1,7 @@
-export {masking};
+export {inputMasking};
 
 //INPUT MASKING
-function masking() {
+function inputMasking() {
     Inputmask("99/99").mask("birthDate")
     Inputmask("99/99").mask("bilirubinDate")
     Inputmask("99:99").mask("birthTime")

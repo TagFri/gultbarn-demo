@@ -1,8 +1,8 @@
 export { displayBilirubin}
 
-import { currentChild } from "./index.js"
+import { currentChild } from "./Child.js"
 import { Bilirubin, removeBilirubin } from "./Bilirubin.js"
-import { daysToAbsoluteDate, leadingZero } from "./dateFunctions.js"
+import { daysToAbsoluteDate, leadingZero } from "./generalFunctions.js"
 
 function displayBilirubin() {
     //REMOVE OLD LABS
