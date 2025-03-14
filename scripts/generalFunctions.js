@@ -1,4 +1,4 @@
-export {msToDays, daysToMs, daysToAbsoluteDate, daysRelativeToReferenceDate, leadingZero, between, realtiveToGraphLabel}
+export {msToDays, daysToMs, daysToAbsoluteDate, daysRelativeToReferenceDate, leadingZero, between, realtiveToGraphLabel, largest}
 
 //Converts millisecounds to relative days
 function msToDays(millisecounds) {
@@ -12,8 +12,6 @@ function daysToMs(relativeDays) {
 
 //Converts relative days to absolute date, based on a refernce date
 function daysToAbsoluteDate(referenceDate, relativeDays) {
-    console.log(referenceDate)
-    console.log(typeof referenceDate)
     return new Date(referenceDate.getTime() + (relativeDays * 24 * 60 * 60 * 1000));
 }
 
@@ -46,4 +44,8 @@ function realtiveToGraphLabel(relativeDate) {
     let years = date.getFullYear()
     years = years.toString().slice(-2)
     return (days + "/" + months + "-" + years + " kl." + hours + ":" + minutes)
+}
+
+function largest(arr) {
+    return Math.max(...arr);
 }

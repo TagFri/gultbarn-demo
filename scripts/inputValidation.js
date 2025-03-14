@@ -1,6 +1,6 @@
 export {validateInputs, errorMessages}
 import { between } from "./generalFunctions.js";
-import { currentChild } from "./Child.js";
+import { Child } from "./Child.js";
 
 //--RUNNING VALIDATION AND ERROR ON ALL INPUTS
 
@@ -63,10 +63,10 @@ function validateInputs(inputData) {
                     console.log(`Validateing date: ${inputValue.date} between: 1 and ${dateValidation[inputValue.month]} }`)
                     dateComponents["month"] = inputValue.month
                     dateComponents["date"] = inputValue.date
-                    errorMessages(htmlID, true)
+                    errorMessages(htmlID, false)
                 } else {
                     errorCounter += 1
-                    errorMessages(htmlID, false)
+                    errorMessages(htmlID, true)
                 }
                 break;
             }
@@ -76,30 +76,30 @@ function validateInputs(inputData) {
                 if (between(inputValue.hour, 0, 23) && between(inputValue.minute, 0, 59)) {
                     dateComponents["hour"] = inputValue.hour
                     dateComponents["minute"] = inputValue.minute
-                    errorMessages(htmlID, true)
+                    errorMessages(htmlID, false)
                 } else {
                     errorCounter += 1
-                    errorMessages(htmlID, false)
+                    errorMessages(htmlID, true)
                 }
                 break;
             }
             case "gestationWeek": {
                 if (between(inputValue, 22, 45)) {
                     validatedInputs["gestationWeek"] = inputValue,
-                        errorMessages(htmlID, true)
+                        errorMessages(htmlID, false)
                 } else {
                     errorCounter += 1
-                    errorMessages(htmlID, false)
+                    errorMessages(htmlID, true)
                 }
                 break;
             }
             case "bilirubinValue": {
                 if (between(inputValue, 0, 1000) ) {
                     validatedInputs["bilirubinValue"] = inputValue,
-                    errorMessages(htmlID, true)
+                    errorMessages(htmlID, false)
                 } else {
                     errorCounter += 1
-                    errorMessages(htmlID, false)
+                    errorMessages(htmlID, true)
                 }
                 break;
             }
@@ -143,7 +143,7 @@ function validateInputs(inputData) {
         //Set bilirubin date
         else if (inputData.bilirubinDate) {
             console.log("BILIRUBIN DATE")
-            let childDateTime = currentChild.birthDateTime;
+            let childDateTime = Child.getInstance().birthDateTime;
             let childDateTimePlussThreeMonths
             if (childDateTime.getMonth() <= 8) {
                 let tempDate = new Date(childDateTime)
@@ -157,17 +157,25 @@ function validateInputs(inputData) {
             }
 
             let bilirubinDateTime = new Date(year, dateComponents.month, dateComponents.date, dateComponents.hour, dateComponents.minute);
+
+            //SHow error msg if bilirubin is before birthdate
             if (bilirubinDateTime < childDateTime) {
                 console.log("bilirubin date is before child birthdate")
-                errorMessages("early-bilirubin", false)
+                errorMessages("early-bilirubin", true)
                 return false
-            } else if (childDateTimePlussThreeMonths < bilirubinDateTime) {
-                errorMessages("late-bilirubin", false)
+            }
+
+            //Show error msg if bilirubin is more then 3 months after child birth
+            else if (childDateTimePlussThreeMonths < bilirubinDateTime) {
+                errorMessages("late-bilirubin", true)
                 console.log("bilirubin date is more then 3 months after child birthdate")
                 return false
-            } else {
-                errorMessages("early-bilirubin", true)
-                errorMessages("late-bilirubin", true)
+            }
+
+            //Remove alle error message and add DateTime inputs
+            else {
+                errorMessages("early-bilirubin", false)
+                errorMessages("late-bilirubin", false)
                 validatedInputs["dateTime"] = bilirubinDateTime;
             }
         }
@@ -182,8 +190,8 @@ function validateInputs(inputData) {
 
 function errorMessages(htmlID, show, timeout) {
         if (document.getElementById(htmlID + "-error")) {
-            document.getElementById(htmlID + "-error").classList.add(show ? "hidden" : "error-message")
-            document.getElementById(htmlID + "-error").classList.remove(show ? "error-message" : "hidden")
+            document.getElementById(htmlID + "-error").classList.remove(show ? "hidden" : "error-message")
+            document.getElementById(htmlID + "-error").classList.add(show ? "error-message" : "hidden")
         } else {
             console.log("No error message for " + htmlID + " found")
         }
