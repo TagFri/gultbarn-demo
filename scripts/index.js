@@ -119,7 +119,6 @@ function saveChild(validatedInputs) {
 
     //UPDATE CASCADING DEPENDENCIES WHEN CHILD IS UPDATED
     if(Child.getInstance()) {
-        console.log("Run child cascade")
 
         //SHOW COMPLETE ICON + REMOVE BILIRUBIN OPACITY
         Child.getInstance().completeChild()
@@ -133,6 +132,9 @@ function saveChild(validatedInputs) {
         if (Bilirubin.allBilirubins.length > 0) {
             GraphContainer.updateBilirubinGraph()
         }
+
+        //Update axis
+        GraphContainer.updateAxises()
     }
 }
 
@@ -172,8 +174,8 @@ function saveBilirubin(validatedInputs) {
 
         //Update transfusion graph
         if (Child.getInstance().childGraphInfo("lightLimit").reduce((max, curr) => curr.y > max ? curr.y : max, 0) < Bilirubin.maxY ) {
-            GraphContainer.updateTransfusionGraph()
             GraphContainer.toggleTransfusionGraph(true)
+            GraphContainer.getInstance().myChart.update();
         }
 
         //Extend graph if needed

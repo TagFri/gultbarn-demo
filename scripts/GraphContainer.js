@@ -254,13 +254,12 @@ class GraphContainer {
 
     //FUNCTIONS
     static toggleTransfusionGraph(showGraph) {
-        if (this.myChart) {
-            if (showGraph) {
-                this.myChart.data.datasets[3].hidden = false;
-            } else {
-                this.myChart.data.datasets[3].hidden = true;
-            }
-            this.myChart.update();
+        if (showGraph) {
+            this.instance.myChart.data.datasets[3].hidden = false;
+            console.log("Show transfusion graph")
+        } else {
+            this.instance.myChart.data.datasets[3].hidden = true;
+            console.log("Hide transfusion graph")
         }
     }
 
