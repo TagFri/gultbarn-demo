@@ -42,8 +42,10 @@ class Bilirubin {
 
     //Get bilirubin slope of two last bilirubins (used for graph and advice measurments)
     static bilirubinSlope() {
+        if (Bilirubin.allBilirubins.length < 2) {
+            return false
+        }
         let reverseBillibinArray = Bilirubin.allBilirubins.slice().reverse()
-        console.log(reverseBillibinArray)
         let diffY = reverseBillibinArray[0].bilirubinValue - reverseBillibinArray[1].bilirubinValue
         let diffX = reverseBillibinArray[0].relativeDays - reverseBillibinArray[1].relativeDays
         return diffY / diffX
@@ -136,8 +138,6 @@ class Bilirubin {
 
     static removeBilirubin(targetButton) {
 
-
-
         //Setup loop for all bilirubin labs
         for (let i = 0; i < Bilirubin.numberOfBilirubins; i++) {
             console.log("Loop: " + i)
@@ -160,6 +160,12 @@ class Bilirubin {
 
                 //Update Bilirubin graph
                 GraphContainer.updateBilirubinGraph()
+
+                //Update extrapolation graph
+                GraphContainer.updateExtrapolationGraph()
+
+                //Update X-values
+                GraphContainer.updateAxises()
 
                 return true;
             }
@@ -186,6 +192,14 @@ class Bilirubin {
 
         //Sort bilirubin array according to date
         Bilirubin.allBilirubins.sort((a, b) => a.relativeDays - b.relativeDays);
+
+        //Update static max variables
+        if (Bilirubin.maxX < this.relativeDays) {
+            Bilirubin.maxX = this.relativeDays;
+        }
+        if (Bilirubin.maxY < this.bilirubinValue) {
+            Bilirubin.maxY = this.bilirubinValue;
+        }
 
         return true;
     }

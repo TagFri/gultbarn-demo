@@ -124,15 +124,15 @@ function saveChild(validatedInputs) {
         //SHOW COMPLETE ICON + REMOVE BILIRUBIN OPACITY
         Child.getInstance().completeChild()
 
-        //UPDATE LIGHT-LIMIT GRAPH AND TITLE
+        //UPDATE LIGHT-LIMIT GRAPH TRANSFUSION GRAPH AND TITLE
         GraphContainer.updateGraphTitle()
         GraphContainer.updateLightLimitGraph()
+        GraphContainer.updateTransfusionGraph()
 
         //UPDATE BILIRUBIN GRAPH
         if (Bilirubin.allBilirubins.length > 0) {
             GraphContainer.updateBilirubinGraph()
         }
-
     }
 }
 
@@ -170,9 +170,14 @@ function saveBilirubin(validatedInputs) {
         GraphContainer.updateBilirubinGraph()
         GraphContainer.updateExtrapolationGraph()
 
-        //Todo Update extrapolation graph
+        //Update transfusion graph
+        if (Child.getInstance().childGraphInfo("lightLimit").reduce((max, curr) => curr.y > max ? curr.y : max, 0) < Bilirubin.maxY ) {
+            GraphContainer.updateTransfusionGraph()
+            GraphContainer.toggleTransfusionGraph(true)
+        }
 
-        //Todo Update transfusion graph
+        //Extend graph if needed
+        GraphContainer.updateAxises()
 
         //TODO Update advice
 
