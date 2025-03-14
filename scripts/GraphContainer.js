@@ -60,96 +60,179 @@ class GraphContainer {
         this.instance.myChart.update();
     }
     static updateExtrapolationGraph() {
-
         console.log("Update extrapolation graph")
-        console.log(GraphContainer.getInstance().distanceToGraph("lightLimitGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue))
 
-        //Requirment: >= 2 bilirubins + positiv slope + under light curve
-        if (Bilirubin.numberOfBilirubins >2 && Bilirubin.bilirubinSlope() > 0 && GraphContainer.getInstance().distanceToGraph("lightLimitGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) < 0) {
+        //Quit if number of bilirubins are not sufficient
+        if (Bilirubin.numberOfBilirubins < 2) {
+            this.instance.myChart.data.datasets[2].data = [];
+            this.instance.myChart.update();
+            return;
+        }
 
-            console.log("Requirment: >= 2 bilirubins + positiv slope + under light curve")
+        //Temp variables needed for the process:
+        let lightPlatauDay = Child.getInstance().childGraphInfo("lightBreakDay")
+        let lightPlatauValue = Child.getInstance().childGraphInfo("lightLimit").find(item => item.x === lightPlatauDay).y;
+        let lightStartValue = Child.getInstance().childGraphInfo("lightLimit")[0].y;
+        let lightSlope = Child.getInstance().childGraphInfo("lightSlope")
+        let lastBilirubinDay = Bilirubin.lastBilirubin().relativeDays
+        let lastBilirubinValue = Bilirubin.lastBilirubin().bilirubinValue
+        let bilirubinSlope = Bilirubin.bilirubinSlope()
+        let lightCross;
 
-            let graphYValue = Child.getInstance().childGraphInfo("lightLimit").find(item => item.x === Child.getInstance().childGraphInfo("lightBreakDay")).y;
-            console.log(graphYValue)
+        //Requirment: positiv slope + under light curve
+        if (Bilirubin.bilirubinSlope() > 0 && GraphContainer.getInstance().distanceToGraph("lightLimitGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) > 0) {
 
-            //Find the light crossing point
-            function lightCrossingPoint() {
+            // Bilirubin taken before light platau, and bilirubin slope crossing light slope before platau
+            if ((lastBilirubinDay < lightPlatauDay) && (bilirubinSlope > lightSlope) && (lastBilirubinValue + ((lightPlatauDay - lastBilirubinDay) * bilirubinSlope) > lightPlatauValue)) {
 
-                // Bilirubin taken before light platau, and bilirubin slope crossing light slope before platau
-                if ((lastBilirubinDay < lightPlatauDay) && (bilirubinSlope > lightSlope) && (lastBilirubinValue + ((lightPlatauDay - lastBilirubinDay) * bilirubinSlope) > lightPlatauValue)) {
-                    console.log("Bilirubin taken before light platau, and bilirubin slope crossing light slope before platau")
-                    //Start difference between bilirubin and light limit
-                    let diffY = (lightStartValue + (lightSlope * (lastBilirubinDay - 1)) - lastBilirubinValue)
-                    console.log(diffY)
+                //Start difference between bilirubin and light limit
+                let diffY = (lightStartValue + (lightSlope * (lastBilirubinDay - 1)) - lastBilirubinValue)
 
-                    //Calculate time to crossing
-                    let timeToCrossing = diffY / (bilirubinSlope - lightSlope)
+                //Calculate time to crossing
+                let timeToCrossing = diffY / (bilirubinSlope - lightSlope)
 
-                    //Get coordinates at crossing;
-                    let xValue = lastBilirubinDay + timeToCrossing
-                    let yValue = lightStartValue + ((xValue - 1) * lightSlope)
+                //Get coordinates at crossing;
+                let xValue = lastBilirubinDay + timeToCrossing
+                let yValue = lightStartValue + ((xValue - 1) * lightSlope)
 
-                    //End function
-                    return ({x: xValue, y: yValue})
+                //End function
+                lightCross = {x: xValue, y: yValue}
 
-                    //Handles crossing at platau for positive slopes
-                } else if ((bilirubinSlope > 0) && (lightStartValue + (lightSlope * (lastBilirubinDay - 1)) - lastBilirubinValue > 0) ) {
-                    console.log("Bilirubin slope crossing light slope before platau")
+                //Handles crossing at platau for positive slopes
+            } else if ((bilirubinSlope > 0) && (lightStartValue + (lightSlope * (lastBilirubinDay - 1)) - lastBilirubinValue > 0) ) {
 
-                    //Start difference between bilirubin and light limit
-                    let diffY = lightPlatauValue - lastBilirubinValue
-                    console.log(diffY)
+                //Start difference between bilirubin and light limit
+                let diffY = lightPlatauValue - lastBilirubinValue
 
-                    //Calculate time to crossing
-                    let timeToCrossing = diffY / bilirubinSlope
-                    console.log(timeToCrossing)
+                //Calculate time to crossing
+                let timeToCrossing = diffY / bilirubinSlope
 
-                    //Get coordinates at crossing;
-                    let xValue = lastBilirubinDay + timeToCrossing
-                    console.log(xValue)
-                    let yValue = lightPlatauValue
-                    console.log(yValue)
-                    //IF crossing is within 14 days from last bilirbubin:
-                    if (xValue < (lastBilirubinDay+14) && lastBilirubinValue < lightPlatauValue) {
-                        console.log("Crossing is within 14 days from last bilirbubin")
-                        return ({x: xValue, y: yValue})
-                    }
-
-                    //Else no need for extrapolation
-                    else {
-                        console.log("No extrapolation is justified")
-                        return false
-                    }
-                }
-                //Else no need for extrapolation
-                else {
-                    console.log("No extrapolation is justified")
-                    return false
+                //Get coordinates at crossing;
+                let xValue = lastBilirubinDay + timeToCrossing
+                let yValue = lightPlatauValue
+                //If crossing is within 14 days from last bilirbubin:
+                if (xValue < (lastBilirubinDay+14) && lastBilirubinValue < lightPlatauValue) {
+                    lightCross = {x: xValue, y: yValue}
+                } else {
+                    lightCross = false
                 }
             }
-
-            //Get coordinates for when extrapolation will cross current light limit
-            const lightCross = lightCrossingPoint()
+            //Else no need for extrapolation
+            else {
+                lightCross = false
+            }
 
             //If there are valid lightcrossing coordinate and its in tfuture
             if (lightCross && lightCross.x > lastBilirubinDay) {
-                const data = [
+                let data = [
                     {x: lastBilirubinDay, y: lastBilirubinValue},
-                    {x: lightCross.x, y: lightCross.y},
-                ]
-                if (lightCross.x > graphAxisMax("x")) {
-                    updateGraphAxis("x", Math.round(lightCross.x / 2) * 2)
-                }
-                updateGraphDataset("extrapolationGraph", data)
+                    lightCross,
+                ];
+                this.instance.myChart.data.datasets[2].data = data;
+            } else {
+                this.instance.myChart.data.datasets[2].data = [];
             }
         } else {
-            this.instance.myChart.data.datasets[2].data = []
+            this.instance.myChart.data.datasets[2].data = [];
         }
-
         this.instance.myChart.update();
     }
+
+    static updateAxises() {
+        this.updateXvalue()
+        this.updateGraphYLimit()
+    }
+
+    static updateXvalue() {
+        console.log("Update X value")
+        const datasets = this.instance.myChart.data.datasets;
+        const bilirubinLastX = datasets[1].data.length > 0 ? datasets[1].data[datasets[1].data.length - 1].x : 0;
+        const extrapolationLastX = datasets[2].data.length > 0 ? datasets[2].data[datasets[2].data.length - 1].x : 0;
+        const maxX = Math.max(bilirubinLastX, extrapolationLastX);
+        const minX = datasets[1].data.length > 0 ? Math.min(...datasets[1].data.map(d => d.x)) : 0;
+        const suggestedMaxX = maxX > 10 ? Math.ceil(maxX) + 2 : 10;
+        console.log(maxX, suggestedMaxX);
+
+        // If last X value exceeds 10, extend lightLimit and transfusion graphs
+        if (maxX > 10) {
+            // Update the last X value of lightLimitGraph
+            const lightLimitData = datasets[0].data;
+            if (lightLimitData.length > 0) {
+                const lastLightLimitCoordinate = lightLimitData[lightLimitData.length - 1];
+                lightLimitData[lightLimitData.length - 1] = {...lastLightLimitCoordinate, x: suggestedMaxX};
+                this.instance.myChart.data.datasets[0].data = lightLimitData;
+            }
+
+            // Update the last X value of transfusionGraph
+            const transfusionData = datasets[3].data;
+            if (transfusionData.length > 0) {
+                const lastTransfusionCoordinate = transfusionData[transfusionData.length - 1];
+                transfusionData[transfusionData.length - 1] = {...lastTransfusionCoordinate, x: suggestedMaxX};
+                this.instance.myChart.data.datasets[3].data = transfusionData;
+            }
+        }
+
+        // If all values are removed or maxX compresses below 10, reset to default range
+        if (maxX <= 10) {
+            // Remove extended X values for lightLimitGraph
+            const lightLimitData = datasets[0].data;
+            if (lightLimitData.length > 0) {
+                lightLimitData[lightLimitData.length - 1] = {...lightLimitData[lightLimitData.length - 1], x: 10};
+                this.instance.myChart.data.datasets[0].data = lightLimitData;
+            }
+
+            // Remove extended X values for transfusionGraph
+            const transfusionData = datasets[3].data;
+            if (transfusionData.length > 0) {
+                transfusionData[transfusionData.length - 1] = {...transfusionData[transfusionData.length - 1], x: 10};
+                this.instance.myChart.data.datasets[3].data = transfusionData;
+            }
+        }
+
+        // Update graph's suggested max X range
+        this.instance.myChart.options.scales.x.max = suggestedMaxX;
+        this.instance.myChart.update();
+    }
+
+    static updateGraphYLimit() {
+
+        let maxYValue = 0;
+
+// Determine the largest y-value from bilirubinGraph
+        const bilirubinData = this.instance.myChart.data.datasets[1].data;
+        if (bilirubinData.length > 0) {
+            const bilirubinMaxY = Math.max(...bilirubinData.map(d => d.y)) + 25;
+            maxYValue = Math.max(maxYValue, bilirubinMaxY);
+        }
+
+        // Determine the largest y-value from lightLimitGraph
+        const lightLimitData = this.instance.myChart.data.datasets[0].data;
+        if (lightLimitData.length > 0) {
+            const lightLimitMaxY = Math.max(...lightLimitData.map(d => d.y)) + 50;
+            maxYValue = Math.max(maxYValue, lightLimitMaxY);
+        }
+
+        // Determine the largest y-value from transfusionGraph if it's not hidden
+        const transfusionGraphHidden = this.instance.myChart.data.datasets[3].hidden;
+        if (!transfusionGraphHidden) {
+            const transfusionData = this.instance.myChart.data.datasets[3].data;
+            if (transfusionData.length > 0) {
+                const transfusionMaxY = Math.max(...transfusionData.map(d => d.y)) + 50;
+                maxYValue = Math.max(maxYValue, transfusionMaxY);
+            }
+        }
+
+        // Round up maxYValue to the nearest increment of 50
+        maxYValue = Math.ceil(maxYValue / 50) * 50;
+
+        // Set the chart's Y-axis maximum limit
+        this.instance.myChart.options.scales.y.max = maxYValue;
+        this.instance.myChart.update();
+    }
+
     static updateTransfusionGraph() {
 
+        this.instance.myChart.data.datasets[3].data = Child.getInstance().childGraphInfo("transfusionLimit")
         this.instance.myChart.update();
     }
 
@@ -171,60 +254,58 @@ class GraphContainer {
 
     //FUNCTIONS
     static toggleTransfusionGraph(showGraph) {
-        if (this.myChart) {
-            if (showGraph) {
-                this.myChart.data.datasets[3].hidden = false;
-            } else {
-                this.myChart.data.datasets[3].hidden = !this.myChart.data.datasets[3].hidden;
-            }
-            this.myChart.update();
+        if (showGraph) {
+            this.instance.myChart.data.datasets[3].hidden = false;
+            console.log("Show transfusion graph")
+        } else {
+            this.instance.myChart.data.datasets[3].hidden = true;
+            console.log("Hide transfusion graph")
         }
     }
 
     distanceToGraph(graphType, xValue, refY) {
         let coordinates = this[graphType]
 
-        //CORRECT UNTIL HERE
-        //todo fix rest
+        // Se if x-value is a perfect match to light graph
+        const foundObject = coordinates.find(item => item.x === xValue)
 
-        let yValue;
-        // If the x-value exactly matches a coordinate key, measure directly.
-        if (xValue in coordinates) {
-            yValue = coordinates[xValue];
-            return yValue - refY;
-        } else {
-            // Otherwise, split coordinates into two arrays.
-            let xCoordinates = [];
-            let yCoordinates = [];
-            for (const [key, value] of Object.entries(coordinates)) {
-                xCoordinates.push(Number(key));
-                yCoordinates.push(value);
-            }
+        //If so, return Y-coordinates between the two points
+        if (foundObject) {
+            return ((coordinates.find(item => item.x === xValue).y) - refY)
+        };
 
-            // Find the index for the point just before xValue.
-            let beforeIndex = -1;
-            for (let i = 0; i < xCoordinates.length; i++) {
-                if (xCoordinates[i] >= xValue) {
-                    beforeIndex = i - 1;
-                    break;
-                } else {
-                    beforeIndex = i;
-                }
-            }
 
-            // Find the index after xValue.
-            let afterIndex = xCoordinates.findIndex(x => x > xValue);
+        // Otherwise, split coordinates into two arrays.
+        let xCoordinates = [];
+        let yCoordinates = [];
 
-            let beforeX = xCoordinates[beforeIndex];
-            let afterX = xCoordinates[afterIndex];
-            let beforeY = yCoordinates[beforeIndex];
-            let afterY = yCoordinates[afterIndex];
-
-            // Calculate the slope between the two points.
-            let slope = (afterY - beforeY) / (afterX - beforeX);
-            // Calculate the y value at the xValue point.
-            yValue = beforeY + (slope * (xValue - beforeX));
+       //Loop through coordinates and split x/y
+        for (const coordinate of coordinates) {
+            xCoordinates.push(coordinate.x);
+            yCoordinates.push(coordinate.y);
         }
+
+        // Find the index for the point just before xValue.
+        let beforeIndex = -1;
+        for (let i = 0; i < xCoordinates.length; i++) {
+            if (xCoordinates[i] >= xValue) {
+                beforeIndex = i - 1;
+                break;
+            } else {
+                beforeIndex = i;
+            }
+        }
+
+        // Find the index after xValue.
+        let afterIndex = xCoordinates.findIndex(x => x > xValue);
+
+        // Calculate the slope between the two points.
+        let slope = (yCoordinates[afterIndex] - yCoordinates[beforeIndex]) / (xCoordinates[afterIndex] - xCoordinates[beforeIndex]);
+
+
+        // Calculate the y value at the xValue point.
+        let yValue = yCoordinates[beforeIndex] + (slope * (xValue - xCoordinates[beforeIndex]));
+
 
         // Return the difference between the graph's y-value and refY.
         return parseInt(yValue - refY);
