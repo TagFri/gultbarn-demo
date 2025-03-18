@@ -232,7 +232,7 @@ class Advice {
             GraphContainer.getInstance().distanceToGraph("lightLimitGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) <= 50
             ||
             // Bilirubin above 280 with slope decrease of less than 20 per day
-            (Bilirubin.lastBilirubin().bilirubinValue >= 280 && Bilirubin.bilirubinSlope() <= -20)
+            (Bilirubin.lastBilirubin().bilirubinValue > 280 && Bilirubin.bilirubinSlope() <= -20)
         ) {
             this.currentAdvice = this.createAdvice("bloodSample", child)
             return
@@ -240,7 +240,7 @@ class Advice {
 
         //NO FOLLOW UP
         //Negative slope + Under 280 + More than 2 labs
-        if (Bilirubin.bilirubinSlope() <= 0 && Bilirubin.lastBilirubin().bilirubinValue < 280 && Bilirubin.numberOfBilirubins >= 2) {
+        if (Bilirubin.bilirubinSlope() <= 0 && Bilirubin.lastBilirubin().bilirubinValue <= 280 && Bilirubin.numberOfBilirubins >= 2) {
             this.currentAdvice = this.createAdvice("noFollowUp", child)
             return
         }
