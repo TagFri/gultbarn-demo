@@ -1,4 +1,4 @@
-import { Child              } from "./child.js"
+import { Child              } from "./Child.js"
 import { Bilirubin          } from "./Bilirubin.js";
 import { GraphContainer     } from "./GraphContainer.js";
 import { daysToAbsoluteDate } from "./generalFunctions.js"
