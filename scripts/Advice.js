@@ -44,7 +44,7 @@ class Advice {
                 bloodsampleDescription += `<br><br>Kliniske symptomer som slapphet, irritabel, brekninger, hypoglykemi, acidose o.l. krever grundigere utredning. Se<a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.5-ikterus-oppfolging-etter-utskriving#:~:text=Vedvarende%20hyperbilirubinemi%3A" target="_blank">pediatriveilederen</a> for videre diagnostiske vurderinger.`
 
                 //Om siste er 50 fra lysgrense
-                if (GraphContainer.getInstance().distanceToGraph("lightLimitGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) > -50) {
+                if (GraphContainer.getInstance().distanceToGraph("lightLimitGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) <= 50) {
                     bloodsampleDescription += `<br><br><span class="semi-bold">OBS!</span> Siste bilirubinverdi er mindre enn 50 µM fra lysgrensen. Er barnet sykt (sepsis, acidose, asfyksi) bør oppstart av lysbehandling vurderes.`
                 }
 
@@ -220,6 +220,7 @@ class Advice {
         }
 
         //BLOOD SAMPLE -> 3 criterias
+        console.log(GraphContainer.getInstance().distanceToGraph("lightLimitGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue))
         if (
             //Positiv bilirubinslope + extrapolation < 14 day in the future
             (Bilirubin.bilirubinSlope() > 0 && Bilirubin.extrapolationPoint().x < Bilirubin.lastBilirubin().relativeDays + 14)
