@@ -128,7 +128,7 @@ function saveChild(validatedInputs) {
         Child.getInstance().completeChild()
 
         //UPDATE LIGHT-LIMIT GRAPH TRANSFUSION GRAPH AND TITLE
-        GraphContainer.updateGraphTitle()
+        document.getElementById("graph-label").innerHTML = "Lysgrense for barn " + Child.getInstance().childGraphInfo("title")
         GraphContainer.updateLightLimitGraph()
         GraphContainer.updateExtrapolationGraph()
         GraphContainer.updateTransfusionGraph()
@@ -140,6 +140,10 @@ function saveChild(validatedInputs) {
 
         //Update axis
         GraphContainer.updateAxises()
+
+        //Update advice
+        Advice.setCurrentAdvice(Child.getInstance())
+        Advice.displayAdvice(Child.getInstance())
     }
 }
 
@@ -197,12 +201,6 @@ function saveBilirubin(validatedInputs) {
     document.getElementById("bilirubinValue").value = "";
     document.getElementById("bilirubinDate").focus()
 }
-
-//** UPDATE GRAPHS
-
-//** UPDATE ADVICE
-
-//** UPDATE JOURNAL
 
 
 //* Dark mode

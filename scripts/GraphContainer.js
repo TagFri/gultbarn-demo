@@ -231,12 +231,6 @@ class GraphContainer {
         this.instance.myChart.update();
     }
 
-    //Update graphTitle
-    static updateGraphTitle() {
-        this.instance.myChart.options.plugins.title.text = Child.getInstance().childGraphInfo("title")
-        this.instance.myChart.update();
-    }
-
     // GET COORDINATES
     get lightLimitGraph() {
         return this.myChart.data.datasets[0].data;}
