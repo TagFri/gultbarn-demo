@@ -17,6 +17,7 @@ function daysToAbsoluteDate(referenceDate, relativeDays) {
 
 //Absolute Date as relative days (float) to Reference Date
 function daysRelativeToReferenceDate(referenceDate, absoluteDate) {
+    console.log(referenceDate)
     return (absoluteDate.getTime() - referenceDate.getTime()) / (1000 * 60 * 60 * 24);
 }
 
