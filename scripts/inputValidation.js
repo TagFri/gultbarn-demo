@@ -60,7 +60,6 @@ function validateInputs(inputData) {
             case "birthDate": {
                 //If month or date is not within librabry specifications
                 if(between(inputValue.month, 0, 11) && between(inputValue.date, 1, dateValidation[inputValue.month])) {
-                    console.log(`Validateing date: ${inputValue.date} between: 1 and ${dateValidation[inputValue.month]} }`)
                     dateComponents["month"] = inputValue.month
                     dateComponents["date"] = inputValue.date
                     errorMessages(htmlID, false)
@@ -142,7 +141,6 @@ function validateInputs(inputData) {
 
         //Set bilirubin date
         else if (inputData.bilirubinDate) {
-            console.log("BILIRUBIN DATE")
             let childDateTime = Child.getInstance().birthDateTime;
             let childDateTimePlussThreeMonths
             if (childDateTime.getMonth() <= 8) {
@@ -160,7 +158,6 @@ function validateInputs(inputData) {
 
             //SHow error msg if bilirubin is before birthdate
             if (bilirubinDateTime < childDateTime) {
-                console.log("bilirubin date is before child birthdate")
                 errorMessages("early-bilirubin", true)
                 return false
             }
@@ -168,7 +165,6 @@ function validateInputs(inputData) {
             //Show error msg if bilirubin is more then 3 months after child birth
             else if (childDateTimePlussThreeMonths < bilirubinDateTime) {
                 errorMessages("late-bilirubin", true)
-                console.log("bilirubin date is more then 3 months after child birthdate")
                 return false
             }
 
@@ -184,7 +180,6 @@ function validateInputs(inputData) {
         return false
     }
     //Debugging:
-    console.log("Finished validating");
 
 }
 
@@ -193,7 +188,6 @@ function errorMessages(htmlID, show, timeout) {
             document.getElementById(htmlID + "-error").classList.remove(show ? "hidden" : "error-message")
             document.getElementById(htmlID + "-error").classList.add(show ? "error-message" : "hidden")
         } else {
-            console.log("No error message for " + htmlID + " found")
         }
 
         if (timeout) {

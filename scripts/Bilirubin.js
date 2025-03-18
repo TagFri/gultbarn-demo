@@ -69,7 +69,6 @@ class Bilirubin {
 
     //Bilirubin overview for mail
     static printBilirubinOverview() {
-        console.log(Bilirubin.allBilirubins)
         let labOverview = "";
         for (const bilirubin of Bilirubin.allBilirubins) {
             labOverview += `Dag: ${bilirubin.relativeDays}: ${bilirubin.bilirubinValue} µmol/L\n`;
@@ -108,6 +107,8 @@ class Bilirubin {
                     if (Bilirubin.allBilirubins.length == 0) {
                         document.getElementById("advice-container").classList.add("opacity-container")
                         document.getElementById("journal-container").classList.add("opacity-container")
+                        GraphContainer.toggleTransfusionGraph(false)
+                        GraphContainer.getInstance().myChart.update();
                     }
 
                     //REDISPLAY ALL BILIRUBINS
@@ -166,10 +167,6 @@ class Bilirubin {
 
         //Setup loop for all bilirubin labs
         for (let i = 0; i < Bilirubin.numberOfBilirubins; i++) {
-            console.log("Loop: " + i)
-            console.log("Total bilirubin: " + Bilirubin.numberOfBilirubins)
-            console.log("Parent ID: " + targetButton.parentElement.parentElement.id)
-            console.log("Bilirubin rel days: " + Bilirubin.allBilirubins[i].relativeDays)
 
 
             //FIND ELEMENT IN BILIRUBIN ARRAY FROM PUSHED BUTTON ON WEBAPGE

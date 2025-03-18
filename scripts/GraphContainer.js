@@ -55,7 +55,6 @@ class GraphContainer {
         this.instance.myChart.update();
     }
     static updateExtrapolationGraph() {
-        console.log("Update extrapolation graph")
 
         //Quit if number of bilirubins are not sufficient
         if (Bilirubin.numberOfBilirubins < 2) {
@@ -106,7 +105,7 @@ class GraphContainer {
                 let xValue = lastBilirubinDay + timeToCrossing
                 let yValue = lightPlatauValue
                 //If crossing is within 14 days from last bilirbubin:
-                if (xValue < (lastBilirubinDay+14) && lastBilirubinValue < lightPlatauValue) {
+                if (xValue < ( lastBilirubinDay + 14 ) && lastBilirubinValue < lightPlatauValue) {
                     lightCross = {x: xValue, y: yValue}
                 } else {
                     lightCross = false
@@ -139,14 +138,12 @@ class GraphContainer {
     }
 
     static updateXvalue() {
-        console.log("Update X value")
         const datasets = this.instance.myChart.data.datasets;
         const bilirubinLastX = datasets[1].data.length > 0 ? datasets[1].data[datasets[1].data.length - 1].x : 0;
         const extrapolationLastX = datasets[2].data.length > 0 ? datasets[2].data[datasets[2].data.length - 1].x : 0;
         const maxX = Math.max(bilirubinLastX, extrapolationLastX);
         const minX = datasets[1].data.length > 0 ? Math.min(...datasets[1].data.map(d => d.x)) : 0;
         const suggestedMaxX = maxX > 10 ? Math.ceil(maxX) + 2 : 10;
-        console.log(maxX, suggestedMaxX);
 
         // If last X value exceeds 10, extend lightLimit and transfusion graphs
         if (maxX > 10) {
@@ -245,10 +242,8 @@ class GraphContainer {
     static toggleTransfusionGraph(showGraph) {
         if (showGraph) {
             this.instance.myChart.data.datasets[3].hidden = false;
-            console.log("Show transfusion graph")
         } else {
             this.instance.myChart.data.datasets[3].hidden = true;
-            console.log("Hide transfusion graph")
         }
     }
 

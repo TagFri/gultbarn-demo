@@ -181,7 +181,7 @@ function saveBilirubin(validatedInputs) {
         GraphContainer.updateExtrapolationGraph()
 
         //Update transfusion graph
-        if (Child.getInstance().childGraphInfo("lightLimit").reduce((max, curr) => curr.y > max ? curr.y : max, 0) <= Bilirubin.maxY ) {
+        if (GraphContainer.getInstance().distanceToGraph("lightLimitGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) <= 0) {
             GraphContainer.toggleTransfusionGraph(true)
             GraphContainer.getInstance().myChart.update();
         }
