@@ -31,6 +31,11 @@ class Bilirubin {
             Bilirubin.allBilirubins = remaining;
             errorMessages("bilirubinBeforeRemoved", true, true)
         }
+        this.displayBilirubin()
+
+        GraphContainer.updateBilirubinGraph()
+
+        GraphContainer.updateExtrapolationGraph()
 
         return true;
     }
