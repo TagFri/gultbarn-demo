@@ -60,31 +60,39 @@ class Advice {
 
         function transfusionDescription() {
 
-            //Empty startstring
-            let transfusionDescription = ""
-
             //Differentiate paths in to transfusion advice
 
+            let transfusionEndDescription = `, erfaren kliniker (bakvakt pediater) bør kontaktes for å vurdering av  utskiftningstransfusjon. Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.3-utskiftingstransfusjon#-helsebiblioteket-innhold-retningslinjer-pediatri-nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening-8-gulsott-og-hemolytisk-sykdom-83-utskiftingstransfusjon:~:text=og%20hemolytisk%20sykdom-,8.%203%20Utskiftingstransfusjon,-Sist%20faglig%20oppdatert" target="_blank">pediatriveilederen</a> for detaljert informasjon.`
+
             //Above transfusion limit
-            if (GraphContainer.getInstance().distanceToGraph("transfusionGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) >= 0) {
-                transfusionDescription += `Barnet har svært høye bilirubinverdier`
+            if (GraphContainer.getInstance().distanceToGraph("transfusionGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) <= 0) {
+                console.log("Above transfusion limit")
+                return `Barnet har svært høye bilirubinverdier ${transfusionEndDescription}`
             }
             //Gestastional weeks text
             else if (Bilirubin.lastBilirubin() >= Child.getInstance().gestationWeek * 10) {
-                transfusionDescription += `Bilirubin er mer enn 10 x gestasjonsuke`
+                return `Bilirubin er mer enn 10 x gestasjonsuke ${transfusionEndDescription}`
             }
             //Bilirubin slope texxt
-            else if (Bilirubin.bilirubinSlope() > 240) {
-                transfusionDescription += `Bilirubin stiger mer enn 10 µmol/time`
+            else if (Bilirubin.bilirubinSlope() >= 240) {
+                return `Bilirubin stiger mer enn 10 µmol/time ${transfusionEndDescription}`
             }
 
             //Fallback if none above are choicen
             if (transfusionDescription = "") {
-                transfusionDescription += `Barnet har svært høye bilirubinverdier`
+                return `Barnet har svært høye bilirubinverdier`
             }
+        }
 
-            //Standard text for all paths in
-            transfusionDescription += `, erfaren kliniker (bakvakt pediater) bør kontaktes for å vurdering av  utskiftningstransfusjon. Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.3-utskiftingstransfusjon#-helsebiblioteket-innhold-retningslinjer-pediatri-nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening-8-gulsott-og-hemolytisk-sykdom-83-utskiftingstransfusjon:~:text=og%20hemolytisk%20sykdom-,8.%203%20Utskiftingstransfusjon,-Sist%20faglig%20oppdatert" target="_blank">pediatriveilederen</a> for detaljert informasjon.`
+        function lightTherapyDescription() {
+            let lightTherapyDescription = ""
+
+            lightTherapyDescription += `Barnet har bilirubinnivåer som overskrider lysgrensen. Lysbehandling er anbefalt. Behandlingen bør startes snarest mulig.<br><span class=semi-cold">Varighet</span>: Det anbefales 12–24 timers lysbehandling. Varighet kan individualiseres ut i fra hvor høye TSB-verdier var ved start lysbehandling, og i henhold til lokale rutiner.<br><br>Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.1-tidlig-ikterus-forste-710-dager#:~:text=Behandling%20og%20oppf%C3%B8lging" target="_blank">pediatriveilederen</a> for videre info.`
+            if (GraphContainer.getInstance().distanceToGraph("transfusionGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) <= 50) {
+                lightTherapyDescription += `<br><br>Grensen for utskiftning senkes med forslagsvis 50 mikromol/l dersom barnet er sykt (sepsis, asfyksi (Apgar < 3 ved 5 min), acidose (ph <7,15 i 1 time; <7,25 i 4 timer), albumin <25 g/l)`
+            }
+            
+            return lightTherapyDescription
         }
 
         switch(adviceTitle) {
@@ -110,7 +118,7 @@ class Advice {
                 return new Advice(
                     "lightTherapy",
                     "Lysbehandling anbefales",
-                    `Barnet har bilirubinnivåer som overskrider lysgrensen. Lysbehandling er anbefalt. Behandlingen bør startes snarest mulig.<br><span class=semi-cold">Varighet</span>: Det anbefales 12–24 timers lysbehandling. Varighet kan individualiseres ut i fra hvor høye TSB-verdier var ved start lysbehandling, og i henhold til lokale rutiner.<br><br>Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.1-tidlig-ikterus-forste-710-dager#:~:text=Behandling%20og%20oppf%C3%B8lging" target="_blank">pediatriveilederen</a> for videre info.`,
+                     lightTherapyDescription(),
                     url + "phototherapy.svg"
                 );
                 break;
