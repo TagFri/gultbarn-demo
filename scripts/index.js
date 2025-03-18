@@ -11,6 +11,8 @@ import { copyContent                    } from "./Journal.js";
 //** INIT PAGE
 //**
 
+//* Dark mode
+
 inputMasking()
 
 // Get the single instance (creates it if it doesn’t exist)
@@ -201,3 +203,12 @@ function saveBilirubin(validatedInputs) {
 //** UPDATE ADVICE
 
 //** UPDATE JOURNAL
+
+
+//* Dark mode
+//let darkMode = false;
+//var now = new Date().getHours();
+//if (now >= 20 || now <= 6) {
+//    darkMode = true;//
+//    document.body.classList.toggle('dark_mode');
+//}

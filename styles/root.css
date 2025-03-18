@@ -13,7 +13,47 @@
     --color-red: #FB4141;
     --color-light-red: #FFE8E9;
     --color-green: #C4E047;
+    --color-input-background: var(--color-white);
+    --color-input-borderline: var(--color-grey);
+    --color-input-field: var(--color-white);
+    --color-input-container-borderline: var(--color-grey);
+
+    --button-color: var(--color-black);
+    --button-text-color: var(--color-white);
+    --btn-hover-font-color: var(--color-white);
+
+    --advice-container-background: var(--color-primary-extra-light);
+    --copy-journal-background: var(--color-grey-light);
+    --color-hr: var(--color-grey);
+    --color-p: var(--color-black);
     --arrow-icon: url(https://upload.wikimedia.org/wikipedia/commons/9/9d/Caret_down_font_awesome_whitevariation.svg);
+}
+
+.dark_mode {
+    --color-primary-extra-strong: #ffcb84;
+    --color-primary-strong: #261f16;
+    --color-primary-medium: #FBC169;
+    --color-primary-light: #FFE2B1;
+    --color-primary-extra-light: #3b342b;
+    --color-black: #ffffff;
+    --color-black-light: #97938D;
+    --color-white: #000000;
+    --color-grey: #DBDDE2;
+    --color-grey-light: #F5F9FA;
+    --color-red: #FB4141;
+    --color-light-red: #201614;
+    --color-green: #C4E047;
+    --color-input-background:#282828;
+    --color-input-borderline: var(--color-white);
+    --color-input-field: var(--color-white);
+    --color-input-container-borderline: var(--color-white);
+    --button-color: #ffbf6b;
+    --button-text-color: var(--color-white);
+    --advice-container-background: #3A342C;
+    --copy-journal-background: var(--color-input-background);
+    --color-p: #D8D6D5;
+    --color-hr: var(--color-input-background);
+    --btn-hover-font-color: var(--color-white);
 }
 
 body {
@@ -53,6 +93,7 @@ body {
     p {
         line-height: 1.3;
         letter-spacing: 0.01rem;
+        color: var(--color-p);
     }
 }
 *, h1, h2, h3, h4, h5, h6, p, input, a, li {

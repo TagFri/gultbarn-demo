@@ -50,9 +50,12 @@ header {
 
 /* INDIVIDUAL CONTAINER STYLES */
 #child-container, #bilirubin-container {
-    border: 0.07rem solid var(--color-grey);
+    border: 0.07rem solid var(--color-input-container-borderline);
+    background-color: var(--color-input-background);
     input {
         text-align: center;
+        background-color: var(--color-input-field);
+        color: var(--color-black);
     }
 }
 
@@ -105,7 +108,7 @@ label, fieldset, legend{
     text-align: left;
     align-items: flex-start;
     justify-content: space-between;
-    background-color: var(--color-primary-extra-light);
+    background-color: var(--advice-container-background);
     /* BAKGRUNNS BILDE */
     background-size: 25%;
     background-image: url("assets/icons/advice/outcome_box_inactive.svg");
@@ -129,7 +132,7 @@ label, fieldset, legend{
 
 #journal-container {
     justify-content: flex-start;
-    background-color: var(--color-grey-light);
+    background-color: var(--copy-journal-background);
     /* BAKGRUNNS BILDE */
     background-image: url("./assets/icons/journal_grey.svg");
     background-position: center;
@@ -154,7 +157,7 @@ label, fieldset, legend{
 
 
 hr {
-    border: 0.005rem solid var(--color-grey);
+    border: 0.005rem solid var(--color-hr);
     margin: 1rem 0;
 }
 
@@ -210,7 +213,7 @@ li {
 }
 
 footer {
-    color: #000000;
+    color: var(--color-black);
     font-size: 0.9rem;
     margin-top: 15rem;
     @media (max-width: 600px) {margin-top: 5rem;}

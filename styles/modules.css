@@ -1,3 +1,7 @@
+body {
+    background-color: var(--color-white);
+}
+
 .round-container {
     border-radius: 1.5rem;
     padding: 1.5rem;
@@ -8,8 +12,8 @@
  */
 .btn {
     /* Style */
-    background: var(--color-black);
-    color: white;
+    background: var(--button-color);
+    color: var(--button-text-color);
     border-radius: 1rem;
     border: none;
     text-decoration: none;
@@ -30,7 +34,7 @@
 /*-> ON FOCUS / HOVER */
 .btn:focus, .btn:hover {
     background: var(--color-primary-extra-strong);
-    color: var(--color-black);
+    color: var(--btn-hover-font-color);
     outline: none;
 }
 
@@ -79,7 +83,7 @@ a {
 input, select {
     padding: 0.5rem 0.75rem;
     border-radius: 1rem;
-    border: 0.07rem solid var(--color-grey);
+    border: 0.07rem solid var(--color-input-borderline);
     cursor: pointer;
 }
 
@@ -143,7 +147,6 @@ input:focus, select:focus {
 /* DATEPICKER */
 input[type="date"]{
     background-color: var(--color-white);
-    font-family: var(--font-family);
     color: var(--color-black);
 }
 ::-webkit-calendar-picker-indicator{
