@@ -126,6 +126,7 @@ function saveChild(validatedInputs) {
         //UPDATE LIGHT-LIMIT GRAPH TRANSFUSION GRAPH AND TITLE
         GraphContainer.updateGraphTitle()
         GraphContainer.updateLightLimitGraph()
+        GraphContainer.updateExtrapolationGraph()
         GraphContainer.updateTransfusionGraph()
 
         //UPDATE BILIRUBIN GRAPH
@@ -173,7 +174,7 @@ function saveBilirubin(validatedInputs) {
         GraphContainer.updateExtrapolationGraph()
 
         //Update transfusion graph
-        if (Child.getInstance().childGraphInfo("lightLimit").reduce((max, curr) => curr.y > max ? curr.y : max, 0) < Bilirubin.maxY ) {
+        if (Child.getInstance().childGraphInfo("lightLimit").reduce((max, curr) => curr.y > max ? curr.y : max, 0) <= Bilirubin.maxY ) {
             GraphContainer.toggleTransfusionGraph(true)
             GraphContainer.getInstance().myChart.update();
         }
