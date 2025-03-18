@@ -320,7 +320,7 @@ class Advice {
     }
 
     //Constructir for each instance
-    constructor(advice, title, description, icon, color="var(--color-yellow-lighter)") {
+    constructor(advice, title, description, icon, color="var(--advice-container-background)") {
         this.advice = advice
         this.title = title
         this.description = description

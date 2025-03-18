@@ -15,19 +15,14 @@ class GraphContainer {
         }
 
         // COLOURS
+        this.black  = 'rgb(11, 30, 51)';
         this.yellowStrong = 'rgb(245, 162, 1)';
         this.yellowMedium = 'rgb(251, 193, 105)';
-        this.yellowLight = 'rgb(255, 226, 177)';
-        this.yellowLighter = 'rgb(255, 250, 242)';
-        this.black = 'rgb(11, 30, 51)';
-        this.grey = 'rgb(195, 199, 203)';
         this.red = 'rgb(251, 65, 65)';
-        this.lightRed = 'rgb(255, 232, 233)';
+
 
         // Graph container and axis settings
         this.myChart = null;
-        this.graphAxisMaxX = 10;
-        this.graphAxisMaxY = 400;
 
         // Cache the instance
         GraphContainer.instance = this;
