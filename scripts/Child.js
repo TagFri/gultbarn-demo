@@ -123,19 +123,18 @@ class Child {
     }
 
     updateChild(newChildParameters) {
-        const oldChild = Child.getInstance();
 
         //Update relative days on bilirubinvalues if time changes
-        if (oldChild.birthDateTime != new Date(newChildParameters.dateTime)) {
+        if (Child.getInstance().birthDateTime != new Date(newChildParameters.dateTime)) {
 
             //Calls on update in Bilirubin class
-            Bilirubin.updateAllBilirubinDates(new Date(oldChild.birthDateTime), new Date(newChildParameters.dateTime));
+            Bilirubin.updateAllBilirubinDates(new Date(Child.getInstance().birthDateTime), new Date(newChildParameters.dateTime));
         }
 
         //Update child values with new values
-        oldChild.birthWeight = parseInt(newChildParameters.birthWeight);
-        oldChild.gestationWeek = parseInt(newChildParameters.gestationWeek);
-        oldChild.birthDateTime = new Date(newChildParameters.dateTime);
+        Child.getInstance().birthWeight = parseInt(newChildParameters.birthWeight);
+        Child.getInstance().gestationWeek = parseInt(newChildParameters.gestationWeek);
+        Child.getInstance().birthDateTime = new Date(newChildParameters.dateTime);
 
         return true;
     }

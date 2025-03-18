@@ -2,6 +2,7 @@ import { daysToAbsoluteDate, leadingZero} from './generalFunctions.js';
 import { Child } from "./Child.js";
 import { errorMessages } from "./inputValidation.js";
 import {GraphContainer} from "./GraphContainer.js";
+import {Advice} from "./Advice.js";
 
 export {Bilirubin, SerumBilirubin, TranscutanousBilirubin}
 
@@ -54,6 +55,26 @@ class Bilirubin {
         let diffY = reverseBillibinArray[0].bilirubinValue - reverseBillibinArray[1].bilirubinValue
         let diffX = reverseBillibinArray[0].relativeDays - reverseBillibinArray[1].relativeDays
         return diffY / diffX
+    }
+
+    //Get extrapolation point
+    static extrapolationPoint() {
+        if (Bilirubin.allBilirubins.length < 2) {
+            return false
+        }
+        const extrapolationGraph = GraphContainer.getInstance().extrapolationGraph;
+        const lastCoordinate = extrapolationGraph[extrapolationGraph.length - 1];
+        return lastCoordinate;
+    }
+
+    //Bilirubin overview for mail
+    static printBilirubinOverview() {
+        console.log(Bilirubin.allBilirubins)
+        let labOverview = "";
+        for (const bilirubin of Bilirubin.allBilirubins) {
+            labOverview += `Dag: ${bilirubin.relativeDays}: ${bilirubin.bilirubinValue} µmol/L\n`;
+        }
+        return labOverview
     }
 
     //Display bilirubin values on webpage
@@ -171,6 +192,10 @@ class Bilirubin {
 
                 //Update X-values
                 GraphContainer.updateAxises()
+
+                //Update advices
+                Advice.setCurrentAdvice(Child.getInstance())
+                Advice.displayAdvice(Child.getInstance())
 
                 return true;
             }

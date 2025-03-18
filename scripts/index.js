@@ -1,9 +1,11 @@
-import {inputMasking} from "./inputMasking.js";
-import {errorMessages, validateInputs} from './inputValidation.js';
-import {daysRelativeToReferenceDate} from "./generalFunctions.js";
-import {Child} from "./Child.js";
-import {Bilirubin, SerumBilirubin} from "./Bilirubin.js";
-import { GraphContainer } from "./GraphContainer.js";
+import { inputMasking                   } from "./inputMasking.js";
+import { errorMessages, validateInputs  } from './inputValidation.js';
+import { daysRelativeToReferenceDate    } from "./generalFunctions.js";
+import { Child                          } from "./Child.js";
+import { Bilirubin, SerumBilirubin      } from "./Bilirubin.js";
+import { GraphContainer                 } from "./GraphContainer.js";
+import { Advice                         } from "./Advice.js";
+import { copyContent                    } from "./Journal.js";
 
 //**
 //** INIT PAGE
@@ -141,7 +143,6 @@ function saveChild(validatedInputs) {
 
 //** SAVE AND UPDATE BILIRUBINS
 function saveBilirubin(validatedInputs) {
-
     //Convert absolute date to relative days
     let relativeDays = daysRelativeToReferenceDate(Child.getInstance().birthDateTime, validatedInputs.dateTime);
 
@@ -182,7 +183,9 @@ function saveBilirubin(validatedInputs) {
         //Extend graph if needed
         GraphContainer.updateAxises()
 
-        //TODO Update advice
+        //Update advice
+        Advice.setCurrentAdvice(Child.getInstance())
+        Advice.displayAdvice(Child.getInstance())
 
     }
 
