@@ -41,7 +41,7 @@ class Advice {
                 }).replace(',', ' kl.')
                 }</span>`
 
-                bloodsampleDescription += `<br><br>Kliniske symptomer som slapphet, irritabel, brekninger, hypoglykemi, acidose o.l. krever grundigere utredning. Se<a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.5-ikterus-oppfolging-etter-utskriving#:~:text=Vedvarende%20hyperbilirubinemi%3A" target="_blank">pediatriveilederen</a> for videre diagnostiske vurderinger.`
+                bloodsampleDescription += `<br><br>Kliniske symptomer som slapphet, irritabel, brekninger, hypoglykemi, acidose o.l. krever grundigere utredning. Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.5-ikterus-oppfolging-etter-utskriving#:~:text=Vedvarende%20hyperbilirubinemi%3A" target="_blank">pediatriveilederen</a> for videre diagnostiske vurderinger.`
 
                 //Om siste er 50 fra lysgrense
                 if (GraphContainer.getInstance().distanceToGraph("lightLimitGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) <= 50) {
@@ -59,6 +59,7 @@ class Advice {
         }
 
         function transfusionDescription() {
+            console.log("TRANSFUSION ADVICE DESCRIPTOIN CREATION")
 
             //Differentiate paths in to transfusion advice
 
@@ -66,11 +67,11 @@ class Advice {
 
             //Above transfusion limit
             if (GraphContainer.getInstance().distanceToGraph("transfusionGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) <= 0) {
-                console.log("Above transfusion limit")
                 return `Barnet har svært høye bilirubinverdier ${transfusionEndDescription}`
             }
             //Gestastional weeks text
-            else if (Bilirubin.lastBilirubin() >= Child.getInstance().gestationWeek * 10) {
+            else if (Bilirubin.lastBilirubin().bilirubinValue >= Child.getInstance().gestationWeek * 10) {
+                console.log("GASTATIONAL WEEKS")
                 return `Bilirubin er mer enn 10 x gestasjonsuke ${transfusionEndDescription}`
             }
             //Bilirubin slope texxt
@@ -80,7 +81,7 @@ class Advice {
 
             //Fallback if none above are choicen
             if (transfusionDescription = "") {
-                return `Barnet har svært høye bilirubinverdier`
+                return `Barnet har svært høye bilirubinverdier ${transfusionEndDescription}`
             }
         }
 
@@ -185,6 +186,7 @@ class Advice {
 
         //EARLY ICTERUS  < 1 Dag:
         if (Bilirubin.lastBilirubin().relativeDays < 1) {
+            console.log("Early icterus")
             this.currentAdvice = this.createAdvice("earlyIcterus")
             return
         }
@@ -221,9 +223,10 @@ class Advice {
 
         //BLOOD SAMPLE -> 3 criterias
         console.log(GraphContainer.getInstance().distanceToGraph("lightLimitGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue))
+        console.log(Bilirubin.extrapolationPoint())
         if (
             //Positiv bilirubinslope + extrapolation < 14 day in the future
-            (Bilirubin.bilirubinSlope() > 0 && Bilirubin.extrapolationPoint().x < Bilirubin.lastBilirubin().relativeDays + 14)
+            (Bilirubin.extrapolationPoint() != undefined && (Bilirubin.bilirubinSlope() > 0 && Bilirubin.extrapolationPoint().x < Bilirubin.lastBilirubin().relativeDays + 14))
             ||
             // Last lab under 50 from lightlimit
             GraphContainer.getInstance().distanceToGraph("lightLimitGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) <= 50
@@ -335,6 +338,5 @@ class Advice {
         this.description = description
         this.icon = icon
         this.color = color
-        console.log(this)
     }
 }

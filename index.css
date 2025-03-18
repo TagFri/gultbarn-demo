@@ -99,6 +99,11 @@ label, fieldset, legend{
     a {
         padding-left: 0.5rem;
     }
+
+    a .no-pad {
+        padding-left: 0;
+    }
+
     .link:hover {
         color: var(--color-primary-extra-strong);
     }
@@ -114,6 +119,10 @@ label, fieldset, legend{
     background-image: url("assets/icons/advice/outcome_box_inactive.svg");
     background-position: bottom right;
     padding-right: 20%;
+}
+
+#advice-paragraph a {
+    padding-left: 0;
 }
 
 
