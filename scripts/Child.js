@@ -65,7 +65,7 @@ class Child {
                 title: 'over 2500g + GA <37',
                 lightSlope: 150 / 2,
                 lightBreakDay: 3,
-                transfusionLimit: [{x: 0, y: 200}, {x: 3, y: 400}, {x: 10, y: 400}]
+                transfusionLimit: [{x: 1, y: 250}, {x: 3, y: 350}, {x: 10, y: 350}]
             }
         } else if (this.#birthWeight < 2500 && this.#birthWeight >= 1500) {
             lightinfo = {
@@ -73,7 +73,7 @@ class Child {
                 lightLimit: [{x: 1, y: 150}, {x: 4, y: 250}, {x: 10, y: 250}],
                 lightSlope: 100 / 3,
                 lightBreakDay: 4,
-                transfusionLimit: [{x: 1, y: 250}, {x: 3, y: 350}, {x: 10, y: 350}]
+                transfusionLimit: this.gestationWeek>=37?[{x: 0, y: 200}, {x: 3, y: 400}, {x: 10, y: 400}]:[{x: 1, y: 250}, {x: 3, y: 350}, {x: 10, y: 350}]
             }
         } else if (this.#birthWeight < 1500 && this.#birthWeight >= 1000) {
             lightinfo = {
@@ -81,7 +81,7 @@ class Child {
                 lightLimit: [{x: 1, y: 125}, {x: 4, y: 200}, {x: 10, y: 200}],
                 lightSlope: 75 / 3,
                 lightBreakDay: 4,
-                transfusionLimit: [{x: 1, y: 200}, {x: 3, y: 250}, {x: 10, y: 250}]
+                transfusionLimit: this.gestationWeek>=37?[{x: 0, y: 200}, {x: 3, y: 400}, {x: 10, y: 400}]:[{x: 1, y: 200}, {x: 3, y: 250}, {x: 10, y: 250}]
             }
         } else if (this.#birthWeight < 1000) {
             lightinfo = {
@@ -89,7 +89,7 @@ class Child {
                 lightLimit: [{x: 1, y: 100}, {x: 4, y: 150}, {x: 10, y: 150}],
                 lightSlope: 50 / 3,
                 lightBreakDay: 4,
-                transfusionLimit: [{x: 1, y: 175}, {x: 2, y: 200}, {x: 3, y: 250}, {x: 10, y: 250}]
+                transfusionLimit: this.gestationWeek>=37?[{x: 0, y: 200}, {x: 3, y: 400}, {x: 10, y: 400}]:[{x: 1, y: 175}, {x: 2, y: 200}, {x: 3, y: 250}, {x: 10, y: 250}]
             }
         }
 
