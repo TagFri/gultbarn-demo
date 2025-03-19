@@ -12,7 +12,7 @@ class Advice {
 
     //Lag råd fra tittel
     static createAdvice(adviceTitle, child) {
-
+        console.log("START: createAdvice")
         //URL ref for icons
         const url="assets/icons/advice/"
 
@@ -21,6 +21,7 @@ class Advice {
             let bloodsampleDescription = ``
             //Only one lab, else standard text.
             if (Bilirubin.numberOfBilirubins == 1) {
+                console.log("Only one lab")
                 bloodsampleDescription += `Bilirubinverdien er < 50 µM under lysgrensen. Barnet bør følges opp med en ny blodprøve for å kontrollere bilirubinnivåene.\n\nEr barnet sykt (sepsis, acidose, asfyksi) bør oppstart av lysbehandling vurderes.`
             }
 
@@ -31,16 +32,17 @@ class Advice {
                 bloodsampleDescription += `Målingene er fortsatt høye, og trendlinjen for de to siste målepunktene er ${(Bilirubin.bilirubinSlope() < 0) ? 'svakt synkende' : 'svakt stigende'}. Barnet bør følges opp med en ny blodprøve for å kontrollere bilirubinnivåene.`
 
                 //If extrapolation is active, get date
-                bloodsampleDescription += `<br><br><span class="semi-bold">Krysningstidspunkt: 
-            ${daysToAbsoluteDate(child.birthDateTime, Bilirubin.extrapolationPoint().x).toLocaleDateString('no-NO', {
-                    weekday: 'short',
-                    day: '2-digit',
-                    month: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                }).replace(',', ' kl.')
-                }</span>`
-
+                if (Bilirubin.extrapolationPoint() != undefined) {
+                    bloodsampleDescription += `<br><br><span class="semi-bold">Krysningstidspunkt: 
+                ${daysToAbsoluteDate(child.birthDateTime, Bilirubin.extrapolationPoint().x).toLocaleDateString('no-NO', {
+                        weekday: 'short',
+                        day: '2-digit',
+                        month: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }).replace(',', ' kl.')
+                    }</span>`
+                }
                 bloodsampleDescription += `<br><br>Kliniske symptomer som slapphet, irritabel, brekninger, hypoglykemi, acidose o.l. krever grundigere utredning. Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.5-ikterus-oppfolging-etter-utskriving#:~:text=Vedvarende%20hyperbilirubinemi%3A" target="_blank">pediatriveilederen</a> for videre diagnostiske vurderinger.`
 
                 //Om siste er 50 fra lysgrense
@@ -221,9 +223,9 @@ class Advice {
             return
         }
 
+        console.log("BILIRUBIN SLOPE: " + Bilirubin.bilirubinSlope())
+        console.log(Bilirubin.bilirubinSlope() <= -20)
         //BLOOD SAMPLE -> 3 criterias
-        console.log(GraphContainer.getInstance().distanceToGraph("lightLimitGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue))
-        console.log(Bilirubin.extrapolationPoint())
         if (
             //Positiv bilirubinslope + extrapolation < 14 day in the future
             (Bilirubin.extrapolationPoint() != undefined && (Bilirubin.bilirubinSlope() > 0 && Bilirubin.extrapolationPoint().x < Bilirubin.lastBilirubin().relativeDays + 14))
@@ -232,7 +234,7 @@ class Advice {
             GraphContainer.getInstance().distanceToGraph("lightLimitGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) <= 50
             ||
             // Bilirubin above 280 with slope decrease of less than 20 per day
-            (Bilirubin.lastBilirubin().bilirubinValue > 280 && Bilirubin.bilirubinSlope() <= -20)
+            (Bilirubin.lastBilirubin().bilirubinValue > 280 && Bilirubin.bilirubinSlope() >= -20)
         ) {
             this.currentAdvice = this.createAdvice("bloodSample", child)
             return

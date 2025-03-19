@@ -176,6 +176,7 @@ function saveBilirubin(validatedInputs) {
         //Display updated bilirubins
         Bilirubin.displayBilirubin()
 
+
         //Update bilirubin + extrapolation graph
         GraphContainer.updateBilirubinGraph()
         GraphContainer.updateExtrapolationGraph()
