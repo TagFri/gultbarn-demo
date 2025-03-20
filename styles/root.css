@@ -13,6 +13,11 @@
     --color-red: #FB4141;
     --color-light-red: #FFE8E9;
     --color-green: #C4E047;
+    --arrow-icon: url(https://upload.wikimedia.org/wikipedia/commons/9/9d/Caret_down_font_awesome_whitevariation.svg);
+}
+
+/* Light mode styles */
+body[data-theme="light"] {
     --color-input-background: var(--color-white);
     --color-input-borderline: var(--color-grey);
     --color-input-field: var(--color-white);
@@ -22,27 +27,15 @@
     --button-text-color: var(--color-white);
     --btn-hover-font-color: var(--color-white);
 
-    --advice-container-background: var(--color-primary-extra-light);
+    --advice-container-background: var(--color-grey-light);
     --copy-journal-background: var(--color-grey-light);
     --color-hr: var(--color-grey);
     --color-p: var(--color-black);
-    --arrow-icon: url(https://upload.wikimedia.org/wikipedia/commons/9/9d/Caret_down_font_awesome_whitevariation.svg);
 }
 
-.dark_mode {
-    --color-primary-extra-strong: #ffcb84;
-    --color-primary-strong: #261f16;
-    --color-primary-medium: #FBC169;
-    --color-primary-light: #FFE2B1;
-    --color-primary-extra-light: #3b342b;
-    --color-black: #ffffff;
-    --color-black-light: #97938D;
+/* Dark mode styles */
+body[data-theme="dark"] {
     --color-white: #000000;
-    --color-grey: #DBDDE2;
-    --color-grey-light: #F5F9FA;
-    --color-red: #FB4141;
-    --color-light-red: #201614;
-    --color-green: #C4E047;
     --color-input-background:#282828;
     --color-input-borderline: var(--color-white);
     --color-input-field: var(--color-white);
@@ -59,6 +52,9 @@
 body {
     /*  Font attributes */
     color: var(--color-black);
+
+    /* For smooth dark-mode transition */
+    transition: background-color 0.3s, color 0.3s;
 
     h1 {
         line-height: 1;

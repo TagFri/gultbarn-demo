@@ -7,7 +7,7 @@ header {
     justify-content: space-between;
     margin-bottom: 3rem;
     @media (max-width: 600px) {margin-bottom: 2rem;}
-    > #logo, > #about {
+    > #logo, > #dark-mode {
         display: flex;
         align-items: center;
     }
@@ -17,7 +17,7 @@ header {
             padding-right: 0.5rem;
         }
     }
-    > #about {
+    > #dark-mode {
         justify-content: end;
         > img {
             padding-left: 0.5rem;
@@ -28,8 +28,8 @@ header {
     }
     /* Responsive header images compared to text*/
     img {
-        @media (max-width: 576px) {height: 1.5rem;}
-        @media (min-width: 576px) {height: 2rem;}
+        @media (max-width: 576px) {height: 1.8rem;}
+        @media (min-width: 576px) {height: 2.6rem;}
     }
     button {
         background: none;
@@ -116,7 +116,7 @@ label, fieldset, legend{
     background-color: var(--advice-container-background);
     /* BAKGRUNNS BILDE */
     background-size: 25%;
-    background-image: url("assets/icons/advice/outcome_box_inactive.svg");
+    background-image: url("assets/icons/advice/outcome-box-inactive.svg");
     background-position: bottom right;
     padding-right: 20%;
 }
@@ -143,7 +143,7 @@ label, fieldset, legend{
     justify-content: flex-start;
     background-color: var(--copy-journal-background);
     /* BAKGRUNNS BILDE */
-    background-image: url("./assets/icons/journal_grey.svg");
+    background-image: url("assets/icons/journal-grey.svg");
     background-position: center;
     padding-bottom: 45%;
     background-size: 75%;
@@ -346,6 +346,7 @@ footer {
     border-style: solid;
     border-color: #555 transparent transparent transparent;
 }
+
 @media (max-width: 992px) {
     #disclaimer {
         flex-direction: column;

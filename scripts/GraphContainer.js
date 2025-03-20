@@ -371,6 +371,7 @@ class GraphContainer {
                     },
                     tooltip: {
                         enabled: true,
+                        displayColors: false,
                         filter: function (tooltipItem) {
                             if (tooltipItem.datasetIndex === 1 || tooltipItem.datasetIndex === 2) {
                                 return tooltipItem.datasetIndex;

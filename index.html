@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="./styles/modules.css">
     <link rel="stylesheet" href="./index.css">
 </head>
-<body>
+<body data-theme="light">
 <!-- JS SCRIPTS -->
 <!-- Math -->
 <script defer src=https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.3.0/math.min.js></script>
@@ -39,18 +39,21 @@
 <!-- HTML -->
 <header>
     <div id="logo">
-        <img src="./assets/icons/logo.svg" alt="Gult barn logo">
-        <h1>gultbarn</h1>
+        <img class="icon" data-light="./assets/icons/logo.svg" data-dark="./assets/icons/logo-dark.svg" src="./assets/icons/logo.svg" alt="Gult barn logo">
     </div>
-    <div id="about">
-        <h3 id="about-us-title">hilsen sommervikarene</h3>
+    <div id="dark-mode">
+        <h3 id="about-us-title">Nattevaktsmodus</h3>
+        <label class="switch">
+            <input type="checkbox" class="dark-theme-toggle">
+            <span class="slider round"></span>
+        </label>
     </div>
 </header>
 <main id="main">
     <!-- INFO ABOUT CHILD -->
     <div id="child-container" class="container round-container">
-        <img id="complete-icon" class="hidden" src="./assets/icons/checkmark.svg" alt="complete-icon">
-        <img id="incomplete-icon" class="hidden" src="./assets/icons/exlamation.svg" alt="incomplete-icon">
+        <img id="complete-icon" class="hidden"data-light="./assets/icons/checkmark.svg" data-dark="./assets/icons/checkmark-dark.svg" src="./assets/icons/checkmark.svg" alt="complete-icon">
+        <img id="incomplete-icon" class="hidden"data-light="./assets/icons/exlamation.svg" data-dark="" src="./assets/icons/exlamation.svg" alt="incomplete-icon">
         <h2>Om barnet</h2>
         <!-- BIRTH WEIGHT INPUT-->
         <label for="birthWeight">Fødselsvekt</label>
@@ -109,9 +112,9 @@
         <ul id="bilirubin-icons">
             <li class="bilirubin-icons-list">
                 <p></p>
-                <img src="./assets/icons/blood-sample-opace.svg" alt="blodprove-icon">
-                <img src="./assets/icons/calender-opace.svg" alt="calendar-icon">
-                <img src="./assets/icons/time-opace.svg" alt="time-icon">
+                <img data-light="./assets/icons/blood-sample.svg" data-dark="./assets/icons/blood-sample-dark.svg" src="assets/icons/blood-sample.svg" alt="blodprove-icon" class="icon">
+                <img data-light="./assets/icons/calender.svg" data-dark="./assets/icons/calender-dark.svg" src="assets/icons/calender.svg" alt="calendar-icon" class="icon">
+                <img data-light="./assets/icons/time.svg" data-dark="./assets/icons/time-dark.svg" src="assets/icons/time.svg" alt="time-icon" class="icon">
             </li>
         </ul>
         <ul id="bilirubin-list">
@@ -129,10 +132,10 @@
     <!-- CLINICAL GUIDANCE / ADVICE -->
     <div id="advice-container" class="flex-container flex-column container round-container opacity-container">
         <div>
-            <h2 id="advice-title">Fagelig råd</h2>
+            <h2 id="advice-title">Råd fra pediatriveilederen</h2>
             <p id="advice-paragraph"><br><br><br></p>
         </div>
-        <h4 id="feedback-button" class="hidden"><span><img id="feedback-image" src="./assets/icons/flag.svg" alt="flag-icon"></span><a class="">Gi tilbakemelding</a></h4>
+        <h4 id="feedback-button" class="hidden"><span><img id="feedback-image" data-light="./assets/icons/flag.svg" data-dark="./assets/icons/flag-dark.svg" src="./assets/icons/flag.svg" alt="flag-icon" class="icon"></span><a class="">Gi tilbakemelding</a></h4>
     </div>
     <!-- PREFORMATTED AND FINISHED JOURNAL NOTE -->
     <div id="journal-container" class="container round-container opacity-container">
@@ -140,7 +143,7 @@
             <h2 id="journal-title">Journalføre?</h2>
             <p id="journal-paragraph">Kopier opplysninger som journalnotat</p>
         </div>
-        <h4 id="journal-copy" class="tooltip"><span class="tooltiptext" id="myTooltip">Kopiert</span><span><img id="journal-copy-img" src="./assets/icons/copy.svg" alt="flag-icon"></span> kopier</h4>
+        <h4 id="journal-copy" class="tooltip" ><span class="tooltiptext" id="myTooltip">Kopiert</span><span><img id="journal-copy-img" data-light="./assets/icons/copy.svg" data-dark="./assets/icons/copy-dark.svg" src="./assets/icons/copy.svg" alt="flag-icon" class="icon"></span> kopier</h4>
     </div>
 </main>
 <footer>
@@ -154,7 +157,7 @@
             <p>Rådene i denne algoritmen er basert på Pediatriveilederen, og lysgrensene bygger på konsensus fra Interessegruppen i nyfødtmedisin, Norsk Barnelegeforening (2006, revidert 2016). All data behandles lokalt på din enhet og sendes aldri til eksterne servere. Algoritmen er utviklet med mål om å støtte kliniske vurderinger, men vi tar forbehold om feil eller mangler. Behandlende kliniker oppfordres alltid til å gjøre en selvstendig vurdering basert på barnets helhetlige situasjon.</p>
         </div>
         <div class="flex-container flex-column right-column right-text">
-            <img class="logo" src="./assets/icons/logo_black.svg" alt="Gult barn logo">
+            <img class="logo" data-light="assets/icons/logo-black.svg" data-dark="assets/icons/logo-dark.svg" src="assets/icons/logo-black.svg" alt="Gult barn logo">
             <div class="flex-container flex-column feedback">
                 <a href="mailto:hei@sablateknisk.no?subject=Gult barn tilbakemelding" class="link"> Gi tilbakemelding</a>
                 <p class="mail">hei@sablateknisk.no</p>
@@ -162,7 +165,7 @@
             <p>Algoritmen og nettsiden er utviklet<br>av Åge Frivoll og Vetle Mørland</p>
         </div>
     </div>
-    <img loading="lazy" id="algorithm-flowchart" src="./assets/icons/algorithm.svg" alt="Algorithm">
+    <img loading="lazy" id="algorithm-flowchart" data-light="./assets/icons/algorithm.svg" data-dark="./assets/icons/algorithm-dark.svg" src="./assets/icons/algorithm.svg" alt="Algorithm">
     <div id="disclaimer" class="flex-container">
         <div class="disclaimer half-column">
             <p class="small-text">1 Lysgrensene bygger på konsensus fra Interessegruppen i nyfødtmedisin, Norsk Barnelegeforening (2006, revidert 2016). Grafene for lysgrensene i gultbarn er laget ved lineær regresjon med følgende punkter:
