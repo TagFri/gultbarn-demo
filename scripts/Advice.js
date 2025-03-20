@@ -59,7 +59,9 @@ class Advice {
 
             return bloodsampleDescription
         }
-
+        let iconMode = document.body.getAttribute('data-theme') == "dark"?"-dark":""
+        console.log("BLOOD SAMPLE DESCRIPTION CREATION")
+        console.log(iconMode)
         function transfusionDescription() {
             console.log("TRANSFUSION ADVICE DESCRIPTOIN CREATION")
 
@@ -104,7 +106,7 @@ class Advice {
                     "earlyIcterus",
                     "Ikterus første levedøgn  - videre utredning anbefales",
                     `Synlig gulsott som oppstår innen 1 døgns alder regnes alltid som patologisk. Videre utredning med blodprøver anbefales som angitt i <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.1-tidlig-ikterus-forste-710-dager#:~:text=Synlig%20gulsott%20innen%201%20d%C3%B8gns%20alder%20(alltid%20patologisk!)" target="_blank">pediatriveilederen</a>, vurder lysbehandling evt. transfusjon/IVIG ved svært høye verdier.`,
-                    url + "early_onset_icterus.svg"
+                    url + "early-onset-icterus" + iconMode + ".svg"
                 );
 
                 break;
@@ -113,7 +115,7 @@ class Advice {
                     "transfusion",
                     "Utskiftningstransfusjon bør vurderes",
                     transfusionDescription(),
-                    url + "transfusion.svg",
+                    url + "transfusion" + iconMode + ".svg",
                     "var(--color-light-red)"
                 );
                 break;
@@ -122,7 +124,7 @@ class Advice {
                     "lightTherapy",
                     "Lysbehandling anbefales",
                      lightTherapyDescription(),
-                    url + "phototherapy.svg"
+                    url + "phototherapy" + iconMode + ".svg"
                 );
                 break;
             case "bloodSample":
@@ -130,7 +132,7 @@ class Advice {
                     "bloodSample",
                     "Blodprøvekontroll anbefales",
                     bloodSampleDescription(),
-                    url + "bloodtest.svg"
+                    url + "bloodtest" + iconMode + ".svg"
                 );
                 break;
             case "prolongedIcterus":
@@ -138,7 +140,7 @@ class Advice {
                     "prolongedIcterus",
                     `Prolongert ikterus - videre utredning anbefales`,
                     `Barn eldre enn 14 dager med synlig ikterus skal alltid utredes med total og konjugert bilirubin – uavhengig av vektoppgang og farge på avføring/urin. Et barn med konjugert bilirubin >17 mikromol/L skal følges opp videre.\n\nVurder også: Hb, hvite, trombocytter, retikulocytter, ALAT, GT, TSH, FT4 og blodtype mor/barn, DAT av barnet (hvis ikke kjent tidligere).<br><br>Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.4-prolongert-ikterus-mistenkt-kolestase-1014-dagers-alder" target="_blank">pediatriveilederen</a> for videre utredning.`,
-                    url + "prolonged_icterus.svg"
+                    url + "prolonged-icterus" + iconMode + ".svg"
                 );
                 break;
             case "noFollowUp":
@@ -146,7 +148,7 @@ class Advice {
                     "noFollowUp",
                     "Ingen oppfølging nødvendig",
                     `Trendlinjen for de to siste målepunktene er ${(Bilirubin.bilirubinSlope()>=0?"svært avflatet":"synkende")}. Blodprøvekontroll er ikke nødvendig.<br><br>Foreldre bes å ta kontakt med helsestasjonen dersom de mener barnet får økende ikterus eller om ikterus vedvarer 3 uker etter siste kontakt, eller om barnet virker slapt eller sykt.`,
-                    url + "no_follow_up.svg"
+                    url + "no-follow-up" + iconMode + ".svg"
                 );
                 break;
             case "noAdvice":
@@ -154,16 +156,16 @@ class Advice {
                     "noAdvice",
                     "Ingen råd fra pediatriveilederen",
                     "Bilirubinverdien er lavere enn 50 µM under lysgrensa. Pediatriveilederen gir ingen konkrete råd ved ett enkelt målepunkt. Anvend klinisk skjønn, med en helhetlig vurdering av barnets klinikk og historikk.",
-                    url + "no_advice.svg",
+                    url + "no-advice" + iconMode + ".svg",
                     "var(--color-grey-light)"
                 );
                 break;
             case "deactivated":
                 return new Advice(
                     "deactivated",
-                    "Faglig råd",
+                    "Råd fra pediatriveilederen",
                     "<br><br><br>",
-                    url + "outcome_box_inactive.svg"
+                    url + "outcome-box-inactive" + iconMode + ".svg"
                 );
                 break;
             case "error":
@@ -171,7 +173,7 @@ class Advice {
                     "error",
                     "Wopsi! Noe har skjedd...",
                     "Beregninger har feilet, pc'en klikka eller verden går rett og slett under. Vanskelig å vite om du ikke sender oss en mail. Trykk på \"Gi tilbakemelding\" under så skal vi se på det så fort vi klarer!",
-                    url + "error.svg",
+                    url + "error" + iconMode + ".svg",
                     "var(--color-grey-light)"
                 );
                 break;

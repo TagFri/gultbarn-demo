@@ -11,7 +11,65 @@ import { copyContent                    } from "./Journal.js";
 //** INIT PAGE
 //**
 
-//* Dark mode
+///* STATISTICS *///
+let apiURL = "https://i70hzn59ha.execute-api.us-east-1.amazonaws.com/startUp/gultBarnStatistics"
+let apiKey = "egFZwylnMe1Sk5PBAr31Y724ppi5NMJ6aJ3vl6g9"
+//todo change to enviormental variable
+
+async function updateCount(clickID) {
+    try {
+        let response = await fetch(apiURL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                //Sends the api key
+                "x-api-key": apiKey
+            },
+            body: JSON.stringify({buttonID: clickID})
+        });
+        let result = await response.json();
+
+        console.log(result);
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+// Attach event listeners to buttons instead of using onclick in HTML
+document.getElementById("save-child").addEventListener("click", () => updateCount("addedChild"));
+document.getElementById("add-bilirubin").addEventListener("click", () => updateCount("addedBilirubin"));
+document.getElementById("journal-copy").addEventListener("click", () => updateCount("copiedJournals"));
+document.getElementById("feedback-button").addEventListener("click", () => updateCount("feedbackGiven"));
+
+
+//Updates icons
+function updateIcons(newTheme) {
+    console.log("test")
+    document.querySelectorAll('.icon').forEach(icon => {
+        (newTheme === 'dark')?icon.src= icon.getAttribute('data-dark'):icon.src= icon.getAttribute('data-light');
+    });
+}
+
+// Listen for changes in the dark mode setting
+let lastToggle = 0
+const darkModeToggle = document.querySelector('.dark-theme-toggle');
+darkModeToggle.addEventListener('click', function(event) {
+
+    if (Date.now() - lastToggle > 40) {
+        lastToggle = Date.now();
+
+        // Get current theme from body attribute
+        const currentTheme = document.body.getAttribute('data-theme');
+
+        // Determine the new theme
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+        // Update the body's data attribute
+        document.body.setAttribute('data-theme', newTheme);
+
+        updateIcons(newTheme)
+    }
+});
 
 inputMasking()
 
@@ -45,7 +103,8 @@ document.getElementById("journal-copy").addEventListener("click", function() {
     })
 //Mouseenter/leave -> jump and colour change
 document.getElementById("journal-copy").addEventListener("mouseenter", function () {
-    document.getElementById("journal-container").style.backgroundImage = "url('./assets/icons/journal_yellow.svg')"
+    let iconMode = document.body.getAttribute('data-theme') == "-dark"?"dark":""
+    document.getElementById("journal-container").style.backgroundImage = "url('./assets/icons/journal-yellow"+iconMode+".svg')"
     document.getElementById("journal-container").style.animation = "animatedBackground 0.4s ease-in-out";
     setTimeout(function() {
             document.getElementById("journal-container").style.animation = "";
@@ -53,17 +112,20 @@ document.getElementById("journal-copy").addEventListener("mouseenter", function 
     )
 })
 document.getElementById("journal-copy").addEventListener("mouseleave", function () {
-    document.getElementById("journal-container").style.backgroundImage = "url('./assets/icons/journal_grey.svg')"
+    document.getElementById("journal-container").style.backgroundImage = "url('./assets/icons/journal-grey.svg')"
     document.getElementById("journal-container").style.animation = "";
 })
 
 //** Flag dynamics
 //Mouseenter/leave -> Fill / unfill
 document.getElementById("feedback-button").addEventListener("mouseenter", function () {
-    document.getElementById("feedback-image").src = "./assets/icons/flag_filled.svg"
+    let iconMode = document.body.getAttribute('data-theme') == "dark"?"-dark":""
+    console.log(iconMode)
+    document.getElementById("feedback-image").src = "./assets/icons/flag-filled" +iconMode+ ".svg"
 })
 document.getElementById("feedback-button").addEventListener("mouseleave", function () {
-    document.getElementById("feedback-image").src = "./assets/icons/flag.svg"
+    let iconMode = document.body.getAttribute('data-theme') == "dark"?"-dark":""
+    document.getElementById("feedback-image").src = "./assets/icons/flag" +iconMode+ ".svg"
 })
 
 //**
@@ -202,12 +264,3 @@ function saveBilirubin(validatedInputs) {
     document.getElementById("bilirubinValue").value = "";
     document.getElementById("bilirubinDate").focus()
 }
-
-
-//* Dark mode
-//let darkMode = false;
-//var now = new Date().getHours();
-//if (now >= 20 || now <= 6) {
-//    darkMode = true;//
-//    document.body.classList.toggle('dark_mode');
-//}
