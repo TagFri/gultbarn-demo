@@ -1,7 +1,7 @@
 import { Child              } from "./Child.js"
 import { Bilirubin          } from "./Bilirubin.js";
 import { GraphContainer     } from "./GraphContainer.js";
-import { daysToAbsoluteDate } from "./generalFunctions.js"
+import {daysToAbsoluteDate, distanceToGraph} from "./generalFunctions.js"
 
 export { Advice }
 
@@ -46,7 +46,7 @@ class Advice {
                 bloodsampleDescription += `<br><br>Kliniske symptomer som slapphet, irritabel, brekninger, hypoglykemi, acidose o.l. krever grundigere utredning. Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.5-ikterus-oppfolging-etter-utskriving#:~:text=Vedvarende%20hyperbilirubinemi%3A" target="_blank">pediatriveilederen</a> for videre diagnostiske vurderinger.`
 
                 //Om siste er 50 fra lysgrense
-                if (GraphContainer.getInstance().distanceToGraph("lightLimitGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) <= 50) {
+                if ( distanceToGraph("light") <= 50) {
                     bloodsampleDescription += `<br><br><span class="semi-bold">OBS!</span> Siste bilirubinverdi er mindre enn 50 µM fra lysgrensen. Er barnet sykt (sepsis, acidose, asfyksi) bør oppstart av lysbehandling vurderes.`
                 }
 
@@ -59,9 +59,10 @@ class Advice {
 
             return bloodsampleDescription
         }
-        let iconMode = document.body.getAttribute('data-theme') == "dark"?"-dark":""
-        console.log("BLOOD SAMPLE DESCRIPTION CREATION")
-        console.log(iconMode)
+        //Get correct icon according to dark mode or not
+        let iconMode = ""
+
+        //Get correct transfustion description
         function transfusionDescription() {
             console.log("TRANSFUSION ADVICE DESCRIPTOIN CREATION")
 
@@ -70,7 +71,7 @@ class Advice {
             let transfusionEndDescription = `, erfaren kliniker (bakvakt pediater) bør kontaktes for å vurdering av  utskiftningstransfusjon. Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.3-utskiftingstransfusjon#-helsebiblioteket-innhold-retningslinjer-pediatri-nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening-8-gulsott-og-hemolytisk-sykdom-83-utskiftingstransfusjon:~:text=og%20hemolytisk%20sykdom-,8.%203%20Utskiftingstransfusjon,-Sist%20faglig%20oppdatert" target="_blank">pediatriveilederen</a> for detaljert informasjon.`
 
             //Above transfusion limit
-            if (GraphContainer.getInstance().distanceToGraph("transfusionGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) <= 0) {
+            if ( distanceToGraph("transfusion") <= 0) {
                 return `Barnet har svært høye bilirubinverdier ${transfusionEndDescription}`
             }
             //Gestastional weeks text
@@ -93,15 +94,15 @@ class Advice {
             let lightTherapyDescription = ""
 
             lightTherapyDescription += `Barnet har bilirubinnivåer som overskrider lysgrensen. Lysbehandling er anbefalt. Behandlingen bør startes snarest mulig.<br><span class=semi-cold">Varighet</span>: Det anbefales 12–24 timers lysbehandling. Varighet kan individualiseres ut i fra hvor høye TSB-verdier var ved start lysbehandling, og i henhold til lokale rutiner.<br><br>Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.1-tidlig-ikterus-forste-710-dager#:~:text=Behandling%20og%20oppf%C3%B8lging" target="_blank">pediatriveilederen</a> for videre info.`
-            if (GraphContainer.getInstance().distanceToGraph("transfusionGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) <= 50) {
+            if (distanceToGraph("transfusion") <= 50) {
                 lightTherapyDescription += `<br><br>Grensen for utskiftning senkes med forslagsvis 50 mikromol/l dersom barnet er sykt (sepsis, asfyksi (Apgar < 3 ved 5 min), acidose (ph <7,15 i 1 time; <7,25 i 4 timer), albumin <25 g/l)`
             }
             
             return lightTherapyDescription
         }
-
         switch(adviceTitle) {
             case "earlyIcterus":
+                console.log("EARLY ICTERUS advice created")
                 return new Advice(
                     "earlyIcterus",
                     "Ikterus første levedøgn  - videre utredning anbefales",
@@ -111,6 +112,7 @@ class Advice {
 
                 break;
             case "transfusion":
+                console.log("TRANSFUSION advice created")
                 return new Advice(
                     "transfusion",
                     "Utskiftningstransfusjon bør vurderes",
@@ -120,14 +122,16 @@ class Advice {
                 );
                 break;
             case "lightTherapy":
+                console.log("LIGHT THERAPY advice created")
                 return new Advice(
                     "lightTherapy",
                     "Lysbehandling anbefales",
                      lightTherapyDescription(),
-                    url + "phototherapy" + iconMode + ".svg"
+                    url + "phototherapy.svg"
                 );
                 break;
             case "bloodSample":
+                console.log("BLOOD SAMPLE advice created")
                 return new Advice(
                     "bloodSample",
                     "Blodprøvekontroll anbefales",
@@ -136,6 +140,7 @@ class Advice {
                 );
                 break;
             case "prolongedIcterus":
+                console.log("PROLONGED ICTERUS advice created")
                 return new Advice(
                     "prolongedIcterus",
                     `Prolongert ikterus - videre utredning anbefales`,
@@ -144,6 +149,7 @@ class Advice {
                 );
                 break;
             case "noFollowUp":
+                console.log("NO FOLLOW UP advice created")
                 return new Advice(
                     "noFollowUp",
                     "Ingen oppfølging nødvendig",
@@ -152,6 +158,7 @@ class Advice {
                 );
                 break;
             case "noAdvice":
+                console.log("NO ADVICE advice created")
                 return new Advice(
                     "noAdvice",
                     "Ingen råd fra pediatriveilederen",
@@ -161,6 +168,7 @@ class Advice {
                 );
                 break;
             case "deactivated":
+                console.log("DEACTIVATED advice created")
                 return new Advice(
                     "deactivated",
                     "Råd fra pediatriveilederen",
@@ -168,7 +176,8 @@ class Advice {
                     url + "outcome-box-inactive" + iconMode + ".svg"
                 );
                 break;
-            case "error":
+            default:
+                console.log("ERROR advice created")
                 return new Advice(
                     "error",
                     "Wopsi! Noe har skjedd...",
@@ -182,9 +191,12 @@ class Advice {
 
     //Get single advice
     static setCurrentAdvice(child) {
+        console.log("SET CURRENT ADVICE")
+
         //If all bilirubins are removed -> deactive advice
         if (Bilirubin.numberOfBilirubins == 0) {
             this.currentAdvice = this.createAdvice("deactivated", child)
+            console.log("-> DEACTIVATED")
             return
         }
 
@@ -192,60 +204,69 @@ class Advice {
         if (Bilirubin.lastBilirubin().relativeDays < 1) {
             console.log("Early icterus")
             this.currentAdvice = this.createAdvice("earlyIcterus")
+            console.log("-> EARLY ICTERUS")
             return
         }
 
         //TRANSFUSJON -> 3 criterias
         if (
             //Last bilirubin is more/equal to gestational week * 10
-            Bilirubin.lastBilirubin().bilirubinValue >= (child.gestationWeek * 10)
+            (Bilirubin.lastBilirubin().bilirubinValue >= (child.gestationWeek * 10))
             ||
             //Last bilirubin is above/equal transfusionlimit
-            GraphContainer.getInstance().distanceToGraph("transfusionGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) <= 0
+            (distanceToGraph("transfusion") <= 0)
             ||
             //Slope is above/equal 240
-            Bilirubin.bilirubinSlope() >= 240
+            (Bilirubin.bilirubinSlope() >= 240)
         ) {
 
             this.currentAdvice = this.createAdvice("transfusion", child)
+            console.log("-> TRANSFUSJON")
             return
         }
 
         //LIGHT THERAPY
         //Last bilirubin above/equal light limit graph
-        if (GraphContainer.getInstance().distanceToGraph("lightLimitGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) <= 0) {
+        if (distanceToGraph("light") <= 0) {
             this.currentAdvice = this.createAdvice("lightTherapy", child)
+            console.log("-> LIGHT THERAPY")
             return
         }
 
         //Late icterus
         //Lab after 14 days
         if (Bilirubin.lastBilirubin().relativeDays >= 14) {
-            this.currentAdvice = this.createAdvice("lateIcterus", child)
+            this.currentAdvice = this.createAdvice("prolongedIcterus", child)
+            console.log("-> LATE ICTERUS")
+            console.log(this.currentAdvice)
             return
         }
 
-        console.log("BILIRUBIN SLOPE: " + Bilirubin.bilirubinSlope())
-        console.log(Bilirubin.bilirubinSlope() <= -20)
         //BLOOD SAMPLE -> 3 criterias
         if (
             //Positiv bilirubinslope + extrapolation < 14 day in the future
             (Bilirubin.extrapolationPoint() != undefined && (Bilirubin.bilirubinSlope() > 0 && Bilirubin.extrapolationPoint().x < Bilirubin.lastBilirubin().relativeDays + 14))
             ||
             // Last lab under 50 from lightlimit
-            GraphContainer.getInstance().distanceToGraph("lightLimitGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) <= 50
+            (distanceToGraph("light") <= 50)
             ||
             // Bilirubin above 280 with slope decrease of less than 20 per day
-            (Bilirubin.lastBilirubin().bilirubinValue > 280 && Bilirubin.bilirubinSlope() >= -20)
+            (Bilirubin.lastBilirubin().bilirubinValue >= 280 && Bilirubin.bilirubinSlope() >= -20)
         ) {
             this.currentAdvice = this.createAdvice("bloodSample", child)
+            console.log("-> BLOOD SAMPLE")
             return
         }
 
         //NO FOLLOW UP
-        //Negative slope + Under 280 + More than 2 labs
-        if (Bilirubin.bilirubinSlope() <= 0 && Bilirubin.lastBilirubin().bilirubinValue <= 280 && Bilirubin.numberOfBilirubins >= 2) {
+            //Negative slope + Under 280 + More than 2 labs
+        if ( (Bilirubin.bilirubinSlope() <= 0 && Bilirubin.lastBilirubin().bilirubinValue < 280 && Bilirubin.numberOfBilirubins >= 2)
+            ||
+            //Crosing more then 14 days in the future
+            (distanceToGraph("light") > 14 ) )
+            {
             this.currentAdvice = this.createAdvice("noFollowUp", child)
+            console.log("-> NO FOLLOW UP")
             return
         }
 
@@ -253,11 +274,13 @@ class Advice {
         //1 Lab + More/equal 50 from light limit
         if (Bilirubin.numberOfBilirubins == 1) {
             this.currentAdvice = this.createAdvice("noAdvice", child)
+            console.log("-> NO ADVICE")
             return
         }
 
         //ERROR
         this.currentAdvice = this.createAdvice("error", child)
+        console.log("-> ERROR")
         return
     }
 

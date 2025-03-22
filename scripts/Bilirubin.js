@@ -1,4 +1,4 @@
-import { daysToAbsoluteDate, leadingZero} from './generalFunctions.js';
+import { daysToAbsoluteDate, leadingZero, distanceToGraph} from './generalFunctions.js';
 import { Child } from "./Child.js";
 import { errorMessages } from "./inputValidation.js";
 import {GraphContainer} from "./GraphContainer.js";
@@ -63,8 +63,7 @@ class Bilirubin {
             return false
         }
         const extrapolationGraph = GraphContainer.getInstance().extrapolationGraph;
-        const lastCoordinate = extrapolationGraph[extrapolationGraph.length - 1];
-        return lastCoordinate;
+        return extrapolationGraph[extrapolationGraph.length - 1];
     }
 
     //Bilirubin overview for mail

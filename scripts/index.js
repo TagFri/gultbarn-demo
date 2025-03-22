@@ -1,6 +1,6 @@
 import { inputMasking                   } from "./inputMasking.js";
 import { errorMessages, validateInputs  } from './inputValidation.js';
-import { daysRelativeToReferenceDate    } from "./generalFunctions.js";
+import { daysRelativeToReferenceDate, distanceToGraph    } from "./generalFunctions.js";
 import { Child                          } from "./Child.js";
 import { Bilirubin, SerumBilirubin      } from "./Bilirubin.js";
 import { GraphContainer                 } from "./GraphContainer.js";
@@ -10,38 +10,9 @@ import { copyContent                    } from "./Journal.js";
 //**
 //** INIT PAGE
 //**
+inputMasking()
 
-///* STATISTICS *///
-let apiURL = "https://i70hzn59ha.execute-api.us-east-1.amazonaws.com/startUp/gultBarnStatistics"
-let apiKey = "egFZwylnMe1Sk5PBAr31Y724ppi5NMJ6aJ3vl6g9"
-//todo change to enviormental variable
-
-async function updateCount(clickID) {
-    try {
-        let response = await fetch(apiURL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                //Sends the api key
-                "x-api-key": apiKey
-            },
-            body: JSON.stringify({buttonID: clickID})
-        });
-        let result = await response.json();
-
-        console.log(result);
-    } catch (error) {
-        console.error(error);
-    }
-};
-
-// Attach event listeners to buttons instead of using onclick in HTML
-document.getElementById("save-child").addEventListener("click", () => updateCount("addedChild"));
-document.getElementById("add-bilirubin").addEventListener("click", () => updateCount("addedBilirubin"));
-document.getElementById("journal-copy").addEventListener("click", () => updateCount("copiedJournals"));
-document.getElementById("feedback-button").addEventListener("click", () => updateCount("feedbackGiven"));
-
-
+///* DARK MODE *///
 //Updates icons
 function updateIcons(newTheme) {
     console.log("test")
@@ -71,13 +42,12 @@ darkModeToggle.addEventListener('click', function(event) {
     }
 });
 
-inputMasking()
-
 // Get the single instance (creates it if it doesn’t exist)
 const graph = GraphContainer.getInstance();
 
 // Initialize the graph container (creates a new Chart instance)
 graph.initiateGraph();
+
 
 //**
 //** EVENT LISTENERES:
@@ -163,6 +133,7 @@ function saveChild(validatedInputs) {
 
     //FIRST TIME CREATION
     if(!Child.getInstance()) {
+        console.log("First saved child")
         new Child(validatedInputs);
 
         //CHANGE USER INTERFACE IF USER TRIES TO UPDATE CHILD AGAIN
@@ -174,45 +145,29 @@ function saveChild(validatedInputs) {
         document.querySelector("#birthWeight").addEventListener("change", () => {
             Child.getInstance().incompleteChild()
         })
+        console.log("Finished saveing")
+        console.log(Child.getInstance())
+        updateCascade("child")
 
     }
 
     //UPDATING CURRENT CHILD TO NEW VALUES
     else {
+        console.log("Secound saved child")
         //Update current child
         Child.getInstance().updateChild(validatedInputs)
-    }
-
-    //UPDATE CASCADING DEPENDENCIES WHEN CHILD IS UPDATED
-    if(Child.getInstance()) {
-
-        //SHOW COMPLETE ICON + REMOVE BILIRUBIN OPACITY
-        Child.getInstance().completeChild()
-
-        //UPDATE LIGHT-LIMIT GRAPH TRANSFUSION GRAPH AND TITLE
-        document.getElementById("graph-label").innerHTML = "Lysgrense for barn " + Child.getInstance().childGraphInfo("title")
-        GraphContainer.updateLightLimitGraph()
-        GraphContainer.updateExtrapolationGraph()
-        GraphContainer.updateTransfusionGraph()
-
-        //UPDATE BILIRUBIN GRAPH
-        if (Bilirubin.allBilirubins.length > 0) {
-            GraphContainer.updateBilirubinGraph()
-        }
-
-        //Update axis
-        GraphContainer.updateAxises()
-
-        //Update advice
-        Advice.setCurrentAdvice(Child.getInstance())
-        Advice.displayAdvice(Child.getInstance())
+        updateCascade("child")
     }
 }
 
 //** SAVE AND UPDATE BILIRUBINS
 function saveBilirubin(validatedInputs) {
+    console.log("BILIRUBIN SAVE FUNCTION STARTED")
+
     //Convert absolute date to relative days
     let relativeDays = daysRelativeToReferenceDate(Child.getInstance().birthDateTime, validatedInputs.dateTime);
+
+    console.log(`Relative days: ${relativeDays}`)
 
     //Check if the bilirubin dateTime exists from before:
     let exists = false;
@@ -232,35 +187,65 @@ function saveBilirubin(validatedInputs) {
         //Create new bilirubin object (Now only serum, transcutanous not implemented)
         new SerumBilirubin(validatedInputs.bilirubinValue, relativeDays);
 
+        console.log("BILIRUBIN OBJECT CREATED")
+
+        //Remove bilirubin inputs,
+        document.getElementById("bilirubinDate").value = "";
+        document.getElementById("bilirubinTime").value = "";
+        document.getElementById("bilirubinValue").value = "";
+
         //Remove error message
         errorMessages("bilirubinExists", false)
 
-        //Display updated bilirubins
-        Bilirubin.displayBilirubin()
+        //Upadte all dependencies
+        updateCascade("bilirubin")
+    }
 
+    // Focuis back on date to add a new one
+    document.getElementById("bilirubinDate").focus()
+}
 
-        //Update bilirubin + extrapolation graph
+function updateCascade(type) {
+    if (type == "child") {
+        //SHOW COMPLETE ICON + REMOVE BILIRUBIN OPACITY
+        Child.getInstance().completeChild()
+
+        //UPDATE LIGHT-LIMIT GRAPH TRANSFUSION GRAPH AND TITLE
+        document.getElementById("graph-label").innerHTML = "Lysgrense for barn " + Child.getInstance().childGraphInfo("title")
+        GraphContainer.updateLightLimitGraph()
+        GraphContainer.updateTransfusionGraph()
+    }
+
+    if (type == "bilirubin") {
+
+        console.log("BILIRUBIN UPDATE CASCADING STARTED")
+
+        //Uppdate bilirubin graph
+        console.log("updateBilirubinGraph called ->")
         GraphContainer.updateBilirubinGraph()
+
+        //Update extrapolation graph
+        console.log("updateExtrapolationGraph called ->")
         GraphContainer.updateExtrapolationGraph()
 
         //Update transfusion graph
-        if (GraphContainer.getInstance().distanceToGraph("lightLimitGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) <= 0) {
+        console.log("updateTransfusionGraph called ->")
+        if (distanceToGraph("light") <= 0) {
             GraphContainer.toggleTransfusionGraph(true)
-            GraphContainer.getInstance().myChart.update();
         }
+    }
+    if ( ( type == "child" && Bilirubin.numberOfBilirubins > 0 ) || type =="bilirubin") {
+        //Display correct bilirubin values
+        Bilirubin.displayBilirubin()
 
-        //Extend graph if needed
+        //Adjust axis:
         GraphContainer.updateAxises()
 
-        //Update advice
+        //Update graph display
+        GraphContainer.getInstance().myChart.update();
+
+        //New advices:
         Advice.setCurrentAdvice(Child.getInstance())
         Advice.displayAdvice(Child.getInstance())
-
     }
-
-    //Remove bilirubin inputs, and focuis back on date to add a new one
-    document.getElementById("bilirubinDate").value = "";
-    document.getElementById("bilirubinTime").value = "";
-    document.getElementById("bilirubinValue").value = "";
-    document.getElementById("bilirubinDate").focus()
 }

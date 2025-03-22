@@ -1,4 +1,4 @@
-import {daysToAbsoluteDate} from "./generalFunctions.js";
+import {daysToAbsoluteDate, distanceToGraph} from "./generalFunctions.js";
 import {Child} from "./Child.js";
 import {Bilirubin} from "./Bilirubin.js";
 
@@ -18,7 +18,7 @@ class GraphContainer {
         this.black  = 'rgb(11, 30, 51)';
         this.yellowStrong = 'rgb(245, 162, 1)';
         this.yellowMedium = 'rgb(251, 193, 105)';
-        this.red = 'rgb(251, 65, 65)';
+        this.red = 'rgb(255, 232, 233)';
 
         // Graph container and axis settings
         this.myChart = null;
@@ -39,7 +39,6 @@ class GraphContainer {
     static updateLightLimitGraph() {
         //Update chart data field
         this.instance.myChart.data.datasets[0].data = Child.getInstance().childGraphInfo("lightLimit")
-        this.instance.myChart.update();
     }
     static updateBilirubinGraph() {
 
@@ -51,17 +50,17 @@ class GraphContainer {
 
         //Update chart data field
         this.instance.myChart.data.datasets[1].data = data
-        this.instance.myChart.update();
     }
     static updateExtrapolationGraph() {
-        console.log(`START: updateExtrapolationGraph`)
+        console.log(`START: updateExtrapolationGraph with ${Bilirubin.lastBilirubin().bilirubinValue} and ${Bilirubin.lastBilirubin().relativeDays}`)
+
         //Quit if number of bilirubins are not sufficient
         if (Bilirubin.numberOfBilirubins < 2) {
             this.instance.myChart.data.datasets[2].data = [];
-            this.instance.myChart.update();
             return;
         }
 
+        console.log("CREATE TEMP VARIABLES")
         //Temp variables needed for the process:
         let lightPlatauDay = Child.getInstance().childGraphInfo("lightBreakDay")
         let lightPlatauValue = Child.getInstance().childGraphInfo("lightLimit").find(item => item.x === lightPlatauDay).y;
@@ -70,14 +69,20 @@ class GraphContainer {
         let lastBilirubinDay = Bilirubin.lastBilirubin().relativeDays
         let lastBilirubinValue = Bilirubin.lastBilirubin().bilirubinValue
         let bilirubinSlope = Bilirubin.bilirubinSlope()
-        let lightCross;
+        let lightCross = false;
+        console.log("-> TEMP VARIABLES CREATED")
 
+        console.log("POSITIVE SLOPE + UNDER LIGHT CURVE CHECK:")
+        console.log()
+        console.log(distanceToGraph("light"))
+        console.log((lightStartValue + (lightSlope * (lastBilirubinDay - 1)) - lastBilirubinValue > 0))
         //Requirment: positiv slope + under light curve
-        if (Bilirubin.bilirubinSlope() > 0 && this.instance.distanceToGraph("lightLimitGraph", Bilirubin.lastBilirubin().relativeDays, Bilirubin.lastBilirubin().bilirubinValue) > 0) {
-
-
+        if ( (Bilirubin.bilirubinSlope() > 0) && (distanceToGraph("light") > 0) ) {
+            console.log("-> TRUE")
+            console.log("EXTRAPOLATION BEFORE/AFTER PLATAU CHECK:")
             // Bilirubin taken before light platau, and bilirubin slope crossing light slope before platau
             if ((lastBilirubinDay < lightPlatauDay) && (bilirubinSlope > lightSlope) && (lastBilirubinValue + ((lightPlatauDay - lastBilirubinDay) * bilirubinSlope) > lightPlatauValue)) {
+                console.log("->BEFORE TRUE")
 
                 //Start difference between bilirubin and light limit
                 let diffY = (lightStartValue + (lightSlope * (lastBilirubinDay - 1)) - lastBilirubinValue)
@@ -94,8 +99,8 @@ class GraphContainer {
                 lightCross = {x: xValue, y: yValue}
 
                 //Handles crossing at platau for positive slopes
-                console.log("EXTRAPOLATION AFTER PLATAU")
-            } else if ((bilirubinSlope > 0) && (lightStartValue + (lightSlope * (lastBilirubinDay - 1)) - lastBilirubinValue > 0) ) {
+            } else if ((bilirubinSlope > 0) && (lightStartValue + (lightSlope * (lastBilirubinDay - 1)) - lastBilirubinValue > 0)) {
+                console.log("-> AFTER TRUE")
 
                 //Start difference between bilirubin and light limit
                 let diffY = lightPlatauValue - lastBilirubinValue
@@ -107,38 +112,33 @@ class GraphContainer {
                 let xValue = lastBilirubinDay + timeToCrossing
                 let yValue = lightPlatauValue
                 //If crossing is within 14 days from last bilirbubin:
-                console.log("WITHIN 14 DAYS FROM LAST BILIRUBIN")
-                if (xValue < ( lastBilirubinDay + 14 ) && (lastBilirubinValue < lightPlatauValue)) {
+                if (xValue < (lastBilirubinDay + 14) && (lastBilirubinValue < lightPlatauValue)) {
+                    console.log("WITHIN 14 DAYS FROM LAST BILIRUBIN")
                     lightCross = {x: xValue, y: yValue}
-                } else {
-                    lightCross = false
+                    console.log(lightCross)
                 }
             }
-            //Else no need for extrapolation
-            else {
-                lightCross = false
-            }
-
+            console.log("FINISHED CALC LIGHT CROSS")
+            console.log(`lightCross: ${lightCross}`)
+            console.log(`lightCrossX: ${lightCross.x}`)
+            console.log(`lastBilirubinDay: ${lastBilirubinDay}`)
             //If there are valid lightcrossing coordinate and its in tfuture
-            if (lightCross && lightCross.x > lastBilirubinDay) {
-                let data = [
+            if (lightCross && (lightCross.x > lastBilirubinDay)) {
+                console.log("lightCross is valid")
+                this.instance.myChart.data.datasets[2].data = [
                     {x: lastBilirubinDay, y: lastBilirubinValue},
                     lightCross,
                 ];
-                this.instance.myChart.data.datasets[2].data = data;
-            } else {
-                this.instance.myChart.data.datasets[2].data = [];
+                console.log(`END: updateExtrapolationGraph -> ${this.instance.myChart.data.datasets[2].data}`)
+                return
             }
-        } else {
-            this.instance.myChart.data.datasets[2].data = [];
         }
-        console.log(`END: updateExtrapolationGraph with this.instance.myChart.update();`)
-        this.instance.myChart.update();
+        console.log(`END: updateExtrapolationGraph -> EMPTY;`)
+        this.instance.myChart.data.datasets[2].data = [];
+
     }
     static updateTransfusionGraph() {
-
         this.instance.myChart.data.datasets[3].data = Child.getInstance().childGraphInfo("transfusionLimit")
-        this.instance.myChart.update();
     }
 
     static updateAxises() {
@@ -250,54 +250,6 @@ class GraphContainer {
         } else {
             this.instance.myChart.data.datasets[3].hidden = true;
         }
-    }
-
-    distanceToGraph(graphType, xValue, refY) {
-        console.log(`Starting distanceToGraph`)
-        let coordinates = this[graphType]
-
-        // Se if x-value is a perfect match to light graph
-        const foundObject = coordinates.find(item => item.x === xValue)
-
-        //If so, return Y-coordinates between the two points
-        if (foundObject) {
-            return ((coordinates.find(item => item.x === xValue).y) - refY)
-        };
-
-
-        // Otherwise, split coordinates into two arrays.
-        let xCoordinates = [];
-        let yCoordinates = [];
-
-       //Loop through coordinates and split x/y
-        for (const coordinate of coordinates) {
-            xCoordinates.push(coordinate.x);
-            yCoordinates.push(coordinate.y);
-        }
-
-        // Find the index for the point just before xValue.
-        let beforeXIndex = -1;
-        for (let i = 0; i < xCoordinates.length; i++) {
-            if (xCoordinates[i] >= xValue) {
-                beforeXIndex = i - 1;
-                break;
-            } else {
-                beforeXIndex = i;
-            }
-        }
-
-        // Find the index after xValue.
-        let afterXIndex = xCoordinates.findIndex(x => x > xValue);
-
-        // Calculate the slope between the two points.
-        let slope = (yCoordinates[afterXIndex] - yCoordinates[beforeXIndex]) / (xCoordinates[afterXIndex] - xCoordinates[beforeXIndex]);
-
-        // Calculate the y value at the xValue point.
-        let yValue = yCoordinates[beforeXIndex] + (slope * (xValue - xCoordinates[beforeXIndex]));
-
-        // Return the difference between the graph's y-value and refY.
-        console.log(`Returning from distanceToGraph: ${parseInt(yValue - refY)}`)
-        return parseInt(yValue - refY);
     }
 
     initiateGraph() {
