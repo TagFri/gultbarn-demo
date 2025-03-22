@@ -1,4 +1,4 @@
-import { daysToAbsoluteDate, leadingZero} from './generalFunctions.js';
+import { daysToAbsoluteDate, leadingZero, distanceToGraph} from './generalFunctions.js';
 import { Child } from "./Child.js";
 import { errorMessages } from "./inputValidation.js";
 import {GraphContainer} from "./GraphContainer.js";
@@ -14,6 +14,8 @@ class Bilirubin {
     static numberOfBilirubins = 0;
     static maxX = 0
     static maxY = 0
+    static distanceToLightGraph
+    static distanceToTransfusionGraph
 
     //Update time of all labs (used when child time is updated)
     static updateAllBilirubinDates(oldDateTime, newDateTime) {
@@ -31,11 +33,11 @@ class Bilirubin {
         if (remaining.length != Bilirubin.allBilirubins.length) {
             Bilirubin.allBilirubins = remaining;
             errorMessages("bilirubinBeforeRemoved", true, true)
+
+            this.displayBilirubin()
         }
-        this.displayBilirubin()
 
         GraphContainer.updateBilirubinGraph()
-
         GraphContainer.updateExtrapolationGraph()
 
         return true;
@@ -57,14 +59,18 @@ class Bilirubin {
         return diffY / diffX
     }
 
+    static setDistanceToGraphs() {
+        Bilirubin.distanceToLightGraph = distanceToGraph("light")
+        Bilirubin.distanceToTransfusionGraph = distanceToGraph("transfusion")
+    }
+
     //Get extrapolation point
     static extrapolationPoint() {
         if (Bilirubin.allBilirubins.length < 2) {
             return false
         }
         const extrapolationGraph = GraphContainer.getInstance().extrapolationGraph;
-        const lastCoordinate = extrapolationGraph[extrapolationGraph.length - 1];
-        return lastCoordinate;
+        return extrapolationGraph[extrapolationGraph.length - 1];
     }
 
     //Bilirubin overview for mail
@@ -180,6 +186,9 @@ class Bilirubin {
 
                 //Redisplay remaining bilirubins
                 Bilirubin.displayBilirubin();
+
+                //Update distances to graph
+                Bilirubin.setDistanceToGraphs()
 
                 //Update Bilirubin graph
                 GraphContainer.updateBilirubinGraph()

@@ -112,8 +112,6 @@ class Child {
 
     completeChild() {
 
-        console.log("completeChild")
-
         //TOGLE COMPLETE ICON
         document.getElementById("complete-icon").classList.remove("hidden")
         document.getElementById("incomplete-icon").classList.add("hidden")
@@ -123,9 +121,9 @@ class Child {
     }
 
     updateChild(newChildParameters) {
-
+        console.log("Updating child:")
         //Update relative days on bilirubinvalues if time changes
-        if (Child.getInstance().birthDateTime != new Date(newChildParameters.dateTime)) {
+        if ( (Child.getInstance().birthDateTime != new Date(newChildParameters.dateTime) ) && Bilirubin.numberOfBilirubins > 0) {
 
             //Calls on update in Bilirubin class
             Bilirubin.updateAllBilirubinDates(new Date(Child.getInstance().birthDateTime), new Date(newChildParameters.dateTime));
