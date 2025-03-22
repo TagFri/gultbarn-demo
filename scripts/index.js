@@ -1,6 +1,6 @@
 import { inputMasking                   } from "./inputMasking.js";
 import { errorMessages, validateInputs  } from './inputValidation.js';
-import { daysRelativeToReferenceDate, distanceToGraph    } from "./generalFunctions.js";
+import { daysRelativeToReferenceDate    } from "./generalFunctions.js";
 import { Child                          } from "./Child.js";
 import { Bilirubin, SerumBilirubin      } from "./Bilirubin.js";
 import { GraphContainer                 } from "./GraphContainer.js";
@@ -218,19 +218,18 @@ function updateCascade(type) {
 
     if (type == "bilirubin") {
 
-        console.log("BILIRUBIN UPDATE CASCADING STARTED")
-
         //Uppdate bilirubin graph
-        console.log("updateBilirubinGraph called ->")
         GraphContainer.updateBilirubinGraph()
 
+        //Update distance to graphs
+        Bilirubin.setDistanceToGraphs()
+
         //Update extrapolation graph
-        console.log("updateExtrapolationGraph called ->")
         GraphContainer.updateExtrapolationGraph()
 
         //Update transfusion graph
         console.log("updateTransfusionGraph called ->")
-        if (distanceToGraph("light") <= 0) {
+        if (Bilirubin.distanceToLightGraph <= 0) {
             GraphContainer.toggleTransfusionGraph(true)
         }
     }

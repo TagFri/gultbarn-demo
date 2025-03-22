@@ -1,4 +1,4 @@
-import {daysToAbsoluteDate, distanceToGraph} from "./generalFunctions.js";
+import {daysToAbsoluteDate } from "./generalFunctions.js";
 import {Child} from "./Child.js";
 import {Bilirubin} from "./Bilirubin.js";
 
@@ -72,12 +72,8 @@ class GraphContainer {
         let lightCross = false;
         console.log("-> TEMP VARIABLES CREATED")
 
-        console.log("POSITIVE SLOPE + UNDER LIGHT CURVE CHECK:")
-        console.log()
-        console.log(distanceToGraph("light"))
-        console.log((lightStartValue + (lightSlope * (lastBilirubinDay - 1)) - lastBilirubinValue > 0))
         //Requirment: positiv slope + under light curve
-        if ( (Bilirubin.bilirubinSlope() > 0) && (distanceToGraph("light") > 0) ) {
+        if ( (Bilirubin.bilirubinSlope() > 0) && (Bilirubin.distanceToLightGraph > 0) ) {
             console.log("-> TRUE")
             console.log("EXTRAPOLATION BEFORE/AFTER PLATAU CHECK:")
             // Bilirubin taken before light platau, and bilirubin slope crossing light slope before platau

@@ -1,5 +1,6 @@
-import {    Bilirubin   } from "./Bilirubin.js";
-import {GraphContainer} from "./GraphContainer.js";
+import {    Bilirubin       } from "./Bilirubin.js";
+import {    Child           } from "./Child.js";
+import {    GraphContainer  } from "./GraphContainer.js";
 
 export {msToDays, daysToMs, daysToAbsoluteDate, daysRelativeToReferenceDate, leadingZero, between, realtiveToGraphLabel, largest, distanceToGraph}
 
@@ -87,71 +88,56 @@ function distanceToGraph(graph) {
 
     //Set coordinates from graph
     switch (graph) {
-        case "light": coordinates = GraphContainer.getInstance().myChart.data.datasets[0].data;
+        case "light": coordinates = Child.getInstance().childGraphInfo("lightLimit")
         break;
-        case "transfusion": coordinates = GraphContainer.getInstance().myChart.data.datasets[3].data;
+        case "transfusion": coordinates = Child.getInstance().childGraphInfo("transfusionLimit")
         break
     }
 
-    console.log(coordinates)
+    //Lab parameters for last bilirubin
+    let labDay = Bilirubin.lastBilirubin().relativeDays
 
-    //Check that there are coordinates available
-    if (coordinates != [] || coordinates != undefined || coordinates != null) {
+    //Set labday to 10 if it's above as all graphs are defined at day
+    if (labDay > 10) { labDay = 10 }
+    let labValue = Bilirubin.lastBilirubin().bilirubinValue
 
-        //Lab parameters for last bilirubin
-        let labDay = Bilirubin.lastBilirubin().relativeDays
-        let labValue = Bilirubin.lastBilirubin().bilirubinValue
+    console.log(`labDay: ${labDay}`)
+    console.log(`labValue: ${labValue}`)
 
-        console.log(`labDay: ${labDay}`)
-        console.log(`labValue: ${labValue}`)
+    //Splitted coordinates
+    let xCoordinates = [];
+    let yCoordinates = [];
 
-        //Splitted coordinates
-        let xCoordinates = [];
-        let yCoordinates = [];
+    //Loop through coordinates and split x/y
+    for (const coordinate of coordinates) {
+        xCoordinates.push(coordinate.x);
+        yCoordinates.push(coordinate.y);
+    }
+    console.log(`xCoordinates: ${xCoordinates}`)
+    console.log(`yCoordinates: ${yCoordinates}`)
 
-        //Loop through coordinates and split x/y
-        for (const coordinate of coordinates) {
-            xCoordinates.push(coordinate.x);
-            yCoordinates.push(coordinate.y);
-        }
-        console.log(`xCoordinates: ${xCoordinates}`)
-        console.log(`yCoordinates: ${yCoordinates}`)
+    //If lab day in coordinates -> return difference in y value
+    if (xCoordinates.includes(labDay)) {
+        console.log("labDay in coordinates")
+        console.log(yCoordinates[xCoordinates.indexOf(labDay)] - labValue)
+        return (yCoordinates[xCoordinates.indexOf(labDay)] - labValue)
+    }
+    //Else if labDay is between lowest and hight coordinate
+    else if ( xCoordinates.sort()[0] < labDay < xCoordinates.sort()[xCoordinates.length-1]) {
+        console.log("labDay between coordinates")
 
-        //If lab day in coordinates -> return difference in y value
-        if (xCoordinates.includes(labDay)) {
-            console.log("labDay in coordinates")
-            console.log(yCoordinates[xCoordinates.indexOf(labDay)] - labValue)
-            return (yCoordinates[xCoordinates.indexOf(labDay)] - labValue)
-        }
-        //Else if labDay is between lowest and hight coordinate
-        else if ( xCoordinates.sort()[0] < labDay < xCoordinates.sort()[xCoordinates.length-1]) {
-            console.log("labDay between coordinates")
+        //Return indexAfterRefence, indexBeforeReference
+        let closestIndex = findClosestIndices(xCoordinates, labDay)
 
-            //Return indexAfterRefence, indexBeforeReference
-            let closestIndex = findClosestIndices(xCoordinates, labDay)
-            console.log(closestIndex)
+        //Get slope of graph
+        let graphSlope = (yCoordinates[closestIndex.indexAfterReference] - yCoordinates[closestIndex.indexBeforeReference]) / (xCoordinates[closestIndex.indexAfterReference] - xCoordinates[closestIndex.indexBeforeReference]);
 
-            //Get slope of graph
-            debugger
+        //Calculate current graph y value
+        let currentGraphValue = yCoordinates[closestIndex.indexBeforeReference] + (graphSlope * (labDay - xCoordinates[closestIndex.indexBeforeReference]));
+        console.log(currentGraphValue)
 
-            console.log({closestIndex})
-            console.log(typeof parseInt(yCoordinates[closestIndex.indexAfterReference]))
-            console.log(typeof yCoordinates[closestIndex.indexBeforeReference])
-            console.log(typeof xCoordinates[closestIndex.indexAfterReference])
-            console.log(typeof xCoordinates[closestIndex.indexBeforeReference])
-            console.log((yCoordinates[closestIndex.indexAfterReference] - yCoordinates[closestIndex.indexBeforeReference]))
-            console.log((xCoordinates[closestIndex.indexAfterReference] - xCoordinates[closestIndex.indexBeforeReference]))
-            let graphSlope = (yCoordinates[closestIndex.indexAfterReference] - yCoordinates[closestIndex.indexBeforeReference]) / (xCoordinates[closestIndex.indexAfterReference] - xCoordinates[closestIndex.indexBeforeReference]);
-
-            console.log(graphSlope)
-
-            //Calculate current graph y value
-            let currentGraphValue = yCoordinates[closestIndex.indexBeforeReference] + (graphSlope * (labDay - xCoordinates[closestIndex.indexBeforeReference]));
-            console.log(currentGraphValue)
-
-            console.log("Returning from distanceToGraph: " + (currentGraphValue - labValue))
-            return (currentGraphValue - labValue)
-        }
+        console.log("Returning from distanceToGraph: " + (currentGraphValue - labValue))
+        return (currentGraphValue - labValue)
     }
 
     console.log("Returning from distanceToGraph: false")

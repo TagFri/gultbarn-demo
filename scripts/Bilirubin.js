@@ -14,6 +14,8 @@ class Bilirubin {
     static numberOfBilirubins = 0;
     static maxX = 0
     static maxY = 0
+    static distanceToLightGraph
+    static distanceToTransfusionGraph
 
     //Update time of all labs (used when child time is updated)
     static updateAllBilirubinDates(oldDateTime, newDateTime) {
@@ -31,11 +33,11 @@ class Bilirubin {
         if (remaining.length != Bilirubin.allBilirubins.length) {
             Bilirubin.allBilirubins = remaining;
             errorMessages("bilirubinBeforeRemoved", true, true)
+
+            this.displayBilirubin()
         }
-        this.displayBilirubin()
 
         GraphContainer.updateBilirubinGraph()
-
         GraphContainer.updateExtrapolationGraph()
 
         return true;
@@ -55,6 +57,11 @@ class Bilirubin {
         let diffY = reverseBillibinArray[0].bilirubinValue - reverseBillibinArray[1].bilirubinValue
         let diffX = reverseBillibinArray[0].relativeDays - reverseBillibinArray[1].relativeDays
         return diffY / diffX
+    }
+
+    static setDistanceToGraphs() {
+        Bilirubin.distanceToLightGraph = distanceToGraph("light")
+        Bilirubin.distanceToTransfusionGraph = distanceToGraph("transfusion")
     }
 
     //Get extrapolation point
@@ -179,6 +186,9 @@ class Bilirubin {
 
                 //Redisplay remaining bilirubins
                 Bilirubin.displayBilirubin();
+
+                //Update distances to graph
+                Bilirubin.setDistanceToGraphs()
 
                 //Update Bilirubin graph
                 GraphContainer.updateBilirubinGraph()
