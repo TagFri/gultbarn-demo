@@ -52,7 +52,6 @@ class GraphContainer {
         this.instance.myChart.data.datasets[1].data = data
     }
     static updateExtrapolationGraph() {
-        console.log(`START: updateExtrapolationGraph with ${Bilirubin.lastBilirubin().bilirubinValue} and ${Bilirubin.lastBilirubin().relativeDays}`)
 
         //Quit if number of bilirubins are not sufficient
         if (Bilirubin.numberOfBilirubins < 2) {

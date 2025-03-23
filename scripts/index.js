@@ -229,10 +229,11 @@ function updateCascade(type) {
 
         //Update transfusion graph
         console.log("updateTransfusionGraph called ->")
-        if (Bilirubin.distanceToLightGraph <= 0) {
+        if (Bilirubin.distanceToLightGraph <= 0 || Bilirubin.distanceToTransfusionGraph <= 50) {
             GraphContainer.toggleTransfusionGraph(true)
         }
     }
+
     if ( ( type == "child" && Bilirubin.numberOfBilirubins > 0 ) || type =="bilirubin") {
         //Display correct bilirubin values
         Bilirubin.displayBilirubin()
@@ -240,11 +241,10 @@ function updateCascade(type) {
         //Adjust axis:
         GraphContainer.updateAxises()
 
-        //Update graph display
-        GraphContainer.getInstance().myChart.update();
-
         //New advices:
         Advice.setCurrentAdvice(Child.getInstance())
         Advice.displayAdvice(Child.getInstance())
     }
+
+    GraphContainer.getInstance().myChart.update();
 }
