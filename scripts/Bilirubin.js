@@ -188,7 +188,9 @@ class Bilirubin {
                 Bilirubin.displayBilirubin();
 
                 //Update distances to graph
-                Bilirubin.setDistanceToGraphs()
+                if (Bilirubin.allBilirubins.length > 0) {
+                    Bilirubin.setDistanceToGraphs()
+                }
 
                 //Update Bilirubin graph
                 GraphContainer.updateBilirubinGraph()

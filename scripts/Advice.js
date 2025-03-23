@@ -99,6 +99,7 @@ class Advice {
             
             return lightTherapyDescription
         }
+
         switch(adviceTitle) {
             case "earlyIcterus":
                 console.log("EARLY ICTERUS advice created")
