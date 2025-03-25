@@ -23,7 +23,7 @@ header {
             padding-left: 0.5rem;
         }
     }
-    #about-us-title {
+    #darkMode {
         font-weight: lighter;
     }
     /* Responsive header images compared to text*/
@@ -55,7 +55,7 @@ header {
     input {
         text-align: center;
         background-color: var(--color-input-field);
-        color: var(--color-black);
+        color: var(--color-font);
     }
 }
 
@@ -222,14 +222,14 @@ li {
 }
 
 footer {
-    color: var(--color-black);
+    color: var(--color-font);
     font-size: 0.9rem;
     margin-top: 15rem;
     @media (max-width: 600px) {margin-top: 5rem;}
     width: 100vw;
     position: absolute;
     left: 0;
-    background-color: var(--color-primary-strong);
+    background-color: var(--color-footer-background);
     border-radius: 75px 75px 0 0;
     .main-container, #algorithm-flowchart, #disclaimer {
         padding: 0 3rem;
@@ -321,8 +321,8 @@ footer {
 .tooltip .tooltiptext {
     visibility: hidden;
     width: 100px;
-    background-color: #555;
-    color: #fff;
+    background-color: var(--color-tooltip-background);
+    color: var(--color-font);
     text-align: center;
     border-radius: 6px;
     padding: 5px;
@@ -344,7 +344,7 @@ footer {
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: #555 transparent transparent transparent;
+    border-color: var(--color-tooltip-background) transparent transparent transparent;
 }
 
 @media (max-width: 992px) {

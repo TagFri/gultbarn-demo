@@ -41,19 +41,27 @@
     <div id="logo">
         <img class="icon" data-light="./assets/icons/logo.svg" data-dark="./assets/icons/logo-dark.svg" src="./assets/icons/logo.svg" alt="Gult barn logo">
     </div>
-    <div id="dark-mode">
-        <h3 id="about-us-title">Nattevaktsmodus</h3>
+    <!--<div id="dark-mode">
+
         <label class="switch">
             <input type="checkbox" class="dark-theme-toggle">
             <span class="slider round"></span>
         </label>
+    </div>-->
+    <div id="dark-mode">
+        <h3 id="darkMode">Dagvaktsmodus</h3>
+        <div class="toggle-wrapper" id="toggle">
+            <div class="toggle-thumb">
+                <span class="toggle-thumb-icon"></span>
+            </div>
+        </div>
     </div>
 </header>
 <main id="main">
     <!-- INFO ABOUT CHILD -->
     <div id="child-container" class="container round-container">
-        <img id="complete-icon" class="hidden"data-light="./assets/icons/checkmark.svg" data-dark="./assets/icons/checkmark-dark.svg" src="./assets/icons/checkmark.svg" alt="complete-icon">
-        <img id="incomplete-icon" class="hidden"data-light="./assets/icons/exlamation.svg" data-dark="" src="./assets/icons/exlamation.svg" alt="incomplete-icon">
+        <img id="complete-icon" class="hidden icon" data-light="./assets/icons/checkmark.svg" data-dark="./assets/icons/checkmark-dark.svg" src="./assets/icons/checkmark.svg" alt="complete-icon">
+        <img id="incomplete-icon" class="hidden icon" data-light="./assets/icons/exlamation.svg" data-dark="" src="./assets/icons/exlamation.svg" alt="incomplete-icon">
         <h2>Om barnet</h2>
         <!-- BIRTH WEIGHT INPUT-->
         <label for="birthWeight">Fødselsvekt</label>
@@ -143,7 +151,7 @@
             <h2 id="journal-title">Journalføre?</h2>
             <p id="journal-paragraph">Kopier opplysninger som journalnotat</p>
         </div>
-        <h4 id="journal-copy" class="tooltip" ><span class="tooltiptext" id="myTooltip">Kopiert</span><span><img id="journal-copy-img" data-light="./assets/icons/copy.svg" data-dark="./assets/icons/copy-dark.svg" src="./assets/icons/copy.svg" alt="flag-icon" class="icon"></span> kopier</h4>
+        <h4 id="journal-copy" class="tooltip" ><span class="tooltiptext" id="myTooltip">Kopiert</span><span><img id="journal-copy-img" class="icon" data-light="./assets/icons/copy.svg" data-dark="./assets/icons/copy-dark.svg" src="./assets/icons/copy.svg" alt="flag-icon"></span> kopier</h4>
     </div>
 </main>
 <footer>
@@ -157,7 +165,7 @@
             <p>Rådene i denne algoritmen er basert på Pediatriveilederen, og lysgrensene bygger på konsensus fra Interessegruppen i nyfødtmedisin, Norsk Barnelegeforening (2006, revidert 2016). All data behandles lokalt på din enhet og sendes aldri til eksterne servere. Algoritmen er utviklet med mål om å støtte kliniske vurderinger, men vi tar forbehold om feil eller mangler. Behandlende kliniker oppfordres alltid til å gjøre en selvstendig vurdering basert på barnets helhetlige situasjon.</p>
         </div>
         <div class="flex-container flex-column right-column right-text">
-            <img class="logo" data-light="assets/icons/logo-black.svg" data-dark="assets/icons/logo-dark.svg" src="assets/icons/logo-black.svg" alt="Gult barn logo">
+            <img class="logo icon" data-light="assets/icons/logo-black.svg" data-dark="assets/icons/logo-dark.svg" src="assets/icons/logo-black.svg" alt="Gult barn logo">
             <div class="flex-container flex-column feedback">
                 <a href="mailto:hei@sablateknisk.no?subject=Gult barn tilbakemelding" class="link"> Gi tilbakemelding</a>
                 <p class="mail">hei@sablateknisk.no</p>
@@ -165,7 +173,7 @@
             <p>Algoritmen og nettsiden er utviklet<br>av Åge Frivoll og Vetle Mørland</p>
         </div>
     </div>
-    <img loading="lazy" id="algorithm-flowchart" data-light="./assets/icons/algorithm.svg" data-dark="./assets/icons/algorithm-dark.svg" src="./assets/icons/algorithm.svg" alt="Algorithm">
+    <img loading="lazy" id="algorithm-flowchart" class="icon" data-light="./assets/icons/algorithm.svg" data-dark="./assets/icons/algorithm-dark.svg" src="./assets/icons/algorithm.svg" alt="Algorithm">
     <div id="disclaimer" class="flex-container">
         <div class="disclaimer half-column">
             <p class="small-text">1 Lysgrensene bygger på konsensus fra Interessegruppen i nyfødtmedisin, Norsk Barnelegeforening (2006, revidert 2016). Grafene for lysgrensene i gultbarn er laget ved lineær regresjon med følgende punkter:

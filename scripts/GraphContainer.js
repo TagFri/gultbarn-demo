@@ -257,6 +257,7 @@ class GraphContainer {
 
         // Set global chart defaults.
         Chart.defaults.font.size = 14;
+        Chart.defaults.font.color = '#0B1E33';
         Chart.defaults.font.family = 'Poppins';
         Chart.defaults.spanGaps = true;
         Chart.defaults.tension = 0;

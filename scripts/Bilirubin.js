@@ -126,8 +126,20 @@ class Bilirubin {
 
             })
             const image = document.createElement("img")
-            image.src = "./assets/icons/remove.svg"
-            image.classList.add("individual-bilirubin-remove")
+
+            //Set image path according to dark mode
+            if (document.body.getAttribute('data-theme') == "light") {
+                image.src = "./assets/icons/remove.svg"
+            } else {
+                image.src = "./assets/icons/remove-dark.svg"
+            };
+
+            //Set custom src for dark mode toggle
+            image.setAttribute('data-light', './assets/icons/remove.svg')
+            image.setAttribute('data-dark', './assets/icons/remove-dark.svg')
+
+            //Add classes including icon for dark mode toggle
+            image.className += "individual-bilirubin-remove, icon";
             image.alt = "delete-icon"
 
             //Bilirubin value
