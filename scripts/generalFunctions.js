@@ -2,7 +2,7 @@ import {    Bilirubin       } from "./Bilirubin.js";
 import {    Child           } from "./Child.js";
 import {    GraphContainer  } from "./GraphContainer.js";
 
-export {msToDays, daysToMs, daysToAbsoluteDate, daysRelativeToReferenceDate, leadingZero, between, realtiveToGraphLabel, largest, distanceToGraph}
+export {msToDays, daysToMs, daysToAbsoluteDate, daysRelativeToReferenceDate, leadingZero, between, realtiveToGraphLabel, largest, distanceToGraph, throttle}
 
 //Converts millisecounds to relative days
 function msToDays(millisecounds) {
@@ -144,69 +144,17 @@ function distanceToGraph(graph) {
     return false
 }
 
-// LEGACY CODE:
-// distanceToGraph(graphType, xValue, refY) {
-//    console.log(`Starting distanceToGraph with ${graphType}, ${xValue}, ${refY}`)
-//
-//    let coordinates;
-//    switch (graphType) {
-//        case "lightLimitGraph": coordinates = this.instance.myChart.data.datasets[0].data;
-//            break;
-//        case "transfutionGraph": coordinates = this.instance.myChart.data.datasets[3].data;
-//    }
-//    console.log(coordinates)
-//    console.log(typeof coordinates)
-//
-//    // Se if x-value is a perfect match to light graph
-//    const foundObject = coordinates.find(item => item.x === xValue)
-//
-//    //If so, return Y-coordinates between the two points
-//    console.log(foundObject)
-//    if (foundObject !== undefined) {
-//        return ((coordinates.find(item => item.x === xValue).y) - refY)
-//    };
-//
-//
-//    // Otherwise, split coordinates into two arrays.
-//    let xCoordinates = [];
-//    let yCoordinates = [];
-//
-//    //Loop through coordinates and split x/y
-//    for (const coordinate of coordinates) {
-//        xCoordinates.push(coordinate.x);
-//        yCoordinates.push(coordinate.y);
-//    }
-//    console.log(`xCoordinates: ${xCoordinates}`)
-//    console.log(`yCoordinates: ${yCoordinates}`)
-//
-//    // Find the index for the point just before xValue.
-//    let beforeXIndex = -1;
-//    for (let i = 0; i < xCoordinates.length; i++) {
-//        if (xCoordinates[i] >= xValue) {
-//            beforeXIndex = i - 1;
-//            break;
-//        } else {
-//            beforeXIndex = i;
-//        }
-//    }
-//
-//    // Find the index after xValue.
-//    let afterXIndex = xCoordinates.findIndex(x => x > xValue);
-//
-//    console.log(`beforeXIndex: ${beforeXIndex}`)
-//    console.log(`afterXIndex: ${afterXIndex}`)
-//
-//    // Calculate the slope between the two points.
-//    let slope = (yCoordinates[afterXIndex] - yCoordinates[beforeXIndex]) / (xCoordinates[afterXIndex] - xCoordinates[beforeXIndex]);
-//
-//    console.log(`slope: ${slope}`)
-//
-//    // Calculate the y value at the xValue point.
-//    let yValue = yCoordinates[beforeXIndex] + (slope * (xValue - xCoordinates[beforeXIndex]));
-//
-//    console.log(`yValue: ${yValue}`)
-//
-//    // Return the difference between the graph's y-value and refY.
-//    console.log(`Returning from distanceToGraph: ${parseInt(yValue - refY)}`)
-//    return parseInt(yValue - refY);
-//}
+// Throttle for js events
+function throttle(fn, time) {
+    let timeout = null;
+    return function () {
+        if(timeout) return;
+        const context = this;
+        const args = arguments;
+        const later = () => {
+            fn.call(context, ...args);
+            timeout = null;
+        }
+        timeout = setTimeout(later, time);
+    }
+}

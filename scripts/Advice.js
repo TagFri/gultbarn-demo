@@ -21,7 +21,7 @@ class Advice {
             //Only one lab, else standard text.
             if (Bilirubin.numberOfBilirubins == 1) {
                 console.log("Only one lab")
-                bloodsampleDescription += `Bilirubinverdien er < 50 µM under lysgrensen. Barnet bør følges opp med en ny blodprøve for å kontrollere bilirubinnivåene.\n\nEr barnet sykt (sepsis, acidose, asfyksi) bør oppstart av lysbehandling vurderes.`
+                bloodsampleDescription += `Bilirubinverdien er ≤ 50 µmol/L under lysgrensen. Barnet bør følges opp med en ny blodprøve for å kontrollere bilirubinnivåene. <br><br>Er barnet sykt (sepsis, acidose, asfyksi) bør oppstart av lysbehandling vurderes.`
             }
 
             // >= 2 labs:
@@ -46,12 +46,12 @@ class Advice {
 
                 //Om siste er 50 fra lysgrense
                 if ( Bilirubin.distanceToLightGraph <= 50) {
-                    bloodsampleDescription += `<br><br><span class="semi-bold">OBS!</span> Siste bilirubinverdi er mindre enn 50 µM fra lysgrensen. Er barnet sykt (sepsis, acidose, asfyksi) bør oppstart av lysbehandling vurderes.`
+                    bloodsampleDescription += `<br><br><span class="semi-bold">OBS!</span> Siste bilirubinverdi er mindre enn 50 µmol/L fra lysgrensen. Er barnet sykt (sepsis, acidose, asfyksi) bør oppstart av lysbehandling vurderes.`
                 }
 
                 //Om stigning er mer enn 100 per dag
-                if ( Bilirubin.bilirubinSlope() > 100 ) {
-                    bloodsampleDescription += `<br><br><span class="semi-bold">OBS!</span> Trendlinjen for de to siste målepunktene stiger med mer enn ≥ 100 µM per døgn. Grundigere utredning av årsak til ikterus anbefales.`
+                if ( Bilirubin.bilirubinSlope() >= 100 ) {
+                    bloodsampleDescription += `<br><br><span class="semi-bold">OBS!</span> Trendlinjen for de to siste målepunktene stiger med mer enn ≥ 100 µmol/L per døgn. Grundigere utredning av årsak til ikterus anbefales.`
                 }
 
             }
@@ -62,31 +62,50 @@ class Advice {
         let iconDarkMode = document.body.getAttribute('data-theme') == 'dark'?'-dark':'';
 
         //Get correct transfustion description
+        console.log("GET TRANSFUSON DESCRIPTION")
+        console.log(( Child.getInstance().gestationWeek + (Bilirubin.lastBilirubin().relativeDays) / 7 ) * 10);
+        console.log(Bilirubin.lastBilirubin().bilirubinValue);
         function transfusionDescription() {
             console.log("TRANSFUSION ADVICE DESCRIPTOIN CREATION")
 
             //Differentiate paths in to transfusion advice
 
-            let transfusionEndDescription = `, erfaren kliniker (bakvakt pediater) bør kontaktes for å vurdering av  utskiftningstransfusjon. Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.3-utskiftingstransfusjon#-helsebiblioteket-innhold-retningslinjer-pediatri-nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening-8-gulsott-og-hemolytisk-sykdom-83-utskiftingstransfusjon:~:text=og%20hemolytisk%20sykdom-,8.%203%20Utskiftingstransfusjon,-Sist%20faglig%20oppdatert" target="_blank">pediatriveilederen</a> for detaljert informasjon.`
+            let transfusionDescriptionText = ""
 
             //Above transfusion limit
             if ( Bilirubin.distanceToTransfusionGraph <= 0) {
-                return `Barnet har svært høye bilirubinverdier ${transfusionEndDescription}`
+                console.log("ABOVE TRANSfusion LIMIT")
+                transfusionDescriptionText += "Barnet har svært høye bilirubinverdier"
+                console.log(transfusionDescriptionText)
             }
+
             //Gestastional weeks text
-            else if (Bilirubin.lastBilirubin().bilirubinValue >= Child.getInstance().gestationWeek * 10) {
+            if (Bilirubin.lastBilirubin().bilirubinValue >= ( Child.getInstance().gestationWeek + (Bilirubin.lastBilirubin().relativeDays) / 7 ) * 10) {
                 console.log("GASTATIONAL WEEKS")
-                return `Bilirubin er mer enn 10 x gestasjonsuke ${transfusionEndDescription}`
+                if (transfusionDescriptionText == "") {
+                    transfusionDescriptionText += "Bilirubin er mer enn 10 x gestasjonalder"
+                } else {
+                    transfusionDescriptionText += ", nå mer enn 10 x gestasjonsalder"
+                }
             }
+
             //Bilirubin slope texxt
-            else if (Bilirubin.bilirubinSlope() >= 240) {
-                return `Bilirubin stiger mer enn 10 µmol/time ${transfusionEndDescription}`
+            if (Bilirubin.bilirubinSlope() >= 240) {
+                if (transfusionDescriptionText == "") {
+                    transfusionDescriptionText += "Bilirubin stiger mer enn 10 µmol/time"
+                } else {
+                    transfusionDescriptionText += ", og samtidg stiger mer enn 10 µmol/time"
+                }
             }
 
             //Fallback if none above are choicen
-            if (transfusionDescription = "") {
-                return `Barnet har svært høye bilirubinverdier ${transfusionEndDescription}`
+            if (transfusionDescriptionText == "") {
+                console.log("FALLBACK")
+                transfusionDescriptionText += "Barnet har svært høye bilirubinverdier."
             }
+            console.log(transfusionDescriptionText)
+
+            return transfusionDescriptionText += ". Erfaren kliniker (bakvakt pediater) bør kontaktes for å vurdering av  utskiftningstransfusjon."
         }
 
         function lightTherapyDescription() {
@@ -153,7 +172,7 @@ class Advice {
                 return new Advice(
                     "noFollowUp",
                     "Ingen oppfølging nødvendig",
-                    `Trendlinjen for de to siste målepunktene er ${(Bilirubin.bilirubinSlope()>=0?"svært avflatet":"synkende")}. Blodprøvekontroll er ikke nødvendig.<br><br>Foreldre bes å ta kontakt med helsestasjonen dersom de mener barnet får økende ikterus eller om ikterus vedvarer 3 uker etter siste kontakt, eller om barnet virker slapt eller sykt.`,
+                    `Trendlinjen for de to siste målepunktene er ${(Bilirubin.bilirubinSlope()>=0?"svært avflatet":"synkende")}. Blodprøvekontroll er ikke nødvendig.<br><br>Foreldre oppfordres til å ta kontakt med helsestasjonen dersom de mener barnet får økende gulsott, om gulsott vedvarer 3 uker etter siste kontakt, eller om barnet virker slapt eller sykt.`,
                     url + "no-follow-up" + iconDarkMode + ".svg"
                 );
                 break;
@@ -162,7 +181,7 @@ class Advice {
                 return new Advice(
                     "noAdvice",
                     "Ingen råd fra pediatriveilederen",
-                    "Bilirubinverdien er lavere enn 50 µM under lysgrensa. Pediatriveilederen gir ingen konkrete råd ved ett enkelt målepunkt. Anvend klinisk skjønn, med en helhetlig vurdering av barnets klinikk og historikk.",
+                    "Bilirubinverdien er lavere enn 50 µmol/L under lysgrensa. Pediatriveilederen gir ingen konkrete råd ved ett enkelt målepunkt. Anvend klinisk skjønn, med en helhetlig vurdering av barnets klinikk og historikk.",
                     url + "no-advice" + iconDarkMode + ".svg",
                     "var(--noAdvice-advice)"
                 );
@@ -211,7 +230,7 @@ class Advice {
         //TRANSFUSJON -> 3 criterias
         if (
             //Last bilirubin is more/equal to gestational week * 10
-            (Bilirubin.lastBilirubin().bilirubinValue >= (child.gestationWeek * 10))
+            ( Bilirubin.lastBilirubin().bilirubinValue >= ( (child.gestationWeek + (Bilirubin.lastBilirubin().relativeDays) / 7 ) * 10) )
             ||
             //Last bilirubin is above/equal transfusionlimit
             (Bilirubin.distanceToTransfusionGraph <= 0)
