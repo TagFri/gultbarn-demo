@@ -1,4 +1,4 @@
-import { daysToAbsoluteDate, leadingZero, distanceToGraph} from './generalFunctions.js';
+import { daysToAbsoluteDate, leadingZero, distanceToGraph, updateCount} from './generalFunctions.js';
 import { Child } from "./Child.js";
 import { errorMessages } from "./inputValidation.js";
 import {GraphContainer} from "./GraphContainer.js";
@@ -186,12 +186,13 @@ class Bilirubin {
         //Setup loop for all bilirubin labs
         for (let i = 0; i < Bilirubin.numberOfBilirubins; i++) {
 
-
             //FIND ELEMENT IN BILIRUBIN ARRAY FROM PUSHED BUTTON ON WEBAPGE
             if (Bilirubin.allBilirubins[i].relativeDays == targetButton.parentElement.parentElement.id) {
 
                 //Remove matching bilirubin object
                 Bilirubin.allBilirubins.splice(i, 1);
+
+                updateCount("bilirubinRemoved")
 
                 //Update bilirubin counter
                 Bilirubin.numberOfBilirubins --;

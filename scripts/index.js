@@ -1,6 +1,6 @@
 import { inputMasking                   } from "./inputMasking.js";
 import { errorMessages, validateInputs  } from './inputValidation.js';
-import { daysRelativeToReferenceDate, throttle } from "./generalFunctions.js";
+import { daysRelativeToReferenceDate, throttle, updateCount } from "./generalFunctions.js";
 import { Child                          } from "./Child.js";
 import { Bilirubin, SerumBilirubin      } from "./Bilirubin.js";
 import { GraphContainer                 } from "./GraphContainer.js";
@@ -10,30 +10,6 @@ import { copyContent                    } from "./Journal.js";
 //**
 //** INIT PAGE
 //**
-
-///* STATISTICS *///
-let apiURL = "https://i70hzn59ha.execute-api.us-east-1.amazonaws.com/startUp/gultBarnStatistics"
-let apiKey = "egFZwylnMe1Sk5PBAr31Y724ppi5NMJ6aJ3vl6g9"
-//todo change to enviormental variable
-
-async function updateCount(clickID) {
-    try {
-        let response = await fetch(apiURL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                //Sends the api key
-                "x-api-key": apiKey
-            },
-            body: JSON.stringify({buttonID: clickID})
-        });
-        let result = await response.json();
-
-        console.log(result);
-    } catch (error) {
-        console.error(error);
-    }
-};
 
 /* Custom masking */
 inputMasking()
@@ -262,6 +238,9 @@ function saveChild(validatedInputs) {
         console.log("Secound saved child")
         //Update current child
         Child.getInstance().updateChild(validatedInputs)
+
+        updateCount("modifiedChild")
+
         updateCascade("child")
     }
 }
