@@ -53,7 +53,7 @@ class Child {
         let lightinfo;
         if (this.#birthWeight >= 2500 && this.#gestationWeek >= 37) {
             lightinfo = {
-                title: 'over 2500g + GA >=37',
+                title: 'over 2500g + GA ≥ 37',
                 lightLimit: [{x: 1, y: 175}, {x: 3, y: 350}, {x: 10, y: 350}],
                 lightSlope: 175 / 2,
                 lightBreakDay: 3,
@@ -62,7 +62,7 @@ class Child {
         } else if (this.#birthWeight >= 2500 && this.#gestationWeek < 37) {
             lightinfo = {
                 lightLimit: [{x: 1, y: 150}, {x: 3, y: 300}, {x: 10, y: 300}],
-                title: 'over 2500g + GA <37',
+                title: 'over 2500g + GA < 37',
                 lightSlope: 150 / 2,
                 lightBreakDay: 3,
                 transfusionLimit: [{x: 1, y: 250}, {x: 3, y: 350}, {x: 10, y: 350}]

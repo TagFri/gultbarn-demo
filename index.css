@@ -25,7 +25,7 @@ header {
     }
     /* Responsive header images compared to text*/
     img {
-        @media (max-width: 576px) {height: 1.8rem;}
+        @media (max-width: 576px) {height: 2.4rem;}
         @media (min-width: 576px) {height: 2.6rem;}
     }
     button {

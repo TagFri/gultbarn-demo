@@ -149,10 +149,13 @@ body {
     body {
         /* Heading font sizes*/
         h1 {font-size: 1.5rem}
-        h2 {font-size: 1.3rem}
+        h2 {font-size: 1.4rem}
         h3 {font-size: 1.25rem}
+        h4 {font-size: 1.15rem}
+        input, select {font-size: 1.1rem}
+        button {font-size: 1rem}
         /* Bold text*/
-        h1, h2, h3 {font-weight: bold}
+        h1, h2, h3, h4 {font-weight: 600}
     }
 }
 
@@ -167,8 +170,10 @@ body {
         h2 {font-size: 1.35rem}
         h3 {font-size: 1.25rem}
         h4 {font-size: 1.125rem}
+        input, select {font-size: 1.1rem}
+        button {font-size: 1rem}
         /* Bold text*/
-        h1, h2, h3 {font-weight: bold}
+        h1, h2, h3, h4 {font-weight: 600}
     }
 }
 /* DESKTOP FONTS FONTS SIZE AND TYPES **/
@@ -182,6 +187,8 @@ body {
         h3 {font-size: 1.2rem}
         h4 {font-size: 1.1rem}
         h5 {font-size: 1.1rem}
+        input, select {font-size: 1.1rem}
+        button {font-size: 1rem}
         /* Bold text */
         h1, h2, h3, h4, h5 {font-weight: 600}
     }
