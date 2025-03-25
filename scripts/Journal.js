@@ -35,7 +35,7 @@ function copyContent() {
     let htmlJournal = `
         <h3>Oppfølgning av bilirubinsvar</h3>
         <h4>Barnets informasjon:</h4>
-        <p>Fødselstidspunkt: &emsp;Fjernet for personvern <br>
+        <p>Fødselstidspunkt: &emsp;[FYLL INN] <br>
         Fødselsvekt: &emsp;&emsp;&emsp;${barnetsVekt}<br>
         Gestasjonsalder: &emsp;${gestation}</p>
         <h4>Anamnese:</h4>
@@ -47,7 +47,7 @@ function copyContent() {
         <h4>Informasjon til pårørende:</h4>
         <p>[FYLL INN INFO]</p>
         
-        <p>Dersom barnet blir synelig gulere, må dere ta med barnet tilbake til barselavdelingen for å måle bilirubin. Dette er særlig viktig dersom barnet skulle bli påfallende slapt og ikke vil ta brystet, eller blir urolig/irritabel. Ring xxx xx xxx for å avtale prøven med barselavdelingen </p>
+        <p>Dersom barnet blir synlig gulere, må dere ta med barnet tilbake til barselavdelingen for å måle bilirubin. Dette er særlig viktig dersom barnet skulle bli påfallende slapt og ikke vil ta brystet, eller blir urolig/irritabel. Ring xxx xx xxx for å avtale prøven med barselavdelingen </p>
         <img style="width: 100px" src="${image}" alt="Bilubinverdier"></img>
     `;
 
