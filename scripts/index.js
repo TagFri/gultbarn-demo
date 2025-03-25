@@ -38,6 +38,7 @@ if (startTime.getHours() >= 23 || startTime.getHours() < 6) {
 
     document.querySelector(".toggle-thumb").classList.add("dark-mode")
     document.querySelector(".toggle-thumb-icon").classList.add("dark-mode")
+    document.querySelector(".toggle-wrapper").classList.add("dark-mode")
 
 }
 
@@ -55,10 +56,12 @@ document.querySelector('.toggle-wrapper').addEventListener('click', function(eve
         document.getElementById("darkMode").innerText = "Nattevaktsmodus";
         document.querySelector(".toggle-thumb").classList.add("dark-mode")
         document.querySelector(".toggle-thumb-icon").classList.add("dark-mode")
+        document.querySelector(".toggle-wrapper").classList.add("dark-mode")
     } else {
         document.getElementById("darkMode").innerText = "Dagvaktsmodus";
         document.querySelector(".toggle-thumb").classList.remove("dark-mode")
         document.querySelector(".toggle-thumb-icon").classList.remove("dark-mode")
+        document.querySelector(".toggle-wrapper").classList.remove("dark-mode")
     }
 
 
