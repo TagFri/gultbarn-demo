@@ -77,7 +77,7 @@ class Bilirubin {
     static printBilirubinOverview() {
         let labOverview = "";
         for (const bilirubin of Bilirubin.allBilirubins) {
-            labOverview += `Dag: ${bilirubin.relativeDays}: ${bilirubin.bilirubinValue} µmol/L\n`;
+            labOverview += `${Math.floor(bilirubin.relativeDays)} dager, ${((bilirubin.relativeDays % 1) * 24).toFixed(1)} timer: ${bilirubin.bilirubinValue} µmol/L\n`;
         }
         return labOverview
     }
