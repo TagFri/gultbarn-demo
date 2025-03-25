@@ -11,6 +11,30 @@ import { copyContent                    } from "./Journal.js";
 //** INIT PAGE
 //**
 
+///* STATISTICS *///
+let apiURL = "https://i70hzn59ha.execute-api.us-east-1.amazonaws.com/startUp/gultBarnStatistics"
+let apiKey = "egFZwylnMe1Sk5PBAr31Y724ppi5NMJ6aJ3vl6g9"
+//todo change to enviormental variable
+
+async function updateCount(clickID) {
+    try {
+        let response = await fetch(apiURL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                //Sends the api key
+                "x-api-key": apiKey
+            },
+            body: JSON.stringify({buttonID: clickID})
+        });
+        let result = await response.json();
+
+        console.log(result);
+    } catch (error) {
+        console.error(error);
+    }
+};
+
 /* Custom masking */
 inputMasking()
 
@@ -141,6 +165,7 @@ document.querySelectorAll(".save-btn").forEach(button => button.addEventListener
 //Click -> Colur change
 document.getElementById("journal-copy").addEventListener("click", function() {
         copyContent();
+        updateCount("copiedJournals")
         document.getElementById("journal-container").style.animation = "animatedBackground 0.4s ease-in-out";
         document.getElementById("myTooltip").style.visibility = "visible";
         document.getElementById("myTooltip").style.opacity = 1;
@@ -227,6 +252,7 @@ function saveChild(validatedInputs) {
             Child.getInstance().incompleteChild()
         })
         console.log("Finished child")
+        updateCount("addedChild")
         updateCascade("child")
 
     }
@@ -266,6 +292,7 @@ function saveBilirubin(validatedInputs) {
         new SerumBilirubin(validatedInputs.bilirubinValue, relativeDays);
 
         console.log("BILIRUBIN OBJECT CREATED")
+        updateCount("addedBilirubin")
 
         //Remove bilirubin inputs,
         document.getElementById("bilirubinDate").value = "";
