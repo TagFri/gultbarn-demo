@@ -74,25 +74,22 @@ class Advice {
 
             //Above transfusion limit
             if ( Bilirubin.distanceToTransfusionGraph <= 0) {
-                console.log("ABOVE TRANSfusion LIMIT")
                 transfusionDescriptionText += "Barnet har svært høye bilirubinverdier"
-                console.log(transfusionDescriptionText)
             }
 
             //Gestastional weeks text
             if (Bilirubin.lastBilirubin().bilirubinValue >= ( Child.getInstance().gestationWeek + (Bilirubin.lastBilirubin().relativeDays) / 7 ) * 10) {
-                console.log("GASTATIONAL WEEKS")
                 if (transfusionDescriptionText == "") {
-                    transfusionDescriptionText += "Bilirubin er mer enn 10 x gestasjonalder"
+                    transfusionDescriptionText += "Bilirubin er ≥ 10 x gestasjonsalder i uker"
                 } else {
-                    transfusionDescriptionText += ", nå mer enn 10 x gestasjonsalder"
+                    transfusionDescriptionText += ", nå mer enn 10 x gestasjonsalder i uker"
                 }
             }
 
             //Bilirubin slope texxt
-            if (Bilirubin.bilirubinSlope() >= 240) {
+            if (Bilirubin.bilirubinSlope() > 240) {
                 if (transfusionDescriptionText == "") {
-                    transfusionDescriptionText += "Bilirubin stiger mer enn 10 µmol/time"
+                    transfusionDescriptionText += "Bilirubin stiger med mer enn 10 µmol/L per time"
                 } else {
                     transfusionDescriptionText += ", og samtidg stiger mer enn 10 µmol/time"
                 }
@@ -101,19 +98,18 @@ class Advice {
             //Fallback if none above are choicen
             if (transfusionDescriptionText == "") {
                 console.log("FALLBACK")
-                transfusionDescriptionText += "Barnet har svært høye bilirubinverdier."
+                transfusionDescriptionText += "Barnet har svært høye bilirubinverdier"
             }
-            console.log(transfusionDescriptionText)
 
-            return transfusionDescriptionText += ". Erfaren kliniker (bakvakt pediater) bør kontaktes for å vurdering av  utskiftningstransfusjon."
+            return transfusionDescriptionText += '. Erfaren kliniker (bakvakt pediater) bør kontaktes for å vurdering av  utskiftningstransfusjon. Se <a class="link" href=https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.3-utskiftingstransfusjon" target="_blank">pediatriveilederen</a> for videre info.`
         }
 
         function lightTherapyDescription() {
             let lightTherapyDescription = ""
 
-            lightTherapyDescription += `Barnet har bilirubinnivåer som overskrider lysgrensen. Lysbehandling er anbefalt. Behandlingen bør startes snarest mulig.<br><span class=semi-cold">Varighet</span>: Det anbefales 12–24 timers lysbehandling. Varighet kan individualiseres ut i fra hvor høye TSB-verdier var ved start lysbehandling, og i henhold til lokale rutiner.<br><br>Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.1-tidlig-ikterus-forste-710-dager#:~:text=Behandling%20og%20oppf%C3%B8lging" target="_blank">pediatriveilederen</a> for videre info.`
+            lightTherapyDescription += `Barnet har bilirubinnivåer som overskrider lysgrensen. Lysbehandling er anbefalt. Behandlingen bør startes snarest mulig<br><br> Det anbefales 12–24 timers lysbehandling. Varighet kan individualiseres ut i fra hvor høye TSB-verdier var ved start lysbehandling, og i henhold til lokale rutiner.<br><br>Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.1-tidlig-ikterus-forste-710-dager#:~:text=Behandling%20og%20oppf%C3%B8lging" target="_blank">pediatriveilederen</a> for videre info.`
             if (Bilirubin.distanceToTransfusionGraph <= 50) {
-                lightTherapyDescription += `<br><br>Grensen for utskiftning senkes med forslagsvis 50 mikromol/l dersom barnet er sykt (sepsis, asfyksi (Apgar < 3 ved 5 min), acidose (ph <7,15 i 1 time; <7,25 i 4 timer), albumin <25 g/l)`
+                lightTherapyDescription += `<br><br><span class="semi-bold">OBS!</span> Siste målepunkt er ≤ 50 µmol/L under transfusjonsgrensen. Vurder utskiftningstransfusjon dersom barnet er sykt (sepsis, asfyksi (Apgar < 3 ved 5 min), acidose (pH <7 ,15 i 1 time eller < 7,25 i 4 timer), albumin <25 g/L).`
             }
             
             return lightTherapyDescription
@@ -125,7 +121,7 @@ class Advice {
                 return new Advice(
                     "earlyIcterus",
                     "Ikterus første levedøgn  - videre utredning anbefales",
-                    `Synlig gulsott som oppstår innen 1 døgns alder regnes alltid som patologisk. Videre utredning med blodprøver anbefales som angitt i <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.1-tidlig-ikterus-forste-710-dager#:~:text=Synlig%20gulsott%20innen%201%20d%C3%B8gns%20alder%20(alltid%20patologisk!)" target="_blank">pediatriveilederen</a>, vurder lysbehandling evt. transfusjon/IVIG ved svært høye verdier.`,
+                    `Synlig gulsott som oppstår innen første levedøgn regnes alltid som patologisk. Videre utredning med blodprøver anbefales som angitt i <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.1-tidlig-ikterus-forste-710-dager#:~:text=Synlig%20gulsott%20innen%201%20d%C3%B8gns%20alder%20(alltid%20patologisk!)" target="_blank">pediatriveilederen</a>, vurder lysbehandling evt. transfusjon/IVIG ved svært høye verdier.`,
                     url + "early-onset-icterus" + iconDarkMode + ".svg"
                 );
 
@@ -163,7 +159,7 @@ class Advice {
                 return new Advice(
                     "prolongedIcterus",
                     `Prolongert ikterus - videre utredning anbefales`,
-                    `Barn eldre enn 14 dager med synlig ikterus skal alltid utredes med total og konjugert bilirubin – uavhengig av vektoppgang og farge på avføring/urin. Et barn med konjugert bilirubin >17 mikromol/L skal følges opp videre.\n\nVurder også: Hb, hvite, trombocytter, retikulocytter, ALAT, GT, TSH, FT4 og blodtype mor/barn, DAT av barnet (hvis ikke kjent tidligere).<br><br>Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.4-prolongert-ikterus-mistenkt-kolestase-1014-dagers-alder" target="_blank">pediatriveilederen</a> for videre utredning.`,
+                    `Barn eldre enn 14 dager med synlig ikterus skal alltid utredes med total og konjugert bilirubin – uavhengig av vektoppgang og farge på avføring og urin. Et barn med konjugert bilirubin >17 µmol/L skal følges opp videre.\n\nVurder også: Hb, hvite, trombocytter, retikulocytter, ALAT, GT, TSH, FT4 og blodtype mor/barn, DAT av barnet (hvis ikke kjent tidligere).<br><br>Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.4-prolongert-ikterus-mistenkt-kolestase-1014-dagers-alder" target="_blank">pediatriveilederen</a> for videre utredning.`,
                     url + "prolonged-icterus" + iconDarkMode + ".svg"
                 );
                 break;
@@ -199,8 +195,8 @@ class Advice {
                 console.log("ERROR advice created")
                 return new Advice(
                     "error",
-                    "Wopsi! Noe har skjedd...",
-                    "Beregninger har feilet, pc'en klikka eller verden går rett og slett under. Vanskelig å vite om du ikke sender oss en mail. Trykk på \"Gi tilbakemelding\" under så skal vi se på det så fort vi klarer!",
+                    "Du milde partus! 😱",
+                    "Du har oppdaget en teknisk feil. Trykk på \"Gi tilbakemelding\" under og send oss en skaderapport, så skal vi ta en titt ved første anledning :-)",
                     url + "error" + iconDarkMode + ".svg",
                     "var(--color-grey-light)"
                 );
@@ -236,7 +232,7 @@ class Advice {
             (Bilirubin.distanceToTransfusionGraph <= 0)
             ||
             //Slope is above/equal 240
-            (Bilirubin.bilirubinSlope() >= 240)
+            (Bilirubin.bilirubinSlope() > 240)
         ) {
 
             this.currentAdvice = this.createAdvice("transfusion", child)
