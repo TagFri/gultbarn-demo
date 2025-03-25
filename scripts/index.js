@@ -1,6 +1,6 @@
 import { inputMasking                   } from "./inputMasking.js";
 import { errorMessages, validateInputs  } from './inputValidation.js';
-import { daysRelativeToReferenceDate    } from "./generalFunctions.js";
+import { daysRelativeToReferenceDate, throttle } from "./generalFunctions.js";
 import { Child                          } from "./Child.js";
 import { Bilirubin, SerumBilirubin      } from "./Bilirubin.js";
 import { GraphContainer                 } from "./GraphContainer.js";
@@ -88,7 +88,7 @@ function toggleDarkMode() {
         GraphContainer.getInstance().myChart.data.datasets[0].borderColor = 'rgb(216, 215, 214)';
         GraphContainer.getInstance().myChart.data.datasets[3].borderColor = 'rgb(153, 27, 30)';
     } else if (newTheme === 'light') {
-        GraphContainer.getInstance().myChart.data.datasets[0].borderColor = 'rgb(11, 30, 51)'
+        GraphContainer.getInstance().myChart.data.datasets[0].borderColor = 'rgb(11, 30, 51)';
         GraphContainer.getInstance().myChart.data.datasets[3].borderColor = 'rgb(255, 232, 233)';
     }
 
@@ -123,6 +123,15 @@ function updateIcons(newTheme) {
 //** EVENT LISTENERES:
 //**
 
+///* ADJUST GRAPH RATIO DEPENDING ON WINDOW WITH TROUTTLE *///
+window.addEventListener("resize", throttle(function() {
+    let widthBrowser = document.documentElement.clientWidth
+    if (widthBrowser < 600) {
+        GraphContainer.getInstance().myChart.options.aspectRatio = 1;
+    } else if (widthBrowser >= 600) {
+        GraphContainer.getInstance().myChart.options.aspectRatio = 2.2;
+    }}, 500));
+
 //** SAVE BUTTONS
 document.querySelectorAll(".save-btn").forEach(button => button.addEventListener("click", (event) => {
     validateAndSave(event)
@@ -143,35 +152,32 @@ document.getElementById("journal-copy").addEventListener("click", function() {
     })
 
 //Mouseenter/leave -> jump and colour change
-document.getElementById("journal-copy").addEventListener("mouseenter", function () {
-    let iconMode = document.body.getAttribute('data-theme') == "dark"?"-dark":""
+document.getElementById("journal-copy").addEventListener("mouseenter", throttle(function () {
+    let iconMode = document.body.getAttribute('data-theme') == "dark" ? "-dark" : "";
 
-    console.log(iconMode)
-
-    document.getElementById("journal-container").style.backgroundImage = "url('./assets/icons/journal-yellow" + iconMode + ".svg')"
+    document.getElementById("journal-container").style.backgroundImage = "url('./assets/icons/journal-yellow" + iconMode + ".svg')";
     document.getElementById("journal-container").style.animation = "animatedBackground 0.4s ease-in-out";
-    setTimeout(function() {
-            document.getElementById("journal-container").style.animation = "";
-        },400
-    )
-})
+    setTimeout(function () {
+        document.getElementById("journal-container").style.animation = "";
+    }, 400);
+}, 50));
 
-document.getElementById("journal-copy").addEventListener("mouseleave", function () {
+document.getElementById("journal-copy").addEventListener("mouseleave", throttle(function () {
     let iconMode = document.body.getAttribute('data-theme') == "dark"?"-dark":""
     document.getElementById("journal-container").style.backgroundImage = "url('./assets/icons/journal-grey" + iconMode + ".svg')"
     document.getElementById("journal-container").style.animation = "";
-})
+},50));
 
 //** Flag dynamics
 //Mouseenter/leave -> Fill / unfill
-document.getElementById("feedback-button").addEventListener("mouseenter", function () {
+document.getElementById("feedback-button").addEventListener("mouseenter", throttle( function () {
     let iconMode = document.body.getAttribute('data-theme') == "dark"?"-dark":""
     document.getElementById("feedback-image").src = "./assets/icons/flag-filled" +iconMode+ ".svg"
-})
-document.getElementById("feedback-button").addEventListener("mouseleave", function () {
+},50))
+document.getElementById("feedback-button").addEventListener("mouseleave", throttle( function () {
     let iconMode = document.body.getAttribute('data-theme') == "dark"?"-dark":""
     document.getElementById("feedback-image").src = "./assets/icons/flag" +iconMode+ ".svg"
-})
+},50))
 
 //**
 //** PAGE FUNCTIONS
