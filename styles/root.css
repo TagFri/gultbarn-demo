@@ -18,40 +18,82 @@
 
 /* Light mode styles */
 body[data-theme="light"] {
-    --color-input-background: var(--color-white);
-    --color-input-borderline: var(--color-grey);
-    --color-input-field: var(--color-white);
-    --color-input-container-borderline: var(--color-grey);
 
+    /* Background */
+    --color-background: var(--color-white);
+    --color-footer-background: var(--color-primary-extra-strong);
+
+    /* Fonts */
+    --color-font: var(--color-black);
+    --color-p: var(--color-black);
+    --color-h: var(--color-black);
+    --color-link: var(--color-black);
+
+    /* Button */
     --button-color: var(--color-black);
     --button-text-color: var(--color-white);
     --btn-hover-font-color: var(--color-white);
 
+    /* Inputs */
+    --color-input-background: var(--color-white);
+    --color-input-borderline: var(--color-grey);
+    --color-input-field: var(--color-white);
+    --color-input-container-borderline: var(--color-grey);
+    --color-hr: var(--color-grey);
+
+    /* Chart */
+    --color-tooltip-background: var(--color-black);
+
+    /* Containers */
     --advice-container-background: var(--color-grey-light);
     --copy-journal-background: var(--color-grey-light);
-    --color-hr: var(--color-grey);
-    --color-p: var(--color-black);
+    --transfusion-advice: var(--color-light-red);
+    --noAdvice-advice: var(--color-grey-light);
+
 }
 
 /* Dark mode styles */
 body[data-theme="dark"] {
-    --color-white: #000000;
-    --color-input-background:#282828;
-    --color-input-borderline: var(--color-white);
-    --color-input-field: var(--color-white);
-    --color-input-container-borderline: var(--color-white);
+
+    /* Redfine colours */
+    --color-black: #000000;
+
+    /* Background */
+    --color-background: var(--color-black);
+    --color-footer-background: #261f16;
+
+    /* Fonts */
+    --color-font: #D8D6D5;
+    --color-p: var(--color-font);
+    --color-h: var(--color-white);
+    --color-link: var(--color-white);
+
+    /* Button */
     --button-color: #ffbf6b;
-    --button-text-color: var(--color-white);
-    --advice-container-background: #3A342C;
-    --copy-journal-background: var(--color-input-background);
-    --color-p: #D8D6D5;
+    --button-text-color: var(--color-black);
+    --btn-hover-font-color: var(--color-black);
+
+    /* Inputs */
+    --color-input-background: #282828;
+    --color-input-borderline: var(--color-black);
+    --color-input-field: var(--color-black);
+    --color-input-container-borderline: var(--color-black);
     --color-hr: var(--color-input-background);
-    --btn-hover-font-color: var(--color-white);
+
+    /* Chart */
+    --color-tooltip-background: var(--color-white);
+
+    /* Containers */
+    --advice-container-background: #3A342C;
+    --transfusion-advice: #201614;
+    --copy-journal-background: var(--color-input-background);
+    --noAdvice-advice: var(--color-input-background)
+
 }
 
 body {
     /*  Font attributes */
-    color: var(--color-black);
+    color: var(--color-font);
 
     /* For smooth dark-mode transition */
     transition: background-color 0.3s, color 0.3s;
@@ -94,6 +136,7 @@ body {
 }
 *, h1, h2, h3, h4, h5, h6, p, input, a, li {
     font-family: "Poppins", sans-serif;
+    color: var(--color-h)
 }
 
 /* MOBILE FONTS SIZE AND TYPES */

@@ -10,44 +10,111 @@ import { copyContent                    } from "./Journal.js";
 //**
 //** INIT PAGE
 //**
+
+/* Custom masking */
 inputMasking()
-
-///* DARK MODE *///
-//Updates icons
-function updateIcons(newTheme) {
-    console.log("test")
-    document.querySelectorAll('.icon').forEach(icon => {
-        (newTheme === 'dark')?icon.src= icon.getAttribute('data-dark'):icon.src= icon.getAttribute('data-light');
-    });
-}
-
-// Listen for changes in the dark mode setting
-let lastToggle = 0
-const darkModeToggle = document.querySelector('.dark-theme-toggle');
-darkModeToggle.addEventListener('click', function(event) {
-
-    if (Date.now() - lastToggle > 40) {
-        lastToggle = Date.now();
-
-        // Get current theme from body attribute
-        const currentTheme = document.body.getAttribute('data-theme');
-
-        // Determine the new theme
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-
-        // Update the body's data attribute
-        document.body.setAttribute('data-theme', newTheme);
-
-        updateIcons(newTheme)
-    }
-});
 
 // Get the single instance (creates it if it doesn’t exist)
 const graph = GraphContainer.getInstance();
 
+/* Dark mode on init */
+const startTime = new Date();
+if (startTime.getHours() >= 23 || startTime.getHours() < 6) {
+
+    document.getElementById("darkMode").innerText = "Nattevaktsmodus";
+
+    //Set theme for page
+    document.body.setAttribute('data-theme', 'dark');
+
+    //Change icon src
+    updateIcons('dark')
+
+    //Set graph colours
+    GraphContainer.getInstance().black = 'rgb(255, 255, 255)';
+    GraphContainer.getInstance().red = 'rgb(251, 65, 65)';
+
+    //Set jounal picture
+    document.getElementById("journal-container").style.backgroundImage = "url('./assets/icons/journal-grey-dark.svg')"
+
+    document.querySelector(".toggle-thumb").classList.add("dark-mode")
+    document.querySelector(".toggle-thumb-icon").classList.add("dark-mode")
+
+}
+
 // Initialize the graph container (creates a new Chart instance)
 graph.initiateGraph();
 
+
+///* DARK MODE  *///
+
+// Listen for changes in the dark mode setting
+document.querySelector('.toggle-wrapper').addEventListener('click', function(event) {
+    const currentTheme = document.body.getAttribute('data-theme');
+
+    if (currentTheme === 'light') {
+        document.getElementById("darkMode").innerText = "Nattevaktsmodus";
+        document.querySelector(".toggle-thumb").classList.add("dark-mode")
+        document.querySelector(".toggle-thumb-icon").classList.add("dark-mode")
+    } else {
+        document.getElementById("darkMode").innerText = "Dagvaktsmodus";
+        document.querySelector(".toggle-thumb").classList.remove("dark-mode")
+        document.querySelector(".toggle-thumb-icon").classList.remove("dark-mode")
+    }
+
+
+    toggleDarkMode();
+});
+
+//Change between dark and light mode
+function toggleDarkMode() {
+    // Get current theme from body attribute
+    const currentTheme = document.body.getAttribute('data-theme');
+
+    // Determine the new theme
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+
+    // Update the body's data attribute
+    document.body.setAttribute('data-theme', newTheme);
+
+    //Update all icons to new icons
+    updateIcons(newTheme)
+
+    //Update graph colours
+    if (newTheme === 'dark') {
+        GraphContainer.getInstance().myChart.data.datasets[0].borderColor = 'rgb(216, 215, 214)';
+        GraphContainer.getInstance().myChart.data.datasets[3].borderColor = 'rgb(153, 27, 30)';
+    } else if (newTheme === 'light') {
+        GraphContainer.getInstance().myChart.data.datasets[0].borderColor = 'rgb(11, 30, 51)'
+        GraphContainer.getInstance().myChart.data.datasets[3].borderColor = 'rgb(255, 232, 233)';
+    }
+
+    GraphContainer.getInstance().myChart.update()
+
+    //Update jounal picture
+    if (newTheme === 'dark') {
+        document.getElementById("journal-container").style.backgroundImage = "url('./assets/icons/journal-grey-dark.svg')"
+    } else {document.getElementById("journal-container").style.backgroundImage = "url('./assets/icons/journal-grey.svg')"}
+
+
+};
+
+//Updates icons to dark mode / light mode
+function updateIcons(newTheme) {
+    document.querySelectorAll('.icon').forEach(icon => {
+        (newTheme === 'dark')?icon.src= icon.getAttribute('data-dark'):icon.src= icon.getAttribute('data-light');
+    });
+
+    let oldAdviceBackground = document.getElementById("advice-container").style.backgroundImage
+    let newAdviceBackground
+    if (newTheme === 'dark') {
+        newAdviceBackground = oldAdviceBackground.replace(".svg", "-dark.svg")
+    } else if (newTheme === 'light') {
+        newAdviceBackground = oldAdviceBackground.replace("-dark.svg", ".svg")
+    }
+
+    document.getElementById("advice-container").style.backgroundImage = newAdviceBackground
+}
 
 //**
 //** EVENT LISTENERES:
@@ -71,18 +138,24 @@ document.getElementById("journal-copy").addEventListener("click", function() {
             document.getElementById("journal-container").style.animation = "";
         }, 750);
     })
+
 //Mouseenter/leave -> jump and colour change
 document.getElementById("journal-copy").addEventListener("mouseenter", function () {
-    let iconMode = document.body.getAttribute('data-theme') == "-dark"?"dark":""
-    document.getElementById("journal-container").style.backgroundImage = "url('./assets/icons/journal-yellow"+iconMode+".svg')"
+    let iconMode = document.body.getAttribute('data-theme') == "dark"?"-dark":""
+
+    console.log(iconMode)
+
+    document.getElementById("journal-container").style.backgroundImage = "url('./assets/icons/journal-yellow" + iconMode + ".svg')"
     document.getElementById("journal-container").style.animation = "animatedBackground 0.4s ease-in-out";
     setTimeout(function() {
             document.getElementById("journal-container").style.animation = "";
         },400
     )
 })
+
 document.getElementById("journal-copy").addEventListener("mouseleave", function () {
-    document.getElementById("journal-container").style.backgroundImage = "url('./assets/icons/journal-grey.svg')"
+    let iconMode = document.body.getAttribute('data-theme') == "dark"?"-dark":""
+    document.getElementById("journal-container").style.backgroundImage = "url('./assets/icons/journal-grey" + iconMode + ".svg')"
     document.getElementById("journal-container").style.animation = "";
 })
 
@@ -90,7 +163,6 @@ document.getElementById("journal-copy").addEventListener("mouseleave", function 
 //Mouseenter/leave -> Fill / unfill
 document.getElementById("feedback-button").addEventListener("mouseenter", function () {
     let iconMode = document.body.getAttribute('data-theme') == "dark"?"-dark":""
-    console.log(iconMode)
     document.getElementById("feedback-image").src = "./assets/icons/flag-filled" +iconMode+ ".svg"
 })
 document.getElementById("feedback-button").addEventListener("mouseleave", function () {
@@ -145,8 +217,7 @@ function saveChild(validatedInputs) {
         document.querySelector("#birthWeight").addEventListener("change", () => {
             Child.getInstance().incompleteChild()
         })
-        console.log("Finished saveing")
-        console.log(Child.getInstance())
+        console.log("Finished child")
         updateCascade("child")
 
     }
@@ -166,8 +237,6 @@ function saveBilirubin(validatedInputs) {
 
     //Convert absolute date to relative days
     let relativeDays = daysRelativeToReferenceDate(Child.getInstance().birthDateTime, validatedInputs.dateTime);
-
-    console.log(`Relative days: ${relativeDays}`)
 
     //Check if the bilirubin dateTime exists from before:
     let exists = false;
@@ -205,7 +274,11 @@ function saveBilirubin(validatedInputs) {
     document.getElementById("bilirubinDate").focus()
 }
 
+//Update dependent functions
+
 function updateCascade(type) {
+
+    //If child is changed:
     if (type == "child") {
         //SHOW COMPLETE ICON + REMOVE BILIRUBIN OPACITY
         Child.getInstance().completeChild()
@@ -216,6 +289,7 @@ function updateCascade(type) {
         GraphContainer.updateTransfusionGraph()
     }
 
+    //If bilirubin is changed:
     if (type == "bilirubin") {
 
         //Uppdate bilirubin graph
@@ -228,12 +302,12 @@ function updateCascade(type) {
         GraphContainer.updateExtrapolationGraph()
 
         //Update transfusion graph
-        console.log("updateTransfusionGraph called ->")
         if (Bilirubin.distanceToLightGraph <= 0 || Bilirubin.distanceToTransfusionGraph <= 50) {
             GraphContainer.toggleTransfusionGraph(true)
         }
     }
 
+    //If child or bilirubin is changed
     if ( ( type == "child" && Bilirubin.numberOfBilirubins > 0 ) || type =="bilirubin") {
         //Display correct bilirubin values
         Bilirubin.displayBilirubin()
