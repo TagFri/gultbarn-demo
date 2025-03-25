@@ -287,7 +287,7 @@ function updateCascade(type) {
         Child.getInstance().completeChild()
 
         //UPDATE LIGHT-LIMIT GRAPH TRANSFUSION GRAPH AND TITLE
-        document.getElementById("graph-label").innerHTML = "Lysgrense for barn " + Child.getInstance().childGraphInfo("title")
+        document.getElementById("graph-label").innerHTML = "Lysgrense <span id=\"graph-fil\">for barn</span> " + Child.getInstance().childGraphInfo("title")
         GraphContainer.updateLightLimitGraph()
         GraphContainer.updateTransfusionGraph()
     }

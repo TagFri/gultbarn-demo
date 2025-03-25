@@ -11,7 +11,7 @@ body {
     #crossing-info {
         display: inline-block
     }
-    #darkMode, #algorithm-flowchart, #disclaimer {
+    #darkMode, #algorithm-flowchart, #disclaimer, #graph-fil {
         display: none !important;
 
     }
