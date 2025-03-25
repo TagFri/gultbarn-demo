@@ -19,7 +19,7 @@ const graph = GraphContainer.getInstance();
 
 /* Dark mode on init */
 const startTime = new Date();
-if (startTime.getHours() >= 23 || startTime.getHours() < 6) {
+if (startTime.getHours() >= 22 || startTime.getHours() < 7) {
 
     document.getElementById("darkMode").innerText = "Nattevaktsmodus";
 
