@@ -319,7 +319,7 @@ footer {
     visibility: hidden;
     width: 100px;
     background-color: var(--color-tooltip-background);
-    color: var(--color-font);
+    color: var(--color-tooltip-text);
     text-align: center;
     border-radius: 6px;
     padding: 5px;

@@ -28,6 +28,7 @@ body[data-theme="light"] {
     --color-p: var(--color-black);
     --color-h: var(--color-black);
     --color-link: var(--color-black);
+    --color-tooltip-text: var(--color-white);
 
     /* Button */
     --button-color: var(--color-black);
@@ -41,7 +42,7 @@ body[data-theme="light"] {
     --color-input-container-borderline: var(--color-grey);
     --color-hr: var(--color-grey);
 
-    /* Chart */
+    /* Journal tooltip */
     --color-tooltip-background: var(--color-black);
 
     /* Containers */
@@ -67,6 +68,7 @@ body[data-theme="dark"] {
     --color-p: var(--color-font);
     --color-h: var(--color-white);
     --color-link: var(--color-white);
+    --color-tooltip-text: var(--color-black);
 
     /* Button */
     --button-color: #ffbf6b;
@@ -80,7 +82,7 @@ body[data-theme="dark"] {
     --color-input-container-borderline: var(--color-black);
     --color-hr: var(--color-input-background);
 
-    /* Chart */
+    /* Journal tooltip */
     --color-tooltip-background: var(--color-white);
 
     /* Containers */
