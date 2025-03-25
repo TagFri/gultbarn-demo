@@ -2,7 +2,7 @@ import {    Bilirubin       } from "./Bilirubin.js";
 import {    Child           } from "./Child.js";
 import {    GraphContainer  } from "./GraphContainer.js";
 
-export {msToDays, daysToMs, daysToAbsoluteDate, daysRelativeToReferenceDate, leadingZero, between, realtiveToGraphLabel, largest, distanceToGraph, throttle}
+export {msToDays, daysToMs, daysToAbsoluteDate, daysRelativeToReferenceDate, leadingZero, between, realtiveToGraphLabel, largest, distanceToGraph, throttle, updateCount}
 
 //Converts millisecounds to relative days
 function msToDays(millisecounds) {
@@ -158,3 +158,26 @@ function throttle(fn, time) {
         timeout = setTimeout(later, time);
     }
 }
+
+///* STATISTICS *///
+let apiURL = "https://i70hzn59ha.execute-api.us-east-1.amazonaws.com/startUp/gultBarnStatistics"
+let apiKey = "egFZwylnMe1Sk5PBAr31Y724ppi5NMJ6aJ3vl6g9"
+//todo change to enviormental variable
+
+async function updateCount(clickID) {
+    try {
+        let response = await fetch(apiURL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                //Sends the api key
+                "x-api-key": apiKey
+            },
+            body: JSON.stringify({buttonID: clickID})
+        });
+        let result = await response.json();
+
+    } catch (error) {
+        console.error(error);
+    }
+};

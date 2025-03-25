@@ -62,9 +62,6 @@ class Advice {
         let iconDarkMode = document.body.getAttribute('data-theme') == 'dark'?'-dark':'';
 
         //Get correct transfustion description
-        console.log("GET TRANSFUSON DESCRIPTION")
-        console.log(( Child.getInstance().gestationWeek + (Bilirubin.lastBilirubin().relativeDays) / 7 ) * 10);
-        console.log(Bilirubin.lastBilirubin().bilirubinValue);
         function transfusionDescription() {
             console.log("TRANSFUSION ADVICE DESCRIPTOIN CREATION")
 

@@ -1,6 +1,6 @@
 import { inputMasking                   } from "./inputMasking.js";
 import { errorMessages, validateInputs  } from './inputValidation.js';
-import { daysRelativeToReferenceDate, throttle } from "./generalFunctions.js";
+import { daysRelativeToReferenceDate, throttle, updateCount } from "./generalFunctions.js";
 import { Child                          } from "./Child.js";
 import { Bilirubin, SerumBilirubin      } from "./Bilirubin.js";
 import { GraphContainer                 } from "./GraphContainer.js";
@@ -141,6 +141,7 @@ document.querySelectorAll(".save-btn").forEach(button => button.addEventListener
 //Click -> Colur change
 document.getElementById("journal-copy").addEventListener("click", function() {
         copyContent();
+        updateCount("copiedJournals")
         document.getElementById("journal-container").style.animation = "animatedBackground 0.4s ease-in-out";
         document.getElementById("myTooltip").style.visibility = "visible";
         document.getElementById("myTooltip").style.opacity = 1;
@@ -227,6 +228,7 @@ function saveChild(validatedInputs) {
             Child.getInstance().incompleteChild()
         })
         console.log("Finished child")
+        updateCount("addedChild")
         updateCascade("child")
 
     }
@@ -236,6 +238,9 @@ function saveChild(validatedInputs) {
         console.log("Secound saved child")
         //Update current child
         Child.getInstance().updateChild(validatedInputs)
+
+        updateCount("modifiedChild")
+
         updateCascade("child")
     }
 }
@@ -266,6 +271,7 @@ function saveBilirubin(validatedInputs) {
         new SerumBilirubin(validatedInputs.bilirubinValue, relativeDays);
 
         console.log("BILIRUBIN OBJECT CREATED")
+        updateCount("addedBilirubin")
 
         //Remove bilirubin inputs,
         document.getElementById("bilirubinDate").value = "";
