@@ -291,10 +291,8 @@ function updateCascade(type) {
         GraphContainer.updateLightLimitGraph()
         GraphContainer.updateTransfusionGraph()
     }
-
-    //If bilirubin is changed:
-    if (type == "bilirubin") {
-
+    //If child or bilirubin is changed
+    if ( ( type == "child" && Bilirubin.numberOfBilirubins > 0 ) || type =="bilirubin") {
         //Uppdate bilirubin graph
         GraphContainer.updateBilirubinGraph()
 
@@ -308,10 +306,7 @@ function updateCascade(type) {
         if (Bilirubin.distanceToLightGraph <= 0 || Bilirubin.distanceToTransfusionGraph <= 50) {
             GraphContainer.toggleTransfusionGraph(true)
         }
-    }
 
-    //If child or bilirubin is changed
-    if ( ( type == "child" && Bilirubin.numberOfBilirubins > 0 ) || type =="bilirubin") {
         //Display correct bilirubin values
         Bilirubin.displayBilirubin()
 
