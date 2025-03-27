@@ -42,7 +42,7 @@ class Advice {
                     }).replace(',', ' kl.')
                     }</span>`
                 }
-                bloodsampleDescription += `<br><br>Kliniske symptomer som slapphet, irritabel, brekninger, hypoglykemi, acidose o.l. krever grundigere utredning. Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.5-ikterus-oppfolging-etter-utskriving#:~:text=Vedvarende%20hyperbilirubinemi%3A" target="_blank">pediatriveilederen</a> for videre diagnostiske vurderinger.`
+                bloodsampleDescription += `<br><br>Kliniske symptomer som slapphet, irritabel, brekninger, hypoglykemi, acidose o.l. krever grundigere utredning. Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.5-ikterus-oppfolging-etter-utskriving#:~:text=Vedvarende%20hyperbilirubinemi%3A" target="_blank">pediatriveilederen</a> for videre utredning.`
 
                 //Om siste er 50 fra lysgrense
                 if ( Bilirubin.distanceToLightGraph <= 50) {
@@ -100,13 +100,13 @@ class Advice {
 
 
 
-            return transfusionDescriptionText += '. Erfaren kliniker (bakvakt pediater) bør kontaktes for å vurdering av  utskiftningstransfusjon. Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.3-utskiftingstransfusjon" target="_blank">pediatriveilederen</a> for videre info.'
+            return transfusionDescriptionText += '. Erfaren kliniker (bakvakt pediater) bør kontaktes for å vurdering av  utskiftningstransfusjon. Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.3-utskiftingstransfusjon" target="_blank">pediatriveilederen</a> for videre utredning.'
         }
 
         function lightTherapyDescription() {
             let lightTherapyDescription = ""
 
-            lightTherapyDescription += `Barnet har bilirubinnivåer som overskrider lysgrensen. Lysbehandling er anbefalt. Behandlingen bør startes snarest mulig<br><br> Det anbefales 12–24 timers lysbehandling. Varighet kan individualiseres ut i fra hvor høye TSB-verdier var ved start lysbehandling, og i henhold til lokale rutiner.<br><br>Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.1-tidlig-ikterus-forste-710-dager#:~:text=Behandling%20og%20oppf%C3%B8lging" target="_blank">pediatriveilederen</a> for videre info.`
+            lightTherapyDescription += `Barnet har bilirubinnivåer som overskrider lysgrensen. Lysbehandling er anbefalt. Behandlingen bør startes snarest mulig<br><br> Det anbefales 12–24 timers lysbehandling. Varighet kan individualiseres ut i fra hvor høye TSB-verdier var ved start lysbehandling, og i henhold til lokale rutiner.<br><br> Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.1-tidlig-ikterus-forste-710-dager#:~:text=Behandling%20og%20oppf%C3%B8lging" target="_blank">pediatriveilederen</a> for videre utredning.`
             if (Bilirubin.distanceToTransfusionGraph <= 50) {
                 lightTherapyDescription += `<br><br><span class="semi-bold">OBS!</span> Siste målepunkt er ≤ 50 µmol/L under transfusjonsgrensen. Vurder utskiftningstransfusjon dersom barnet er sykt (sepsis, asfyksi (Apgar < 3 ved 5 min), acidose (pH <7 ,15 i 1 time eller < 7,25 i 4 timer), albumin <25 g/L).`
             }
@@ -158,7 +158,7 @@ class Advice {
                 return new Advice(
                     "prolongedIcterus",
                     `Prolongert ikterus - videre utredning anbefales`,
-                    `Barn eldre enn 14 dager med synlig ikterus skal alltid utredes med total og konjugert bilirubin – uavhengig av vektoppgang og farge på avføring og urin. Et barn med konjugert bilirubin >17 µmol/L skal følges opp videre.\n\nVurder også: Hb, hvite, trombocytter, retikulocytter, ALAT, GT, TSH, FT4 og blodtype mor/barn, DAT av barnet (hvis ikke kjent tidligere).<br><br>Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.4-prolongert-ikterus-mistenkt-kolestase-1014-dagers-alder#:~:text=Diagnostikk%20og%20utredning" target="_blank">pediatriveilederen</a> for videre utredning.`,
+                    `Barn eldre enn 14 dager med synlig ikterus skal alltid utredes med total og konjugert bilirubin – uavhengig av vektoppgang og farge på avføring og urin. Et barn med konjugert bilirubin >17 µmol/L skal følges opp videre.\n\nVurder også: Hb, hvite, trombocytter, retikulocytter, ALAT, GT, TSH, FT4 og blodtype mor/barn, DAT av barnet (hvis ikke kjent tidligere).<br><br> Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.4-prolongert-ikterus-mistenkt-kolestase-1014-dagers-alder#:~:text=Diagnostikk%20og%20utredning" target="_blank">pediatriveilederen</a> for videre utredning.`,
                     url + "prolonged-icterus" + iconDarkMode + ".svg"
                 );
                 break;
