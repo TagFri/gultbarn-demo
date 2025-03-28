@@ -49,6 +49,10 @@ class Advice {
                     bloodsampleDescription += `<br><br><span class="semi-bold">OBS!</span> Siste bilirubinverdi er mindre enn 50 µmol/L fra lysgrensen. Er barnet sykt (sepsis, acidose, asfyksi) bør oppstart av lysbehandling vurderes.`
                 }
 
+                if ( Bilirubin.lastBilirubin().bilirubinValue >= 250 && Bilirubin.bilirubinSlope() > 0) {
+                    bloodsampleDescription += `<br><br><span class="semi-bold">OBS!</span> Siste bilirubinverdi er mer enn 250 µmol/L og trenden er stigende. <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.5-ikterus-oppfolging-etter-utskriving#:~:text=Hvis%20bilirubinverdi%20%3E%20250%20mikromol" target="_blank">Kontroll anbefales om 1-2 dager</a>`
+                }
+
                 //Om stigning er mer enn 100 per dag
                 if ( Bilirubin.bilirubinSlope() >= 100 ) {
                     bloodsampleDescription += `<br><br><span class="semi-bold">OBS!</span> Trendlinjen for de to siste målepunktene stiger med mer enn ≥ 100 µmol/L per døgn. Grundigere utredning av årsak til ikterus anbefales.`
@@ -260,6 +264,8 @@ class Advice {
         if (
             //Positiv bilirubinslope + extrapolation < 14 day in the future
             (Bilirubin.extrapolationPoint() != undefined && (Bilirubin.bilirubinSlope() > 0 && Bilirubin.extrapolationPoint().x < Bilirubin.lastBilirubin().relativeDays + 14))
+            ||
+            (Bilirubin.lastBilirubin().bilirubinValue > 250 && Bilirubin.bilirubinSlope() > 0)
             ||
             // Last lab under 50 from lightlimit
             (Bilirubin.distanceToLightGraph <= 50)
