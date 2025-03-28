@@ -11,14 +11,14 @@ body {
     #crossing-info {
         display: inline-block
     }
-    #darkMode, #algorithm-flowchart, #disclaimer, #graph-fil {
+    #darkMode, #algorithm-flowchart, #disclaimer, #graph-fil, #clinical-version, #tech-version {
         display: none !important;
 
     }
 }
 /* TABLET -> SPECILIZED GRID VIEW */
 @media (min-width: 600px) {
-    #crossing-info {
+    #crossing-info, #clinical-version-details, #tech-version-details {
         display: none;
     }
     main {
@@ -46,6 +46,10 @@ body {
 }
 /* DESKTOP -> SPECILIZED DESKTOP VIEW */
 @media (min-width: 992px) {
+    #clinical-version-details, #tech-version-details {
+        display: inline-block;
+    }
+
     body {
         max-width: 1200px;
         padding: 0 1rem;

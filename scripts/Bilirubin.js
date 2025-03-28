@@ -82,6 +82,22 @@ class Bilirubin {
         return labOverview
     }
 
+    //Bilirubin overview with date time
+    static printBilirubinDetailedOverview() {
+        let labOverview = "";
+        for (const bilirubin of Bilirubin.allBilirubins) {
+
+            let date = new Date(daysToAbsoluteDate(Child.getInstance().birthDateTime, bilirubin.relativeDays))
+            const month = leadingZero(date.getMonth() + 1)
+            const day = leadingZero(date.getDate())
+            const hour = leadingZero(date.getHours())
+            const minute = leadingZero(date.getMinutes())
+
+            labOverview += `${day}/${month} kl: ${hour}:${minute}:  ${bilirubin.bilirubinValue} µmol/L\n`;
+        }
+        return labOverview
+    }
+
     //Display bilirubin values on webpage
     static displayBilirubin() {
         //REMOVE OLD LABS
