@@ -55,7 +55,7 @@ function copyContent() {
 
 
     //Gjerne <br>
-     let beskrivelse = Advice.currentAdvice.description.replace(/<br>/g, '')
+     let beskrivelse = Advice.currentAdvice.description.replace(/<br>/g, '\n')
         .replace(/Se [\s\S]*?for videre utredning./g, '')
         .replace(/<span class=\"semi-bold\">/g, "")
         .replace(/<\/span>/g, "")
