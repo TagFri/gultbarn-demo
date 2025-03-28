@@ -32,15 +32,14 @@ class Advice {
 
                 //If extrapolation is active, get date
                 if (Bilirubin.extrapolationPoint() != undefined) {
-                    bloodsampleDescription += `<br><br><span class="semi-bold">Krysningstidspunkt: 
-                ${daysToAbsoluteDate(child.birthDateTime, Bilirubin.extrapolationPoint().x).toLocaleDateString('no-NO', {
+                    bloodsampleDescription += `<br><br><span class="semi-bold"> Krysningstidspunkt: ${daysToAbsoluteDate(child.birthDateTime, Bilirubin.extrapolationPoint().x).toLocaleDateString('no-NO', {
                         weekday: 'short',
                         day: '2-digit',
                         month: '2-digit',
                         hour: '2-digit',
                         minute: '2-digit'
                     }).replace(',', ' kl.')
-                    }</span>`
+                    } </span>`
                 }
                 bloodsampleDescription += `<br><br>Kliniske symptomer som slapphet, irritabel, brekninger, hypoglykemi, acidose o.l. krever grundigere utredning. Se <a class="link" href="https://www.helsebiblioteket.no/innhold/retningslinjer/pediatri/nyfodtmedisin-veiledende-prosedyrer-fra-norsk-barnelegeforening/8-gulsott-og-hemolytisk-sykdom/8.5-ikterus-oppfolging-etter-utskriving#:~:text=Vedvarende%20hyperbilirubinemi%3A" target="_blank">pediatriveilederen</a> for videre utredning.`
 
