@@ -260,9 +260,9 @@ footer {
     .right-column {
         justify-content: flex-start;
         align-items: flex-end;
-        padding-left: 2rem;
         @media (min-width: 600px) {
             width: 30%;
+            padding-left: 2rem;
         }
         @media (min-width: 750px) {
             width: 35%;
